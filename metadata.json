@@ -1,0 +1,6 @@
+{
+  "name": "O Dinheiro Desaparece? Para onde vai o salário?",
+  "description": "Simulador interativo de educação financeira e orçamento doméstico em 3 fases: planejamento familiar, simulação de 6 meses de decisões reais e painel analítico com planilha e diagnóstico.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
