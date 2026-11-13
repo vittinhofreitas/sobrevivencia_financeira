@@ -27,6 +27,7 @@ import {
   Car,
   Gamepad2,
   ChevronRight,
+  ChevronLeft,
   BookOpen,
   Shirt,
   Plane,
@@ -37,6 +38,9 @@ import {
   GraduationCap,
   HandCoins,
   Info,
+  HelpCircle,
+  X,
+  CheckCircle2,
 } from 'lucide-react';
 import {
   ResponsiveContainer,
@@ -66,6 +70,7 @@ import {
 // ============================================================================
 
 export type TelaJogo = 'selecao' | 'gameplay' | 'zeramento';
+export type AbaOrcamento = 'renda' | 'essenciais' | 'estilo_reserva';
 
 export interface ReceitasMensais {
   salarioMensal: number;
@@ -169,15 +174,50 @@ export interface RegistroFaseMensal {
 }
 
 const NOMES_FASES_MESES = [
-  'Mês 1 de 6 · Janeiro',
-  'Mês 2 de 6 · Fevereiro',
-  'Mês 3 de 6 · Março',
-  'Mês 4 de 6 · Abril',
-  'Mês 5 de 6 · Maio',
-  'Mês 6 de 6 · Junho',
+  'Mês 1/6 · Janeiro',
+  'Mês 2/6 · Fevereiro',
+  'Mês 3/6 · Março',
+  'Mês 4/6 · Abril',
+  'Mês 5/6 · Maio',
+  'Mês 6/6 · Junho',
 ];
 
 const NOMES_CURTOS_MESES = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho'];
+
+const PASSOS_TUTORIAL = [
+  {
+    numero: 'Passo 1 de 4',
+    titulo: 'Escolha quem mora na casa',
+    resumo:
+      'Na coluna da esquerda, selecione se quer jogar com a Família (3 pessoas), no modo Jovem Solo (Mulher ou Homem) ou com a Família Grande (5 pessoas).',
+    destaque:
+      'O benefício Bolsa Família aparece apenas nos modos familiares, enquanto o incentivo estudantil Pé-de-Meia aparece exclusivamente no modo Jovem Solo.',
+  },
+  {
+    numero: 'Passo 2 de 4',
+    titulo: 'Monte o orçamento nas 3 abas rápidas',
+    resumo:
+      'Na direita, você ajusta a Renda, as Contas Fixas e o Lazer/Reserva sem precisar rolar a página. Os personagens na sala reagem na hora se o orçamento ficar apertado.',
+    destaque:
+      'Tente deixar pelo menos uma folga no mês e guardar um valor na Reserva de Emergência para não depender do cartão quando surgir um imprevisto.',
+  },
+  {
+    numero: 'Passo 3 de 4',
+    titulo: 'Enfrente 2 situações por mês (Janeiro a Junho)',
+    resumo:
+      'Durante o jogo, a sala fica à esquerda e as 3 opções de decisão aparecem à direita na mesma tela. Você pode clicar na opção desejada ou usar as teclas 1, 2 e 3.',
+    destaque:
+      'Se você tiver dinheiro guardado na Reserva, ela cobre automaticamente consertos urgentes de casa, saúde e transporte.',
+  },
+  {
+    numero: 'Passo 4 de 4',
+    titulo: 'Cuidado com as parcelas e com o cheque especial',
+    resumo:
+      'Parcelar compras no cartão joga a conta para os meses seguintes. Se o saldo da conta ficar negativo na virada do mês, o banco cobra 8% de juros.',
+    destaque:
+      'Ao final de junho, você vê o gráfico completo de para onde foi o dinheiro e pode baixar a planilha CSV ou imprimir o relatório.',
+  },
+];
 
 // ============================================================================
 // BANCO DE EVENTOS (TEXTOS NATURAIS E DIRETOS)
@@ -1565,10 +1605,13 @@ const CORES_GRAFICO_CATEGORIAS = [
 // ============================================================================
 
 export default function App() {
-  // 1. Estados de Modo de Jogo e Gênero
+  // 1. Estados de Modo de Jogo, Gênero, Aba Compacta e Tutorial
   const [telaJogo, setTelaJogo] = useState<TelaJogo>('selecao');
   const [modoJogo, setModoJogo] = useState<ModoJogo>('familia');
   const [generoPersonagem, setGeneroPersonagem] = useState<GeneroPersonagem>('mulher');
+  const [abaOrcamento, setAbaOrcamento] = useState<AbaOrcamento>('renda');
+  const [tutorialAberto, setTutorialAberto] = useState<boolean>(false);
+  const [passoTutorial, setPassoTutorial] = useState<number>(0);
 
   // 2. Estados de Receitas e Despesas (em português)
   const [salarioMensal, setSalarioMensal] = useState<number>(2800);
@@ -1631,7 +1674,7 @@ export default function App() {
   }, []);
 
   // ============================================================================
-  // TRILHA SONORA DE FUNDO SUAVE (WEB AUDIO API LO-FI / CHIPTUNE ACÚSTICO)
+  // TRILHA SONORA DE FUNDO SUAVE (WEB AUDIO API)
   // ============================================================================
 
   const tocarPassoMusica = useCallback(() => {
@@ -1640,24 +1683,11 @@ export default function App() {
       const ctx = obterAudioContext();
       const t = ctx.currentTime;
 
-      // Sequência melódica calma e agradável (Dó maior / Lá menor / Fá / Sol)
       const sequenciaMelodia = [
-        523.25, // C5
-        659.25, // E5
-        783.99, // G5
-        659.25, // E5
-        440.0,  // A4
-        523.25, // C5
-        659.25, // E5
-        523.25, // C5
-        349.23, // F4
-        440.0,  // A4
-        523.25, // C5
-        440.0,  // A4
-        392.0,  // G4
-        493.88, // B4
-        587.33, // D5
-        493.88, // B4
+        523.25, 659.25, 783.99, 659.25,
+        440.0,  523.25, 659.25, 523.25,
+        349.23, 440.0,  523.25, 440.0,
+        392.0,  493.88, 587.33, 493.88,
       ];
 
       const sequenciaBaixo = [
@@ -1673,14 +1703,13 @@ export default function App() {
       const notaMelodia = sequenciaMelodia[idx];
       const notaBaixo = sequenciaBaixo[idx];
 
-      // Melodia suave em onda triangle
       if (notaMelodia > 0) {
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
         osc.type = 'triangle';
         osc.frequency.setValueAtTime(notaMelodia, t);
         gain.gain.setValueAtTime(0.001, t);
-        gain.gain.linearRampToValueAtTime(0.028, t + 0.04);
+        gain.gain.linearRampToValueAtTime(0.026, t + 0.04);
         gain.gain.exponentialRampToValueAtTime(0.0008, t + 0.36);
         osc.connect(gain);
         gain.connect(ctx.destination);
@@ -1688,14 +1717,13 @@ export default function App() {
         osc.stop(t + 0.38);
       }
 
-      // Baixo macio em onda sine
       if (notaBaixo > 0) {
         const oscBaixo = ctx.createOscillator();
         const gainBaixo = ctx.createGain();
         oscBaixo.type = 'sine';
         oscBaixo.frequency.setValueAtTime(notaBaixo, t);
         gainBaixo.gain.setValueAtTime(0.001, t);
-        gainBaixo.gain.linearRampToValueAtTime(0.032, t + 0.05);
+        gainBaixo.gain.linearRampToValueAtTime(0.03, t + 0.05);
         gainBaixo.gain.exponentialRampToValueAtTime(0.0008, t + 0.42);
         oscBaixo.connect(gainBaixo);
         gainBaixo.connect(ctx.destination);
@@ -1723,7 +1751,6 @@ export default function App() {
       }
     };
 
-    // Se já houve interação e o contexto existe, inicia imediatamente
     if (audioCtxRef.current && audioCtxRef.current.state === 'running') {
       iniciarSeInteragir();
     }
@@ -1752,7 +1779,7 @@ export default function App() {
   };
 
   // ============================================================================
-  // EFEITOS SONOROS DE INTERAÇÃO (WEB AUDIO API)
+  // EFEITOS SONOROS DE INTERAÇÃO
   // ============================================================================
 
   const tocarSomArcade = useCallback(
@@ -2620,7 +2647,7 @@ export default function App() {
   };
 
   // ============================================================================
-  // RENDERIZAÇÃO PRINCIPAL
+  // RENDERIZAÇÃO PRINCIPAL (LAYOUT COMPACTO EM TELA ÚNICA + TUTORIAL)
   // ============================================================================
 
   return (
@@ -2629,28 +2656,23 @@ export default function App() {
         tremeTela ? 'animate-screen-shake' : ''
       }`}
     >
-      {/* BARRA SUPERIOR COM CONTROLE DE MÚSICA E EFEITOS SONOROS */}
-      <header className="sticky top-0 z-40 bg-slate-900 text-white border-b-2 border-slate-950 px-4 sm:px-8 py-3 no-print">
-        <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
+      {/* BARRA SUPERIOR COMPACTA */}
+      <header className="sticky top-0 z-40 bg-slate-900 text-white border-b-2 border-slate-950 px-4 sm:px-6 py-2.5 no-print">
+        <div className="max-w-7xl mx-auto flex items-center justify-between gap-3">
           <button
             type="button"
             onClick={reiniciarFliperama}
-            className="flex items-center gap-2.5 text-left cursor-pointer group shrink-0"
+            className="flex items-center gap-2 text-left cursor-pointer group shrink-0"
           >
             <span className="p-1.5 rounded-lg bg-amber-300 text-slate-950 border border-slate-950">
-              <Gamepad2 className="w-5 h-5" />
+              <Gamepad2 className="w-4 h-4" />
             </span>
-            <div>
-              <span className="font-display font-bold text-base sm:text-lg tracking-tight text-white group-hover:text-amber-300 transition-colors block leading-tight">
-                Para Onde Vai o Salário?
-              </span>
-              <span className="text-[11px] text-slate-400 hidden sm:block">
-                Simulador de orçamento no dia a dia
-              </span>
-            </div>
+            <span className="font-display font-bold text-sm sm:text-base tracking-tight text-white group-hover:text-amber-300 transition-colors">
+              Para Onde Vai o Salário?
+            </span>
           </button>
 
-          <nav className="hidden lg:flex items-center gap-4 text-xs font-medium">
+          <nav className="hidden lg:flex items-center gap-3 text-xs font-medium">
             <span
               className={
                 telaJogo === 'selecao'
@@ -2682,27 +2704,40 @@ export default function App() {
             </span>
           </nav>
 
-          {/* Controles de Música de Fundo e Efeitos Sonoros */}
+          {/* Botão Tutorial + Controles de Música e Efeitos */}
           <div className="flex items-center gap-2 shrink-0">
+            <button
+              type="button"
+              onClick={() => {
+                tocarSomArcade('clique');
+                setPassoTutorial(0);
+                setTutorialAberto(true);
+              }}
+              className="px-2.5 py-1.5 rounded-lg bg-amber-300 hover:bg-amber-200 text-slate-950 font-display font-bold text-xs flex items-center gap-1.5 cursor-pointer transition-colors"
+            >
+              <HelpCircle className="w-3.5 h-3.5" />
+              <span>Como jogar</span>
+            </button>
+
             <button
               type="button"
               onClick={alternarMusicaFundo}
               title={musicaAtiva ? 'Silenciar música de fundo' : 'Ativar música de fundo'}
-              className={`px-3 py-1.5 rounded-lg border text-xs font-medium flex items-center gap-1.5 cursor-pointer transition-colors ${
+              className={`px-2.5 py-1.5 rounded-lg border text-xs font-medium flex items-center gap-1.5 cursor-pointer transition-colors ${
                 musicaAtiva
                   ? 'bg-slate-800 hover:bg-slate-700 border-emerald-500/60 text-emerald-300'
                   : 'bg-slate-800/70 hover:bg-slate-800 border-slate-700 text-slate-400'
               }`}
             >
               <Music className="w-3.5 h-3.5" />
-              <span>{musicaAtiva ? 'Música: ON' : 'Música: Muda'}</span>
+              <span className="hidden sm:inline">{musicaAtiva ? 'Música: ON' : 'Música: Muda'}</span>
             </button>
 
             <button
               type="button"
               onClick={() => setSomAtivo((s) => !s)}
               title={somAtivo ? 'Silenciar efeitos sonoros' : 'Ativar efeitos sonoros'}
-              className={`px-3 py-1.5 rounded-lg border text-xs font-medium flex items-center gap-1.5 cursor-pointer transition-colors ${
+              className={`px-2.5 py-1.5 rounded-lg border text-xs font-medium flex items-center gap-1.5 cursor-pointer transition-colors ${
                 somAtivo
                   ? 'bg-slate-800 hover:bg-slate-700 border-amber-400/60 text-amber-200'
                   : 'bg-slate-800/70 hover:bg-slate-800 border-slate-700 text-slate-400'
@@ -2711,12 +2746,12 @@ export default function App() {
               {somAtivo ? (
                 <>
                   <Volume2 className="w-3.5 h-3.5" />
-                  <span className="hidden sm:inline">Efeitos: ON</span>
+                  <span className="hidden md:inline">Efeitos: ON</span>
                 </>
               ) : (
                 <>
                   <VolumeX className="w-3.5 h-3.5" />
-                  <span className="hidden sm:inline">Efeitos: OFF</span>
+                  <span className="hidden md:inline">Efeitos: OFF</span>
                 </>
               )}
             </button>
@@ -2725,63 +2760,144 @@ export default function App() {
       </header>
 
       {/* =====================================================================
-          TELA 1: SELEÇÃO DE MODO, GÊNERO E ORÇAMENTO
+          MODAL DE TUTORIAL PASSO A PASSO ("COMO JOGAR")
          ===================================================================== */}
-      {telaJogo === 'selecao' && (
-        <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-8 py-6 space-y-6">
-          {/* Topo de apresentação limpo */}
-          <div className="arcade-card rounded-2xl bg-slate-900 text-white p-5 sm:p-6 flex flex-col lg:flex-row items-center justify-between gap-4">
-            <div className="space-y-1 text-center lg:text-left">
-              <h1 className="text-xl sm:text-3xl font-bold font-display tracking-tight text-white">
-                Monte o orçamento antes do mês começar
-              </h1>
-              <p className="text-xs sm:text-sm text-slate-300 max-w-2xl">
-                Escolha com quem você quer jogar, ajuste a renda e distribua as contas. Depois,
-                enfrente os imprevistos de janeiro a junho sem deixar o saldo cair no cheque especial.
-              </p>
+      {tutorialAberto && (
+        <div className="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="arcade-card rounded-2xl bg-white max-w-lg w-full p-5 sm:p-6 space-y-4">
+            <div className="flex items-center justify-between border-b border-slate-200 pb-3">
+              <div className="flex items-center gap-2">
+                <span className="px-2.5 py-0.5 rounded bg-amber-200 border border-slate-900 font-mono text-xs font-bold text-slate-900">
+                  {PASSOS_TUTORIAL[passoTutorial].numero}
+                </span>
+                <span className="font-display font-bold text-base text-slate-900">
+                  Como funciona o simulador
+                </span>
+              </div>
+              <button
+                type="button"
+                onClick={() => setTutorialAberto(false)}
+                className="p-1 rounded-lg hover:bg-slate-100 text-slate-500 cursor-pointer"
+                aria-label="Fechar tutorial"
+              >
+                <X className="w-5 h-5" />
+              </button>
             </div>
 
-            <button
-              type="button"
-              onClick={apertarStartJogo}
-              className="arcade-btn px-6 py-3.5 rounded-xl bg-emerald-400 hover:bg-emerald-300 text-slate-950 font-display font-bold text-base sm:text-lg flex items-center gap-2.5 cursor-pointer shrink-0"
-            >
-              <Play className="w-5 h-5 fill-slate-950" />
-              <span>Começar os 6 meses</span>
-            </button>
+            <div className="space-y-3 py-1">
+              <h3 className="font-display font-bold text-lg sm:text-xl text-slate-900">
+                {PASSOS_TUTORIAL[passoTutorial].titulo}
+              </h3>
+              <p className="text-sm text-slate-700 leading-relaxed">
+                {PASSOS_TUTORIAL[passoTutorial].resumo}
+              </p>
+              <div className="p-3.5 rounded-xl bg-emerald-50 border border-emerald-300 text-xs sm:text-sm text-emerald-950 leading-relaxed">
+                <strong>Dica prática:</strong> {PASSOS_TUTORIAL[passoTutorial].destaque}
+              </div>
+            </div>
+
+            {/* Indicadores de passo */}
+            <div className="flex items-center justify-between pt-2 border-t border-slate-200">
+              <div className="flex gap-1.5">
+                {PASSOS_TUTORIAL.map((_, idx) => (
+                  <button
+                    key={idx}
+                    type="button"
+                    onClick={() => setPassoTutorial(idx)}
+                    className={`h-2 rounded-full transition-all cursor-pointer ${
+                      idx === passoTutorial ? 'w-6 bg-slate-900' : 'w-2 bg-slate-300'
+                    }`}
+                    aria-label={`Ir para passo ${idx + 1}`}
+                  />
+                ))}
+              </div>
+
+              <div className="flex items-center gap-2">
+                {passoTutorial > 0 && (
+                  <button
+                    type="button"
+                    onClick={() => setPassoTutorial((p) => p - 1)}
+                    className="px-3 py-2 rounded-lg border border-slate-300 hover:bg-slate-100 text-xs font-bold text-slate-700 flex items-center gap-1 cursor-pointer"
+                  >
+                    <ChevronLeft className="w-4 h-4" />
+                    <span>Anterior</span>
+                  </button>
+                )}
+
+                {passoTutorial < PASSOS_TUTORIAL.length - 1 ? (
+                  <button
+                    type="button"
+                    onClick={() => setPassoTutorial((p) => p + 1)}
+                    className="arcade-btn px-4 py-2 rounded-lg bg-slate-900 text-amber-300 text-xs font-bold flex items-center gap-1 cursor-pointer"
+                  >
+                    <span>Próximo</span>
+                    <ChevronRight className="w-4 h-4" />
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => setTutorialAberto(false)}
+                    className="arcade-btn px-4 py-2 rounded-lg bg-emerald-400 text-slate-950 text-xs font-bold flex items-center gap-1.5 cursor-pointer"
+                  >
+                    <CheckCircle2 className="w-4 h-4" />
+                    <span>Entendi, vamos jogar</span>
+                  </button>
+                )}
+              </div>
+            </div>
           </div>
+        </div>
+      )}
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-            {/* Coluna Esquerda (5 cols): Seleção de Modo + Palco da Sala */}
-            <div className="lg:col-span-5 space-y-5 lg:sticky lg:top-20">
-              <div className="arcade-card rounded-2xl bg-white p-5 space-y-4">
-                <h2 className="font-display font-bold text-base sm:text-lg text-slate-900">
-                  Quem vai morar na casa?
-                </h2>
+      {/* =====================================================================
+          TELA 1: SELEÇÃO DE MODO, GÊNERO E ORÇAMENTO (CABE EM 1 TELA!)
+         ===================================================================== */}
+      {telaJogo === 'selecao' && (
+        <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-4 flex flex-col justify-center">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
+            {/* COLUNA ESQUERDA (5 cols): Quem mora na casa + Palco da Sala */}
+            <div className="lg:col-span-5 flex flex-col justify-between gap-3.5">
+              <div className="arcade-card rounded-2xl bg-white p-4 space-y-3">
+                <div className="flex items-center justify-between">
+                  <h2 className="font-display font-bold text-sm sm:text-base text-slate-900">
+                    1. Quem vai morar na casa?
+                  </h2>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setPassoTutorial(0);
+                      setTutorialAberto(true);
+                    }}
+                    className="text-xs font-semibold text-indigo-700 hover:underline flex items-center gap-1 cursor-pointer"
+                  >
+                    <HelpCircle className="w-3.5 h-3.5" />
+                    <span>Dúvidas? Veja o tutorial</span>
+                  </button>
+                </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                <div className="grid grid-cols-3 gap-2">
                   {/* Modo Família */}
                   <button
                     type="button"
                     onClick={() => aplicarPresetPerfil('familia', generoPersonagem)}
-                    className={`p-3 rounded-xl border-2 border-slate-900 text-left transition-all cursor-pointer flex flex-col justify-between ${
+                    className={`p-2.5 rounded-xl border-2 border-slate-900 text-left transition-all cursor-pointer flex flex-col justify-between ${
                       modoJogo === 'familia'
-                        ? 'bg-amber-200 shadow-[3px_3px_0px_0px_#0f172a]'
+                        ? 'bg-amber-200 shadow-[2px_2px_0px_0px_#0f172a]'
                         : 'bg-slate-50 hover:bg-amber-50'
                     }`}
                   >
                     <div className="flex items-center justify-between">
                       <Users className="w-4 h-4 text-slate-800" />
-                      <span className="px-1.5 py-0.5 rounded bg-slate-900 text-amber-200 font-mono text-[10px] font-semibold">
+                      <span className="px-1.5 py-0.5 rounded bg-slate-900 text-amber-200 font-mono text-[9px] font-semibold">
                         3 pessoas
                       </span>
                     </div>
-                    <div className="mt-2">
-                      <div className="font-display font-bold text-sm text-slate-900">
+                    <div className="mt-1.5">
+                      <div className="font-display font-bold text-xs sm:text-sm text-slate-900">
                         Família
                       </div>
-                      <div className="text-[11px] text-slate-600 mt-0.5">
-                        Casal, filho e pet (com Bolsa Família)
+                      <div className="text-[10px] text-slate-600 leading-tight">
+                        Com Bolsa Família
                       </div>
                     </div>
                   </button>
@@ -2790,24 +2906,24 @@ export default function App() {
                   <button
                     type="button"
                     onClick={() => aplicarPresetPerfil('individual', generoPersonagem)}
-                    className={`p-3 rounded-xl border-2 border-slate-900 text-left transition-all cursor-pointer flex flex-col justify-between ${
+                    className={`p-2.5 rounded-xl border-2 border-slate-900 text-left transition-all cursor-pointer flex flex-col justify-between ${
                       modoJogo === 'individual'
-                        ? 'bg-pink-200 shadow-[3px_3px_0px_0px_#0f172a]'
+                        ? 'bg-pink-200 shadow-[2px_2px_0px_0px_#0f172a]'
                         : 'bg-slate-50 hover:bg-pink-50'
                     }`}
                   >
                     <div className="flex items-center justify-between">
                       <User className="w-4 h-4 text-slate-800" />
-                      <span className="px-1.5 py-0.5 rounded bg-slate-900 text-pink-200 font-mono text-[10px] font-semibold">
+                      <span className="px-1.5 py-0.5 rounded bg-slate-900 text-pink-200 font-mono text-[9px] font-semibold">
                         1 pessoa
                       </span>
                     </div>
-                    <div className="mt-2">
-                      <div className="font-display font-bold text-sm text-slate-900">
+                    <div className="mt-1.5">
+                      <div className="font-display font-bold text-xs sm:text-sm text-slate-900">
                         Jovem Solo
                       </div>
-                      <div className="text-[11px] text-slate-600 mt-0.5">
-                        Mulher ou Homem (com Pé-de-Meia)
+                      <div className="text-[10px] text-slate-600 leading-tight">
+                        Com Pé-de-Meia
                       </div>
                     </div>
                   </button>
@@ -2816,24 +2932,24 @@ export default function App() {
                   <button
                     type="button"
                     onClick={() => aplicarPresetPerfil('familia_grande', generoPersonagem)}
-                    className={`p-3 rounded-xl border-2 border-slate-900 text-left transition-all cursor-pointer flex flex-col justify-between ${
+                    className={`p-2.5 rounded-xl border-2 border-slate-900 text-left transition-all cursor-pointer flex flex-col justify-between ${
                       modoJogo === 'familia_grande'
-                        ? 'bg-emerald-200 shadow-[3px_3px_0px_0px_#0f172a]'
+                        ? 'bg-emerald-200 shadow-[2px_2px_0px_0px_#0f172a]'
                         : 'bg-slate-50 hover:bg-emerald-50'
                     }`}
                   >
                     <div className="flex items-center justify-between">
                       <Users className="w-4 h-4 text-slate-800" />
-                      <span className="px-1.5 py-0.5 rounded bg-slate-900 text-emerald-200 font-mono text-[10px] font-semibold">
+                      <span className="px-1.5 py-0.5 rounded bg-slate-900 text-emerald-200 font-mono text-[9px] font-semibold">
                         5 pessoas
                       </span>
                     </div>
-                    <div className="mt-2">
-                      <div className="font-display font-bold text-sm text-slate-900">
+                    <div className="mt-1.5">
+                      <div className="font-display font-bold text-xs sm:text-sm text-slate-900">
                         Família Grande
                       </div>
-                      <div className="text-[11px] text-slate-600 mt-0.5">
-                        Casal, 2 filhos, vovó e pet (Bolsa Família)
+                      <div className="text-[10px] text-slate-600 leading-tight">
+                        Com Bolsa Família
                       </div>
                     </div>
                   </button>
@@ -2841,49 +2957,48 @@ export default function App() {
 
                 {/* Seletor de Gênero no Modo Jovem Solo */}
                 {modoJogo === 'individual' && (
-                  <div className="p-3.5 rounded-xl bg-slate-100 border-2 border-slate-900 space-y-2">
-                    <div className="text-xs font-semibold text-slate-700">
-                      Escolha seu personagem (muda os custos sugeridos e os dilemas do jogo):
-                    </div>
-                    <div className="grid grid-cols-2 gap-2.5">
+                  <div className="p-2.5 rounded-xl bg-slate-100 border border-slate-300 flex items-center justify-between gap-2">
+                    <span className="text-xs font-semibold text-slate-700">
+                      Personagem solo:
+                    </span>
+                    <div className="flex gap-2">
                       <button
                         type="button"
                         onClick={() => aplicarPresetPerfil('individual', 'mulher')}
-                        className={`py-2 px-3 rounded-lg border-2 font-display font-bold text-sm flex items-center justify-center gap-2 cursor-pointer transition-all ${
+                        className={`py-1 px-3 rounded-lg border font-display font-bold text-xs cursor-pointer transition-all ${
                           generoPersonagem === 'mulher'
-                            ? 'bg-pink-600 text-white border-slate-900 shadow-[2px_2px_0px_0px_#0f172a]'
+                            ? 'bg-pink-600 text-white border-slate-900'
                             : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-50'
                         }`}
                       >
-                        <span>Mulher</span>
+                        Mulher
                       </button>
 
                       <button
                         type="button"
                         onClick={() => aplicarPresetPerfil('individual', 'homem')}
-                        className={`py-2 px-3 rounded-lg border-2 font-display font-bold text-sm flex items-center justify-center gap-2 cursor-pointer transition-all ${
+                        className={`py-1 px-3 rounded-lg border font-display font-bold text-xs cursor-pointer transition-all ${
                           generoPersonagem === 'homem'
-                            ? 'bg-sky-600 text-white border-slate-900 shadow-[2px_2px_0px_0px_#0f172a]'
+                            ? 'bg-sky-600 text-white border-slate-900'
                             : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-50'
                         }`}
                       >
-                        <span>Homem</span>
+                        Homem
                       </button>
                     </div>
                   </div>
                 )}
 
-                {/* Nota contextual sobre o perfil */}
-                <div className="p-3 rounded-xl bg-amber-50/80 border border-amber-300 flex items-start gap-2.5">
+                <div className="p-2.5 rounded-xl bg-amber-50/90 border border-amber-200 flex items-start gap-2">
                   <Info className="w-4 h-4 text-amber-700 shrink-0 mt-0.5" />
-                  <div className="text-xs text-slate-700 space-y-0.5">
-                    <div className="font-bold text-slate-900">{presetAtivo.titulo}</div>
-                    <p className="leading-relaxed">{presetAtivo.dicaEducativa}</p>
-                  </div>
+                  <p className="text-[11px] text-slate-700 leading-snug">
+                    <strong className="text-slate-900">{presetAtivo.titulo}:</strong>{' '}
+                    {presetAtivo.dicaEducativa}
+                  </p>
                 </div>
               </div>
 
-              {/* Palco 2D Interativo */}
+              {/* Palco 2D Interativo Compacto */}
               <PalcoSalaFamilia
                 modoJogo={modoJogo}
                 generoPersonagem={generoPersonagem}
@@ -2899,396 +3014,407 @@ export default function App() {
               />
             </div>
 
-            {/* Coluna Direita (7 cols): Renda, Contas Fixas, Estilo de Vida e Reserva */}
-            <div className="lg:col-span-7 space-y-5">
-              {/* RENDA DO MÊS */}
-              <section className="arcade-card rounded-2xl bg-white p-5 space-y-4">
-                <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 pb-3">
-                  <div>
-                    <h2 className="font-display font-bold text-base sm:text-lg text-slate-900">
-                      Renda mensal
-                    </h2>
-                    <p className="text-xs text-slate-500">
-                      Valor que entra na conta no início de cada mês
-                    </p>
+            {/* COLUNA DIREITA (7 cols): Orçamento organizado em 3 Abas Rápidas + Barra de Início */}
+            <div className="lg:col-span-7 flex flex-col justify-between gap-3.5">
+              <div className="arcade-card rounded-2xl bg-white p-4 sm:p-5 flex-1 flex flex-col justify-between space-y-4">
+                {/* Cabeçalho + Seletor de Abas para caber tudo sem rolar */}
+                <div className="space-y-3">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <div>
+                      <h2 className="font-display font-bold text-base sm:text-lg text-slate-900">
+                        2. Distribua o orçamento do mês
+                      </h2>
+                      <p className="text-xs text-slate-500">
+                        Navegue pelas 3 abas abaixo para revisar entradas, contas fixas e lazer
+                      </p>
+                    </div>
+
+                    <div className="flex items-center gap-2 text-xs font-mono">
+                      <span className="px-2.5 py-1 rounded-lg bg-emerald-100 border border-emerald-600 text-emerald-950 font-bold">
+                        Renda: {formatarMoeda(receitasMensaisTotais)}
+                      </span>
+                      <span className="px-2.5 py-1 rounded-lg bg-slate-100 border border-slate-400 text-slate-900 font-bold">
+                        Gastos: {formatarMoeda(totalGastosMensaisPlanejados)}
+                      </span>
+                    </div>
                   </div>
-                  <div className="px-3 py-1 rounded-lg bg-emerald-100 border border-emerald-700 text-emerald-950 font-mono text-sm font-bold tabular-nums">
-                    Total: {formatarMoeda(receitasMensaisTotais)}/mês
+
+                  {/* 3 Abas de Navegação Rápida */}
+                  <div className="grid grid-cols-3 gap-2 p-1 rounded-xl bg-slate-100 border border-slate-300">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        tocarSomArcade('clique');
+                        setAbaOrcamento('renda');
+                      }}
+                      className={`py-2 px-2 rounded-lg font-display font-bold text-xs sm:text-sm cursor-pointer transition-all ${
+                        abaOrcamento === 'renda'
+                          ? 'bg-slate-900 text-amber-300 shadow-xs'
+                          : 'text-slate-600 hover:text-slate-900'
+                      }`}
+                    >
+                      1. Renda ({formatarMoeda(receitasMensaisTotais)})
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        tocarSomArcade('clique');
+                        setAbaOrcamento('essenciais');
+                      }}
+                      className={`py-2 px-2 rounded-lg font-display font-bold text-xs sm:text-sm cursor-pointer transition-all ${
+                        abaOrcamento === 'essenciais'
+                          ? 'bg-slate-900 text-amber-300 shadow-xs'
+                          : 'text-slate-600 hover:text-slate-900'
+                      }`}
+                    >
+                      2. Contas Fixas ({formatarMoeda(totalDespesasEssenciais)})
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        tocarSomArcade('clique');
+                        setAbaOrcamento('estilo_reserva');
+                      }}
+                      className={`py-2 px-2 rounded-lg font-display font-bold text-xs sm:text-sm cursor-pointer transition-all ${
+                        abaOrcamento === 'estilo_reserva'
+                          ? 'bg-slate-900 text-amber-300 shadow-xs'
+                          : 'text-slate-600 hover:bg-slate-900'
+                      }`}
+                    >
+                      3. Lazer e Reserva ({formatarMoeda(totalDespesasEstiloVida + metaReserva)})
+                    </button>
                   </div>
                 </div>
 
-                <div className="space-y-3">
-                  {/* Salário */}
-                  <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-300 space-y-2">
-                    <div className="flex items-center justify-between gap-2">
-                      <span className="flex items-center gap-2 font-display font-bold text-xs sm:text-sm text-slate-900">
-                        <Coins className="w-4 h-4 text-emerald-700" />
-                        <span>Salário ou estágio</span>
-                      </span>
-                      <div className="flex items-center gap-1.5">
-                        <span className="text-xs font-mono font-semibold text-slate-500">R$</span>
+                {/* CONTEÚDO DA ABA 1: RENDA */}
+                {abaOrcamento === 'renda' && (
+                  <div className="space-y-3 my-auto">
+                    <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-300 space-y-2">
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="flex items-center gap-2 font-display font-bold text-xs sm:text-sm text-slate-900">
+                          <Coins className="w-4 h-4 text-emerald-700" />
+                          <span>Salário do trabalho ou estágio</span>
+                        </span>
+                        <div className="flex items-center gap-1.5">
+                          <span className="text-xs font-mono font-semibold text-slate-500">R$</span>
+                          <input
+                            type="number"
+                            min={0}
+                            max={25000}
+                            step={50}
+                            value={salarioMensal}
+                            onChange={(e) =>
+                              setSalarioMensal(Math.max(0, Number(e.target.value) || 0))
+                            }
+                            aria-label="Salário Mensal"
+                            className="w-26 px-2.5 py-1 rounded-lg border border-slate-400 bg-white font-mono font-bold text-sm text-right tabular-nums"
+                          />
+                        </div>
+                      </div>
+                      <input
+                        type="range"
+                        min={600}
+                        max={10000}
+                        step={50}
+                        value={Math.min(10000, salarioMensal)}
+                        onChange={(e) => setSalarioMensal(Number(e.target.value))}
+                        aria-label="Controle Salário Mensal"
+                        className="w-full accent-emerald-600 cursor-pointer h-2 bg-slate-200 rounded-lg"
+                      />
+                    </div>
+
+                    {(modoJogo === 'familia' || modoJogo === 'familia_grande') && (
+                      <div className="p-3.5 rounded-xl bg-sky-50/70 border border-sky-200 space-y-2">
+                        <div className="flex items-center justify-between gap-2">
+                          <span className="flex items-center gap-2 font-display font-bold text-xs sm:text-sm text-slate-900">
+                            <HandCoins className="w-4 h-4 text-sky-700" />
+                            <span>Benefício Bolsa Família (somente no modo família)</span>
+                          </span>
+                          <div className="flex items-center gap-1.5">
+                            <span className="text-xs font-mono font-semibold text-slate-500">R$</span>
+                            <input
+                              type="number"
+                              min={0}
+                              max={1500}
+                              step={50}
+                              value={bolsaFamilia}
+                              onChange={(e) =>
+                                setBolsaFamilia(Math.max(0, Number(e.target.value) || 0))
+                              }
+                              aria-label="Bolsa Família"
+                              className="w-24 px-2.5 py-1 rounded-lg border border-slate-400 bg-white font-mono font-bold text-sm text-right tabular-nums"
+                            />
+                          </div>
+                        </div>
                         <input
-                          type="number"
+                          type="range"
                           min={0}
-                          max={25000}
+                          max={1200}
                           step={50}
-                          value={salarioMensal}
-                          onChange={(e) =>
-                            setSalarioMensal(Math.max(0, Number(e.target.value) || 0))
-                          }
-                          aria-label="Salário Mensal"
-                          className="w-28 px-2.5 py-1 rounded-lg border border-slate-400 bg-white font-mono font-bold text-sm text-right tabular-nums"
+                          value={Math.min(1200, bolsaFamilia)}
+                          onChange={(e) => setBolsaFamilia(Number(e.target.value))}
+                          aria-label="Controle Bolsa Família"
+                          className="w-full accent-sky-600 cursor-pointer h-2 bg-slate-200 rounded-lg"
                         />
+                        <p className="text-[11px] text-slate-600">
+                          Valor somado todo início de mês à renda da família.
+                        </p>
                       </div>
-                    </div>
-                    <input
-                      type="range"
-                      min={600}
-                      max={10000}
-                      step={50}
-                      value={Math.min(10000, salarioMensal)}
-                      onChange={(e) => setSalarioMensal(Number(e.target.value))}
-                      aria-label="Controle Salário Mensal"
-                      className="w-full accent-emerald-600 cursor-pointer h-2 bg-slate-200 rounded-lg"
-                    />
-                  </div>
+                    )}
 
-                  {/* Bolsa Família — exclusivo nos modos Família e Família Grande */}
-                  {(modoJogo === 'familia' || modoJogo === 'familia_grande') && (
-                    <div className="p-3.5 rounded-xl bg-sky-50/70 border border-sky-200 space-y-2">
-                      <div className="flex items-center justify-between gap-2">
-                        <span className="flex items-center gap-2 font-display font-bold text-xs sm:text-sm text-slate-900">
-                          <HandCoins className="w-4 h-4 text-sky-700" />
-                          <span>Bolsa Família</span>
-                        </span>
-                        <div className="flex items-center gap-1.5">
-                          <span className="text-xs font-mono font-semibold text-slate-500">R$</span>
-                          <input
-                            type="number"
-                            min={0}
-                            max={1500}
-                            step={50}
-                            value={bolsaFamilia}
-                            onChange={(e) =>
-                              setBolsaFamilia(Math.max(0, Number(e.target.value) || 0))
-                            }
-                            aria-label="Bolsa Família"
-                            className="w-24 px-2.5 py-1 rounded-lg border border-slate-400 bg-white font-mono font-bold text-sm text-right tabular-nums"
-                          />
-                        </div>
-                      </div>
-                      <input
-                        type="range"
-                        min={0}
-                        max={1200}
-                        step={50}
-                        value={Math.min(1200, bolsaFamilia)}
-                        onChange={(e) => setBolsaFamilia(Number(e.target.value))}
-                        aria-label="Controle Bolsa Família"
-                        className="w-full accent-sky-600 cursor-pointer h-2 bg-slate-200 rounded-lg"
-                      />
-                      <div className="text-[11px] text-slate-500">
-                        Complemento familiar somado à renda mensal da casa.
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Pé-de-Meia — exclusivo no modo Individual / Jovem Solo */}
-                  {modoJogo === 'individual' && (
-                    <div className="p-3.5 rounded-xl bg-purple-50/70 border border-purple-200 space-y-2">
-                      <div className="flex items-center justify-between gap-2">
-                        <span className="flex items-center gap-2 font-display font-bold text-xs sm:text-sm text-slate-900">
-                          <GraduationCap className="w-4 h-4 text-purple-700" />
-                          <span>Incentivo Pé-de-Meia</span>
-                        </span>
-                        <div className="flex items-center gap-1.5">
-                          <span className="text-xs font-mono font-semibold text-slate-500">R$</span>
-                          <input
-                            type="number"
-                            min={0}
-                            max={600}
-                            step={50}
-                            value={peDeMeia}
-                            onChange={(e) =>
-                              setPeDeMeia(Math.max(0, Number(e.target.value) || 0))
-                            }
-                            aria-label="Incentivo Pé-de-Meia"
-                            className="w-24 px-2.5 py-1 rounded-lg border border-slate-400 bg-white font-mono font-bold text-sm text-right tabular-nums"
-                          />
-                        </div>
-                      </div>
-                      <input
-                        type="range"
-                        min={0}
-                        max={400}
-                        step={50}
-                        value={Math.min(400, peDeMeia)}
-                        onChange={(e) => setPeDeMeia(Number(e.target.value))}
-                        aria-label="Controle Pé-de-Meia"
-                        className="w-full accent-purple-600 cursor-pointer h-2 bg-slate-200 rounded-lg"
-                      />
-                      <div className="text-[11px] text-slate-500">
-                        Incentivo estudantil mensal para quem mantém a frequência escolar em dia.
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </section>
-
-              {/* CONTAS ESSENCIAIS */}
-              <section className="arcade-card rounded-2xl bg-white p-5 space-y-4">
-                <div className="flex items-center justify-between border-b border-slate-200 pb-2.5">
-                  <div>
-                    <h2 className="font-display font-bold text-base sm:text-lg text-slate-900">
-                      Contas fixas e essenciais
-                    </h2>
-                    <p className="text-xs text-slate-500">
-                      Moradia, compras de mercado e deslocamento diário
-                    </p>
-                  </div>
-                  <span className="font-mono font-bold text-sm text-slate-800">
-                    {formatarMoeda(totalDespesasEssenciais)}/mês
-                  </span>
-                </div>
-
-                <div className="space-y-3">
-                  {[
-                    {
-                      label: 'Moradia (aluguel, luz, água e internet)',
-                      variavel: 'gastoMoradia',
-                      valor: gastoMoradia,
-                      setter: setGastoMoradia,
-                      max: Math.round(receitasMensaisTotais * 0.65),
-                      cor: 'bg-teal-500',
-                      icone: <Home className="w-4 h-4 text-teal-700" />,
-                    },
-                    {
-                      label: 'Alimentação (supermercado e feira)',
-                      variavel: 'gastoAlimentacao',
-                      valor: gastoAlimentacao,
-                      setter: setGastoAlimentacao,
-                      max: Math.round(receitasMensaisTotais * 0.6),
-                      cor: 'bg-sky-500',
-                      icone: <ShoppingCart className="w-4 h-4 text-sky-700" />,
-                    },
-                    {
-                      label: 'Transporte (ônibus, combustível ou aplicativo)',
-                      variavel: 'gastoTransporte',
-                      valor: gastoTransporte,
-                      setter: setGastoTransporte,
-                      max: Math.round(receitasMensaisTotais * 0.4),
-                      cor: 'bg-amber-500',
-                      icone: <Car className="w-4 h-4 text-amber-700" />,
-                    },
-                  ].map((item) => {
-                    const pct =
-                      item.max > 0 ? Math.min(100, (item.valor / item.max) * 100) : 0;
-                    return (
-                      <div
-                        key={item.variavel}
-                        className="p-3 rounded-xl bg-slate-50 border border-slate-300 space-y-2"
-                      >
+                    {modoJogo === 'individual' && (
+                      <div className="p-3.5 rounded-xl bg-purple-50/70 border border-purple-200 space-y-2">
                         <div className="flex items-center justify-between gap-2">
                           <span className="flex items-center gap-2 font-display font-bold text-xs sm:text-sm text-slate-900">
-                            {item.icone}
-                            <span>{item.label}</span>
+                            <GraduationCap className="w-4 h-4 text-purple-700" />
+                            <span>Incentivo Pé-de-Meia (somente no modo jovem solo)</span>
                           </span>
-                          <span className="font-mono font-bold text-sm text-slate-900 tabular-nums">
-                            {formatarMoeda(item.valor)}
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <button
-                            type="button"
-                            onClick={() => {
-                              tocarSomArcade('clique');
-                              item.setter(Math.max(0, item.valor - 30));
-                            }}
-                            className="w-7 h-7 rounded-lg bg-white hover:bg-slate-100 border border-slate-400 flex items-center justify-center cursor-pointer shrink-0"
-                            aria-label={`Diminuir ${item.label}`}
-                          >
-                            <Minus className="w-3.5 h-3.5" />
-                          </button>
-
-                          <div className="flex-1 h-3.5 bg-slate-200 rounded-full border border-slate-400 overflow-hidden relative">
-                            <div
-                              className={`h-full ${item.cor} transition-all duration-150`}
-                              style={{ width: `${pct}%` }}
-                            />
+                          <div className="flex items-center gap-1.5">
+                            <span className="text-xs font-mono font-semibold text-slate-500">R$</span>
                             <input
-                              type="range"
+                              type="number"
                               min={0}
-                              max={item.max}
-                              step={20}
-                              value={item.valor}
-                              onChange={(e) => {
-                                tocarSomArcade('clique');
-                                item.setter(Number(e.target.value));
-                              }}
-                              aria-label={item.label}
-                              className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
+                              max={600}
+                              step={50}
+                              value={peDeMeia}
+                              onChange={(e) =>
+                                setPeDeMeia(Math.max(0, Number(e.target.value) || 0))
+                              }
+                              aria-label="Incentivo Pé-de-Meia"
+                              className="w-24 px-2.5 py-1 rounded-lg border border-slate-400 bg-white font-mono font-bold text-sm text-right tabular-nums"
                             />
                           </div>
-
-                          <button
-                            type="button"
-                            onClick={() => {
-                              tocarSomArcade('clique');
-                              item.setter(item.valor + 30);
-                            }}
-                            className="w-7 h-7 rounded-lg bg-white hover:bg-slate-100 border border-slate-400 flex items-center justify-center cursor-pointer shrink-0"
-                            aria-label={`Aumentar ${item.label}`}
-                          >
-                            <Plus className="w-3.5 h-3.5" />
-                          </button>
                         </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </section>
-
-              {/* DIA A DIA E ESTILO DE VIDA */}
-              <section className="arcade-card rounded-2xl bg-white p-5 space-y-4">
-                <div className="flex items-center justify-between border-b border-slate-200 pb-2.5">
-                  <div>
-                    <h2 className="font-display font-bold text-base sm:text-lg text-slate-900">
-                      Dia a dia, cuidados e lazer
-                    </h2>
-                    <p className="text-xs text-slate-500">
-                      Vestuário, passeios, cuidados pessoais e outros gastos planejados
-                    </p>
-                  </div>
-                  <span className="font-mono font-bold text-sm text-slate-800">
-                    {formatarMoeda(totalDespesasEstiloVida)}/mês
-                  </span>
-                </div>
-
-                <div className="space-y-3">
-                  {[
-                    {
-                      label: 'Roupas e calçados',
-                      variavel: 'gastoRoupas',
-                      valor: gastoRoupas,
-                      setter: setGastoRoupas,
-                      max: Math.round(receitasMensaisTotais * 0.35),
-                      cor: 'bg-pink-500',
-                      icone: <Shirt className="w-4 h-4 text-pink-600" />,
-                    },
-                    {
-                      label: 'Passeios, viagens e lazer de fim de semana',
-                      variavel: 'gastoViagens',
-                      valor: gastoViagens,
-                      setter: setGastoViagens,
-                      max: Math.round(receitasMensaisTotais * 0.35),
-                      cor: 'bg-purple-500',
-                      icone: <Plane className="w-4 h-4 text-purple-600" />,
-                    },
-                    {
-                      label:
-                        modoJogo === 'individual' && generoPersonagem === 'mulher'
-                          ? 'Cuidados pessoais (higiene, farmácia e salão)'
-                          : modoJogo === 'individual' && generoPersonagem === 'homem'
-                          ? 'Cuidados pessoais (barbearia, higiene e treino)'
-                          : 'Cuidados pessoais (higiene, farmácia e corte de cabelo)',
-                      variavel: 'gastoCuidadosPessoais',
-                      valor: gastoCuidadosPessoais,
-                      setter: setGastoCuidadosPessoais,
-                      max: Math.round(receitasMensaisTotais * 0.35),
-                      cor: 'bg-rose-500',
-                      icone: <Scissors className="w-4 h-4 text-rose-600" />,
-                    },
-                  ].map((item) => {
-                    const pct =
-                      item.max > 0 ? Math.min(100, (item.valor / item.max) * 100) : 0;
-                    return (
-                      <div
-                        key={item.variavel}
-                        className="p-3 rounded-xl bg-slate-50 border border-slate-300 space-y-2"
-                      >
-                        <div className="flex items-center justify-between gap-2">
-                          <span className="flex items-center gap-2 font-display font-bold text-xs sm:text-sm text-slate-900">
-                            {item.icone}
-                            <span>{item.label}</span>
-                          </span>
-                          <span className="font-mono font-bold text-sm text-slate-900 tabular-nums">
-                            {formatarMoeda(item.valor)}
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <button
-                            type="button"
-                            onClick={() => {
-                              tocarSomArcade('clique');
-                              item.setter(Math.max(0, item.valor - 20));
-                            }}
-                            className="w-7 h-7 rounded-lg bg-white hover:bg-slate-100 border border-slate-400 flex items-center justify-center cursor-pointer shrink-0"
-                            aria-label={`Diminuir ${item.label}`}
-                          >
-                            <Minus className="w-3.5 h-3.5" />
-                          </button>
-
-                          <div className="flex-1 h-3.5 bg-slate-200 rounded-full border border-slate-400 overflow-hidden relative">
-                            <div
-                              className={`h-full ${item.cor} transition-all duration-150`}
-                              style={{ width: `${pct}%` }}
-                            />
-                            <input
-                              type="range"
-                              min={0}
-                              max={item.max}
-                              step={15}
-                              value={item.valor}
-                              onChange={(e) => {
-                                tocarSomArcade('clique');
-                                item.setter(Number(e.target.value));
-                              }}
-                              aria-label={item.label}
-                              className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
-                            />
-                          </div>
-
-                          <button
-                            type="button"
-                            onClick={() => {
-                              tocarSomArcade('clique');
-                              item.setter(item.valor + 20);
-                            }}
-                            className="w-7 h-7 rounded-lg bg-white hover:bg-slate-100 border border-slate-400 flex items-center justify-center cursor-pointer shrink-0"
-                            aria-label={`Aumentar ${item.label}`}
-                          >
-                            <Plus className="w-3.5 h-3.5" />
-                          </button>
-                        </div>
-                      </div>
-                    );
-                  })}
-
-                  {/* Campo Outros Gastos Personalizável */}
-                  <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-300 space-y-2.5">
-                    <div className="flex items-center justify-between gap-2">
-                      <span className="flex items-center gap-2 font-display font-bold text-xs sm:text-sm text-slate-900">
-                        <FilePlus2 className="w-4 h-4 text-indigo-700" />
-                        <span>Outro gasto mensal (personalizável)</span>
-                      </span>
-                      <span className="font-mono font-bold text-sm text-slate-900 tabular-nums">
-                        {formatarMoeda(outrosGastos)}
-                      </span>
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-12 gap-2.5">
-                      <div className="sm:col-span-8">
                         <input
-                          type="text"
-                          placeholder="Ex: Ração do pet, curso, internet do celular..."
-                          value={nomeOutrosGastos}
-                          onChange={(e) => setNomeOutrosGastos(e.target.value)}
-                          aria-label="Nome do gasto personalizado"
-                          className="w-full px-3 py-1.5 rounded-lg border border-slate-400 bg-white text-xs sm:text-sm"
+                          type="range"
+                          min={0}
+                          max={400}
+                          step={50}
+                          value={Math.min(400, peDeMeia)}
+                          onChange={(e) => setPeDeMeia(Number(e.target.value))}
+                          aria-label="Controle Pé-de-Meia"
+                          className="w-full accent-purple-600 cursor-pointer h-2 bg-slate-200 rounded-lg"
                         />
+                        <p className="text-[11px] text-slate-600">
+                          Incentivo estudantil mensal pago ao manter a frequência escolar acima de 80%.
+                        </p>
                       </div>
-                      <div className="sm:col-span-4 flex items-center gap-1.5">
-                        <span className="text-xs font-mono font-semibold text-slate-500">R$</span>
+                    )}
+
+                    <div className="flex justify-end pt-1">
+                      <button
+                        type="button"
+                        onClick={() => setAbaOrcamento('essenciais')}
+                        className="px-4 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-xs font-bold text-slate-800 flex items-center gap-1 cursor-pointer"
+                      >
+                        <span>Revisar Contas Fixas</span>
+                        <ChevronRight className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {/* CONTEÚDO DA ABA 2: CONTAS FIXAS E ESSENCIAIS */}
+                {abaOrcamento === 'essenciais' && (
+                  <div className="space-y-2.5 my-auto">
+                    {[
+                      {
+                        label: 'Moradia (aluguel, luz, água e internet)',
+                        variavel: 'gastoMoradia',
+                        valor: gastoMoradia,
+                        setter: setGastoMoradia,
+                        max: Math.round(receitasMensaisTotais * 0.65),
+                        cor: 'bg-teal-500',
+                        icone: <Home className="w-4 h-4 text-teal-700" />,
+                      },
+                      {
+                        label: 'Alimentação (supermercado e feira do mês)',
+                        variavel: 'gastoAlimentacao',
+                        valor: gastoAlimentacao,
+                        setter: setGastoAlimentacao,
+                        max: Math.round(receitasMensaisTotais * 0.6),
+                        cor: 'bg-sky-500',
+                        icone: <ShoppingCart className="w-4 h-4 text-sky-700" />,
+                      },
+                      {
+                        label: 'Transporte (ônibus, combustível ou aplicativo)',
+                        variavel: 'gastoTransporte',
+                        valor: gastoTransporte,
+                        setter: setGastoTransporte,
+                        max: Math.round(receitasMensaisTotais * 0.4),
+                        cor: 'bg-amber-500',
+                        icone: <Car className="w-4 h-4 text-amber-700" />,
+                      },
+                    ].map((item) => {
+                      const pct =
+                        item.max > 0 ? Math.min(100, (item.valor / item.max) * 100) : 0;
+                      return (
+                        <div
+                          key={item.variavel}
+                          className="p-3 rounded-xl bg-slate-50 border border-slate-300 space-y-1.5"
+                        >
+                          <div className="flex items-center justify-between gap-2">
+                            <span className="flex items-center gap-2 font-display font-bold text-xs sm:text-sm text-slate-900">
+                              {item.icone}
+                              <span>{item.label}</span>
+                            </span>
+                            <span className="font-mono font-bold text-sm text-slate-900 tabular-nums">
+                              {formatarMoeda(item.valor)}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <button
+                              type="button"
+                              onClick={() => {
+                                tocarSomArcade('clique');
+                                item.setter(Math.max(0, item.valor - 30));
+                              }}
+                              className="w-6 h-6 rounded bg-white hover:bg-slate-100 border border-slate-400 flex items-center justify-center cursor-pointer shrink-0"
+                              aria-label={`Diminuir ${item.label}`}
+                            >
+                              <Minus className="w-3 h-3" />
+                            </button>
+
+                            <div className="flex-1 h-3 bg-slate-200 rounded-full border border-slate-400 overflow-hidden relative">
+                              <div
+                                className={`h-full ${item.cor} transition-all duration-150`}
+                                style={{ width: `${pct}%` }}
+                              />
+                              <input
+                                type="range"
+                                min={0}
+                                max={item.max}
+                                step={20}
+                                value={item.valor}
+                                onChange={(e) => {
+                                  tocarSomArcade('clique');
+                                  item.setter(Number(e.target.value));
+                                }}
+                                aria-label={item.label}
+                                className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
+                              />
+                            </div>
+
+                            <button
+                              type="button"
+                              onClick={() => {
+                                tocarSomArcade('clique');
+                                item.setter(item.valor + 30);
+                              }}
+                              className="w-6 h-6 rounded bg-white hover:bg-slate-100 border border-slate-400 flex items-center justify-center cursor-pointer shrink-0"
+                              aria-label={`Aumentar ${item.label}`}
+                            >
+                              <Plus className="w-3 h-3" />
+                            </button>
+                          </div>
+                        </div>
+                      );
+                    })}
+
+                    <div className="flex justify-between pt-1">
+                      <button
+                        type="button"
+                        onClick={() => setAbaOrcamento('renda')}
+                        className="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-xs font-bold text-slate-700 flex items-center gap-1 cursor-pointer"
+                      >
+                        <ChevronLeft className="w-4 h-4" />
+                        <span>Voltar para Renda</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setAbaOrcamento('estilo_reserva')}
+                        className="px-4 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-xs font-bold text-slate-800 flex items-center gap-1 cursor-pointer"
+                      >
+                        <span>Revisar Lazer e Reserva</span>
+                        <ChevronRight className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {/* CONTEÚDO DA ABA 3: DIA A DIA, LAZER E RESERVA */}
+                {abaOrcamento === 'estilo_reserva' && (
+                  <div className="space-y-2.5 my-auto">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                      {[
+                        {
+                          label: 'Roupas e calçados',
+                          variavel: 'gastoRoupas',
+                          valor: gastoRoupas,
+                          setter: setGastoRoupas,
+                          max: Math.round(receitasMensaisTotais * 0.35),
+                          icone: <Shirt className="w-3.5 h-3.5 text-pink-600" />,
+                        },
+                        {
+                          label: 'Passeios e viagens',
+                          variavel: 'gastoViagens',
+                          valor: gastoViagens,
+                          setter: setGastoViagens,
+                          max: Math.round(receitasMensaisTotais * 0.35),
+                          icone: <Plane className="w-3.5 h-3.5 text-purple-600" />,
+                        },
+                        {
+                          label:
+                            modoJogo === 'individual' && generoPersonagem === 'mulher'
+                              ? 'Cuidados e salão'
+                              : modoJogo === 'individual' && generoPersonagem === 'homem'
+                              ? 'Barbearia e treino'
+                              : 'Cuidados e farmácia',
+                          variavel: 'gastoCuidadosPessoais',
+                          valor: gastoCuidadosPessoais,
+                          setter: setGastoCuidadosPessoais,
+                          max: Math.round(receitasMensaisTotais * 0.35),
+                          icone: <Scissors className="w-3.5 h-3.5 text-rose-600" />,
+                        },
+                      ].map((item) => (
+                        <div
+                          key={item.variavel}
+                          className="p-2.5 rounded-xl bg-slate-50 border border-slate-300 space-y-1.5"
+                        >
+                          <div className="flex items-center justify-between gap-1">
+                            <span className="flex items-center gap-1 font-display font-bold text-xs text-slate-900 truncate">
+                              {item.icone}
+                              <span className="truncate">{item.label}</span>
+                            </span>
+                            <span className="font-mono font-bold text-xs text-slate-900 tabular-nums">
+                              {formatarMoeda(item.valor)}
+                            </span>
+                          </div>
+                          <input
+                            type="range"
+                            min={0}
+                            max={item.max}
+                            step={15}
+                            value={item.valor}
+                            onChange={(e) => {
+                              tocarSomArcade('clique');
+                              item.setter(Number(e.target.value));
+                            }}
+                            aria-label={item.label}
+                            className="w-full accent-indigo-600 cursor-pointer h-1.5 bg-slate-200 rounded-lg"
+                          />
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Outro Gasto Personalizável Compacto */}
+                    <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-300 flex flex-col sm:flex-row items-center gap-2">
+                      <span className="flex items-center gap-1.5 font-display font-bold text-xs text-slate-800 shrink-0">
+                        <FilePlus2 className="w-3.5 h-3.5 text-indigo-700" />
+                        <span>Outro gasto:</span>
+                      </span>
+                      <input
+                        type="text"
+                        placeholder="Ex: Ração do pet, curso..."
+                        value={nomeOutrosGastos}
+                        onChange={(e) => setNomeOutrosGastos(e.target.value)}
+                        aria-label="Nome do gasto personalizado"
+                        className="flex-1 w-full px-2.5 py-1 rounded-lg border border-slate-400 bg-white text-xs"
+                      />
+                      <div className="flex items-center gap-1 shrink-0">
+                        <span className="text-xs font-mono text-slate-500">R$</span>
                         <input
                           type="number"
                           min={0}
@@ -3299,45 +3425,42 @@ export default function App() {
                             setOutrosGastos(Math.max(0, Number(e.target.value) || 0))
                           }
                           aria-label="Valor de Outros Gastos"
-                          className="w-full px-2.5 py-1.5 rounded-lg border border-slate-400 bg-white font-mono font-bold text-sm text-right tabular-nums"
+                          className="w-20 px-2 py-1 rounded-lg border border-slate-400 bg-white font-mono font-bold text-xs text-right tabular-nums"
                         />
                       </div>
                     </div>
+
+                    {/* Reserva de Emergência Mensal */}
+                    <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-300 space-y-1.5">
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="flex items-center gap-1.5 font-display font-bold text-xs sm:text-sm text-emerald-950">
+                          <PiggyBank className="w-4 h-4 text-emerald-700" />
+                          <span>Guardar por mês na reserva de emergência</span>
+                        </span>
+                        <span className="font-mono font-bold text-sm text-emerald-800 tabular-nums">
+                          {formatarMoeda(metaReserva)}/mês
+                        </span>
+                      </div>
+                      <input
+                        type="range"
+                        min={0}
+                        max={Math.round(receitasMensaisTotais * 0.35)}
+                        step={20}
+                        value={metaReserva}
+                        onChange={(e) => {
+                          tocarSomArcade('clique');
+                          setMetaReserva(Number(e.target.value));
+                        }}
+                        aria-label="Reserva de emergência mensal"
+                        className="w-full accent-emerald-600 cursor-pointer h-2 bg-white rounded-lg border border-emerald-400"
+                      />
+                    </div>
                   </div>
-                </div>
-              </section>
+                )}
 
-              {/* RESERVA E BOTÃO INICIAR */}
-              <section className="arcade-card rounded-2xl bg-white p-5 space-y-4">
-                <div className="p-3.5 rounded-xl bg-emerald-50/80 border border-emerald-300 space-y-2">
-                  <div className="flex items-center justify-between gap-2">
-                    <span className="flex items-center gap-2 font-display font-bold text-xs sm:text-sm text-emerald-950">
-                      <PiggyBank className="w-4 h-4 text-emerald-700" />
-                      <span>Quanto guardar por mês na reserva de emergência?</span>
-                    </span>
-                    <span className="font-mono font-bold text-sm sm:text-base text-emerald-800 tabular-nums">
-                      {formatarMoeda(metaReserva)}/mês
-                    </span>
-                  </div>
-
-                  <input
-                    type="range"
-                    min={0}
-                    max={Math.round(receitasMensaisTotais * 0.35)}
-                    step={20}
-                    value={metaReserva}
-                    onChange={(e) => {
-                      tocarSomArcade('clique');
-                      setMetaReserva(Number(e.target.value));
-                    }}
-                    aria-label="Reserva de emergência mensal"
-                    className="w-full accent-emerald-600 cursor-pointer h-2 bg-white rounded-lg border border-emerald-400"
-                  />
-                </div>
-
-                {/* Resumo de Comprometimento da Renda */}
+                {/* BARRA FIXA DE RESUMO E BOTÃO COMEÇAR (SEMPRE VISÍVEL) */}
                 <div
-                  className={`p-4 rounded-xl border-2 border-slate-900 flex flex-col sm:flex-row items-center justify-between gap-4 ${
+                  className={`p-3.5 rounded-xl border-2 border-slate-900 flex flex-col sm:flex-row items-center justify-between gap-3 ${
                     percentualComprometidoFixosEVida > 80 || moedasLivresParaImprevistos < 0
                       ? 'bg-rose-500 text-white'
                       : percentualComprometidoFixosEVida > 68
@@ -3345,23 +3468,24 @@ export default function App() {
                       : 'bg-emerald-200 text-slate-950'
                   }`}
                 >
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-2.5">
                     {percentualComprometidoFixosEVida > 80 || moedasLivresParaImprevistos < 0 ? (
-                      <AlertTriangle className="w-7 h-7 shrink-0" />
+                      <AlertTriangle className="w-6 h-6 shrink-0" />
                     ) : (
-                      <ShieldCheck className="w-7 h-7 shrink-0" />
+                      <ShieldCheck className="w-6 h-6 shrink-0" />
                     )}
                     <div>
-                      <div className="font-display font-bold text-sm sm:text-base">
+                      <div className="font-display font-bold text-xs sm:text-sm">
                         {percentualComprometidoFixosEVida > 80 || moedasLivresParaImprevistos < 0
                           ? 'Atenção: despesas acima do limite seguro'
-                          : `${percentualComprometidoFixosEVida}% da renda comprometida com gastos fixos`}
+                          : `${percentualComprometidoFixosEVida}% da renda comprometida com gastos planejados`}
                       </div>
                       <p className="text-xs opacity-90">
                         Sobra livre no mês para imprevistos:{' '}
                         <span className="font-mono font-bold underline">
                           {formatarMoeda(moedasLivresParaImprevistos)}
-                        </span>
+                        </span>{' '}
+                        · Reserva: <span className="font-mono font-bold">{formatarMoeda(metaReserva)}/mês</span>
                       </p>
                     </div>
                   </div>
@@ -3369,38 +3493,41 @@ export default function App() {
                   <button
                     type="button"
                     onClick={apertarStartJogo}
-                    className="arcade-btn px-5 py-3 rounded-xl bg-slate-900 text-amber-300 font-display font-bold text-sm cursor-pointer whitespace-nowrap shrink-0"
+                    className="arcade-btn px-5 py-2.5 rounded-xl bg-slate-900 text-amber-300 font-display font-bold text-sm flex items-center gap-2 cursor-pointer whitespace-nowrap shrink-0"
                   >
-                    Começar simulação →
+                    <Play className="w-4 h-4 fill-amber-300" />
+                    <span>Começar os 6 meses</span>
                   </button>
                 </div>
-              </section>
+              </div>
             </div>
           </div>
         </main>
       )}
 
       {/* =====================================================================
-          TELA 2: SIMULAÇÃO DOS 6 MESES NO PALCO 2D
+          TELA 2: SIMULAÇÃO DOS 6 MESES (LADO A LADO — CABE 100% NA TELA!)
          ===================================================================== */}
       {telaJogo === 'gameplay' && eventoAtualNPC && faseEmAndamento && (
-        <main className="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-8 py-5 space-y-5">
-          {/* PAINEL SUPERIOR DE ACOMPANHAMENTO DO MÊS */}
-          <section className="arcade-card rounded-2xl bg-slate-900 text-white p-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 items-center">
+        <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-3 flex flex-col justify-center space-y-3">
+          {/* BARRA SUPERIOR DE STATUS DO MÊS (COMPACTA) */}
+          <section className="arcade-card rounded-2xl bg-slate-900 text-white px-4 py-2.5">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 items-center">
               {/* 1. Mês atual */}
-              <div className="p-3 rounded-xl bg-slate-800 border border-slate-700">
-                <div className="text-[11px] font-mono text-slate-300">
-                  Situação {indiceTurnoNoMes + 1} de 2 no mês
+              <div className="flex items-center justify-between gap-2 bg-slate-800 px-3 py-2 rounded-xl border border-slate-700">
+                <div>
+                  <div className="text-[10px] font-mono text-slate-300">
+                    Situação {indiceTurnoNoMes + 1} de 2
+                  </div>
+                  <div className="font-display font-bold text-sm text-amber-300">
+                    {NOMES_FASES_MESES[mesAtual - 1]}
+                  </div>
                 </div>
-                <div className="font-display font-bold text-base text-amber-300">
-                  {NOMES_FASES_MESES[mesAtual - 1]}
-                </div>
-                <div className="flex gap-1.5 mt-1.5">
+                <div className="flex gap-1">
                   {[1, 2, 3, 4, 5, 6].map((m) => (
                     <div
                       key={m}
-                      className={`h-1.5 flex-1 rounded-full ${
+                      className={`w-2.5 h-2.5 rounded-full ${
                         m < mesAtual
                           ? 'bg-emerald-400'
                           : m === mesAtual
@@ -3414,57 +3541,59 @@ export default function App() {
 
               {/* 2. Saldo disponível */}
               <div
-                className={`p-3 rounded-xl border ${
+                className={`px-3 py-2 rounded-xl border flex items-center justify-between ${
                   saldoAtual >= 0
                     ? 'bg-slate-800 border-emerald-500/60'
                     : 'bg-rose-950 border-rose-500'
                 }`}
               >
-                <div className="flex items-center justify-between text-[11px] text-slate-300">
-                  <span>Saldo na conta</span>
-                  <Coins className="w-4 h-4 text-amber-300" />
+                <div>
+                  <div className="text-[10px] text-slate-300">Saldo na conta</div>
+                  <div
+                    className={`font-mono font-bold text-base sm:text-lg tabular-nums leading-tight ${
+                      saldoAtual >= 0 ? 'text-emerald-300' : 'text-rose-400'
+                    }`}
+                  >
+                    {formatarMoeda(saldoAtual)}
+                  </div>
                 </div>
-                <div
-                  className={`font-mono font-bold text-xl sm:text-2xl tabular-nums ${
-                    saldoAtual >= 0 ? 'text-emerald-300' : 'text-rose-400'
-                  }`}
-                >
-                  {formatarMoeda(saldoAtual)}
-                </div>
-                <div className="text-[10px] font-mono text-slate-400 truncate">
-                  {saldoAtual < 0
-                    ? 'No cheque especial (8% de juros ao mês)'
-                    : modoJogo === 'individual'
-                    ? `Salário R$ ${salarioMensal} + Pé-de-Meia R$ ${peDeMeiaEfetivo}`
-                    : `Salário R$ ${salarioMensal} + Bolsa Fam. R$ ${bolsaFamiliaEfetivo}`}
+                <div className="text-right text-[10px] font-mono text-slate-400">
+                  {saldoAtual < 0 ? (
+                    <span className="text-rose-300 font-bold">Juros 8%/mês</span>
+                  ) : modoJogo === 'individual' ? (
+                    <span>+Pé-de-Meia R${peDeMeiaEfetivo}</span>
+                  ) : (
+                    <span>+Bolsa Fam. R${bolsaFamiliaEfetivo}</span>
+                  )}
                 </div>
               </div>
 
               {/* 3. Reserva guardada */}
-              <div className="p-3 rounded-xl bg-slate-800 border border-sky-500/50">
-                <div className="flex items-center justify-between text-[11px] text-sky-300">
-                  <span>Reserva guardada</span>
-                  <PiggyBank className="w-4 h-4 text-sky-300" />
+              <div className="px-3 py-2 rounded-xl bg-slate-800 border border-sky-500/50 flex items-center justify-between">
+                <div>
+                  <div className="text-[10px] text-sky-300">Reserva guardada</div>
+                  <div className="font-mono font-bold text-base sm:text-lg text-white tabular-nums leading-tight">
+                    {formatarMoeda(reservaEmergencia)}
+                  </div>
                 </div>
-                <div className="font-mono font-bold text-xl sm:text-2xl text-white tabular-nums">
-                  {formatarMoeda(reservaEmergencia)}
-                </div>
-                <div className="text-[10px] font-mono text-slate-400">
-                  Parcelas do cartão neste mês: -{formatarMoeda(faseEmAndamento.parcelasCartaoAnteriores)}
+                <div className="text-right text-[10px] font-mono text-slate-400">
+                  Cartão: -{formatarMoeda(faseEmAndamento.parcelasCartaoAnteriores)}
                 </div>
               </div>
 
               {/* 4. Bem-estar */}
-              <div className="p-3 rounded-xl bg-slate-800 border border-rose-400/50">
-                <div className="flex items-center justify-between text-[11px] text-rose-300">
-                  <span>Bem-estar</span>
-                  <span className="font-mono font-bold text-white">{felicidadeFamilia}%</span>
+              <div className="px-3 py-2 rounded-xl bg-slate-800 border border-rose-400/50 flex items-center justify-between">
+                <div>
+                  <div className="text-[10px] text-rose-300">Bem-estar</div>
+                  <div className="font-mono font-bold text-base sm:text-lg text-white leading-tight">
+                    {felicidadeFamilia}%
+                  </div>
                 </div>
-                <div className="flex items-center gap-1 my-1">
+                <div className="flex items-center gap-0.5">
                   {[20, 40, 60, 80, 100].map((limite) => (
                     <Heart
                       key={limite}
-                      className={`w-4 h-4 ${
+                      className={`w-3.5 h-3.5 ${
                         felicidadeFamilia >= limite
                           ? 'fill-rose-500 text-rose-400'
                           : felicidadeFamilia >= limite - 10
@@ -3474,169 +3603,185 @@ export default function App() {
                     />
                   ))}
                 </div>
-                <div className="w-full h-2 bg-slate-950 rounded-full overflow-hidden">
-                  <div
-                    className={`h-full transition-all duration-300 ${
-                      felicidadeFamilia >= 65
-                        ? 'bg-emerald-400'
-                        : felicidadeFamilia >= 40
-                        ? 'bg-amber-400'
-                        : 'bg-rose-500'
-                    }`}
-                    style={{ width: `${felicidadeFamilia}%` }}
-                  />
-                </div>
               </div>
             </div>
           </section>
 
-          {/* PALCO 2D DA SALA DE ESTAR */}
-          <PalcoSalaFamilia
-            modoJogo={modoJogo}
-            generoPersonagem={generoPersonagem}
-            humor={humorFamiliaAtual}
-            saldoAtual={saldoAtual}
-            felicidadeFamilia={felicidadeFamilia}
-            mesNome={NOMES_CURTOS_MESES[mesAtual - 1]}
-            npcAtivo={
-              decisaoDoTurno
-                ? null
-                : {
-                    nome: eventoAtualNPC.nomeNPC,
-                    cargo: eventoAtualNPC.cargoNPC,
-                    tipo: eventoAtualNPC.tipoNPC,
-                    fala: eventoAtualNPC.falaNPC,
-                    tituloEvento: eventoAtualNPC.titulo,
-                    categoria: eventoAtualNPC.categoria,
-                  }
-            }
-            falaFamilia={decisaoDoTurno ? falaFamiliaPalco : undefined}
-            jurosCobradosNoMes={faseEmAndamento.jurosChequeEspecial}
-            particulas={particulasFlutuantes}
-          />
+          {/* ÁREA PRINCIPAL LADO A LADO: PALCO + DIÁLOGO (ESQUERDA) E OPÇÕES (DIREITA) */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-stretch">
+            {/* Esquerda (7 cols): Palco 2D da Sala + Visitante */}
+            <div className="lg:col-span-7 flex flex-col justify-between">
+              <PalcoSalaFamilia
+                modoJogo={modoJogo}
+                generoPersonagem={generoPersonagem}
+                humor={humorFamiliaAtual}
+                saldoAtual={saldoAtual}
+                felicidadeFamilia={felicidadeFamilia}
+                mesNome={NOMES_CURTOS_MESES[mesAtual - 1]}
+                npcAtivo={
+                  decisaoDoTurno
+                    ? null
+                    : {
+                        nome: eventoAtualNPC.nomeNPC,
+                        cargo: eventoAtualNPC.cargoNPC,
+                        tipo: eventoAtualNPC.tipoNPC,
+                        fala: eventoAtualNPC.falaNPC,
+                        tituloEvento: eventoAtualNPC.titulo,
+                        categoria: eventoAtualNPC.categoria,
+                      }
+                }
+                falaFamilia={decisaoDoTurno ? falaFamiliaPalco : undefined}
+                jurosCobradosNoMes={faseEmAndamento.jurosChequeEspecial}
+                particulas={particulasFlutuantes}
+              />
+            </div>
 
-          {/* 3 OPÇÕES DE DECISÃO */}
-          {!decisaoDoTurno ? (
-            <section className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {eventoAtualNPC.cartas.map((carta, index) => {
-                const coresTopo =
-                  index === 0
-                    ? 'bg-emerald-200 text-slate-900'
-                    : index === 1
-                    ? 'bg-amber-200 text-slate-900'
-                    : 'bg-rose-200 text-slate-900';
+            {/* Direita (5 cols): As 3 Opções de Decisão empilhadas na mesma tela */}
+            <div className="lg:col-span-5 flex flex-col justify-between">
+              {!decisaoDoTurno ? (
+                <div className="flex flex-col justify-between gap-2.5 h-full">
+                  <div className="text-xs font-semibold text-slate-600 px-1 flex items-center justify-between">
+                    <span>Como você prefere resolver essa situação?</span>
+                    <span className="font-mono text-[11px] text-slate-500">Teclas 1, 2 ou 3</span>
+                  </div>
 
-                return (
-                  <button
-                    key={carta.codigo}
-                    type="button"
-                    onClick={() => processarDecisao(carta)}
-                    className="arcade-btn rounded-2xl bg-white overflow-hidden flex flex-col justify-between text-left cursor-pointer group"
-                  >
-                    <div>
-                      <div
-                        className={`px-4 py-2 border-b-2 border-slate-900 font-mono text-xs font-bold flex items-center justify-between ${coresTopo}`}
+                  {eventoAtualNPC.cartas.map((carta, index) => {
+                    const coresBadge =
+                      index === 0
+                        ? 'bg-emerald-200 text-slate-900'
+                        : index === 1
+                        ? 'bg-amber-200 text-slate-900'
+                        : 'bg-rose-200 text-slate-900';
+
+                    return (
+                      <button
+                        key={carta.codigo}
+                        type="button"
+                        onClick={() => processarDecisao(carta)}
+                        className="arcade-btn rounded-xl bg-white p-3.5 text-left cursor-pointer group flex-1 flex flex-col justify-between"
                       >
-                        <span>{carta.rotuloAcao}</span>
-                        <span className="px-1.5 py-0.5 rounded bg-slate-900 text-white text-[10px]">
-                          Tecla {carta.codigo}
-                        </span>
-                      </div>
+                        <div className="space-y-1">
+                          <div className="flex items-center justify-between gap-2">
+                            <span
+                              className={`px-2 py-0.5 rounded border border-slate-900 font-mono text-[11px] font-bold ${coresBadge}`}
+                            >
+                              {carta.rotuloAcao}
+                            </span>
+                            <div className="flex items-center gap-2 font-mono text-xs">
+                              <span
+                                className={
+                                  carta.impactoMoedas > 0
+                                    ? 'text-emerald-700 font-bold'
+                                    : carta.impactoMoedas === 0
+                                    ? 'text-slate-700 font-semibold'
+                                    : 'text-rose-600 font-bold'
+                                }
+                              >
+                                {carta.impactoMoedas > 0
+                                  ? `+${formatarMoeda(carta.impactoMoedas)}`
+                                  : carta.impactoMoedas === 0
+                                  ? 'R$ 0 agora'
+                                  : formatarMoeda(carta.impactoMoedas)}
+                                {carta.usaCofreReserva && reservaEmergencia > 0
+                                  ? ' (usa reserva)'
+                                  : ''}
+                              </span>
+                              <span
+                                className={
+                                  carta.impactoCoracoes >= 0
+                                    ? 'text-emerald-700 font-semibold'
+                                    : 'text-rose-600 font-semibold'
+                                }
+                              >
+                                {carta.impactoCoracoes > 0
+                                  ? `+${carta.impactoCoracoes}%`
+                                  : `${carta.impactoCoracoes}%`}{' '}
+                                ♥
+                              </span>
+                            </div>
+                          </div>
 
-                      <div className="p-4 space-y-1.5">
-                        <h3 className="font-display font-bold text-base text-slate-900 group-hover:text-indigo-700 transition-colors">
-                          {carta.titulo}
-                        </h3>
-                        <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                          {carta.descricao}
-                        </p>
-                      </div>
+                          <h3 className="font-display font-bold text-sm sm:text-base text-slate-900 group-hover:text-indigo-700 transition-colors">
+                            {carta.titulo}
+                          </h3>
+                          <p className="text-xs text-slate-600 leading-snug">
+                            {carta.descricao}
+                          </p>
+                        </div>
+
+                        {carta.parcelaCartaoFutura > 0 && (
+                          <div className="mt-2 pt-1.5 border-t border-slate-200 flex items-center justify-between font-mono text-[11px] text-amber-800">
+                            <span>Parcelado no cartão:</span>
+                            <span className="font-bold">
+                              +{carta.mesesParcela}x de {formatarMoeda(carta.parcelaCartaoFutura)} nos próximos meses
+                            </span>
+                          </div>
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+              ) : (
+                <div className="arcade-card rounded-2xl bg-amber-100 p-5 h-full flex flex-col justify-between space-y-4">
+                  <div className="space-y-2.5">
+                    <div className="inline-block px-2.5 py-0.5 rounded bg-slate-900 text-amber-200 font-mono text-xs font-semibold">
+                      Resultado da escolha
                     </div>
+                    <h3 className="font-display font-bold text-lg sm:text-xl text-slate-950">
+                      {decisaoDoTurno.tituloAcao}
+                    </h3>
+                    <p className="text-xs sm:text-sm text-slate-800 leading-relaxed">
+                      {decisaoDoTurno.explicacaoMestre}
+                    </p>
 
-                    <div className="p-3.5 bg-slate-50 border-t-2 border-slate-900 space-y-1 font-mono text-xs">
-                      <div className="flex items-center justify-between">
-                        <span className="text-slate-500">No caixa agora:</span>
+                    <div className="p-3 rounded-xl bg-white/80 border border-slate-300 space-y-1 font-mono text-xs">
+                      <div className="flex justify-between">
+                        <span className="text-slate-600">Impacto na conta:</span>
                         <span
                           className={
-                            carta.impactoMoedas > 0
+                            decisaoDoTurno.impactoCaixa >= 0
                               ? 'text-emerald-700 font-bold'
-                              : carta.impactoMoedas === 0
-                              ? 'text-slate-800 font-semibold'
                               : 'text-rose-600 font-bold'
                           }
                         >
-                          {carta.impactoMoedas > 0
-                            ? `+${formatarMoeda(carta.impactoMoedas)}`
-                            : carta.impactoMoedas === 0
-                            ? 'R$ 0'
-                            : formatarMoeda(carta.impactoMoedas)}
-                          {carta.usaCofreReserva && reservaEmergencia > 0 ? ' (usa reserva)' : ''}
+                          {decisaoDoTurno.impactoCaixa > 0
+                            ? `+${formatarMoeda(decisaoDoTurno.impactoCaixa)}`
+                            : formatarMoeda(decisaoDoTurno.impactoCaixa)}
                         </span>
                       </div>
-
-                      {carta.parcelaCartaoFutura > 0 && (
-                        <div className="flex items-center justify-between text-amber-800">
-                          <span>Próximos meses:</span>
-                          <span className="font-bold">
-                            {carta.mesesParcela}x de {formatarMoeda(carta.parcelaCartaoFutura)}
-                          </span>
+                      {decisaoDoTurno.usouReserva > 0 && (
+                        <div className="flex justify-between text-emerald-800 font-bold">
+                          <span>Coberto pela reserva:</span>
+                          <span>{formatarMoeda(decisaoDoTurno.usouReserva)}</span>
                         </div>
                       )}
-
-                      <div className="flex items-center justify-between">
-                        <span className="text-slate-500">Bem-estar:</span>
-                        <span
-                          className={
-                            carta.impactoCoracoes >= 0
-                              ? 'text-emerald-700 font-semibold'
-                              : 'text-rose-600 font-semibold'
-                          }
-                        >
-                          {carta.impactoCoracoes > 0
-                            ? `+${carta.impactoCoracoes}%`
-                            : `${carta.impactoCoracoes}%`}
-                        </span>
-                      </div>
+                      {decisaoDoTurno.dividaFuturaGerada > 0 && (
+                        <div className="flex justify-between text-amber-800 font-bold">
+                          <span>Total jogado para o cartão:</span>
+                          <span>{formatarMoeda(decisaoDoTurno.dividaFuturaGerada)}</span>
+                        </div>
+                      )}
                     </div>
-                  </button>
-                );
-              })}
-            </section>
-          ) : (
-            <section className="arcade-card rounded-2xl bg-amber-100 p-5 flex flex-col sm:flex-row items-center justify-between gap-4">
-              <div className="space-y-1">
-                <div className="inline-block px-2.5 py-0.5 rounded bg-slate-900 text-amber-200 font-mono text-xs font-semibold">
-                  Resultado da escolha
-                </div>
-                <h3 className="font-display font-bold text-lg text-slate-950">
-                  {decisaoDoTurno.tituloAcao}
-                </h3>
-                <p className="text-xs sm:text-sm text-slate-800 max-w-2xl">
-                  {decisaoDoTurno.explicacaoMestre}
-                </p>
-                {decisaoDoTurno.usouReserva > 0 && (
-                  <p className="text-xs font-mono font-bold text-emerald-800">
-                    Sua reserva de emergência cobriu {formatarMoeda(decisaoDoTurno.usouReserva)} deste gasto.
-                  </p>
-                )}
-              </div>
+                  </div>
 
-              <button
-                type="button"
-                onClick={avancarProximoTurno}
-                className="arcade-btn px-6 py-3.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-display font-bold text-sm sm:text-base flex items-center gap-2 cursor-pointer whitespace-nowrap shrink-0"
-              >
-                <span>
-                  {indiceTurnoNoMes === 0
-                    ? 'Próxima situação do mês'
-                    : mesAtual < 6
-                    ? `Avançar para ${NOMES_CURTOS_MESES[mesAtual]}`
-                    : 'Ver balanço dos 6 meses'}
-                </span>
-                <ChevronRight className="w-5 h-5" />
-              </button>
-            </section>
-          )}
+                  <button
+                    type="button"
+                    onClick={avancarProximoTurno}
+                    className="arcade-btn w-full py-3.5 px-5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-display font-bold text-sm sm:text-base flex items-center justify-center gap-2 cursor-pointer"
+                  >
+                    <span>
+                      {indiceTurnoNoMes === 0
+                        ? 'Próxima situação do mês'
+                        : mesAtual < 6
+                        ? `Avançar para ${NOMES_CURTOS_MESES[mesAtual]}`
+                        : 'Ver balanço dos 6 meses'}
+                    </span>
+                    <ChevronRight className="w-5 h-5" />
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
         </main>
       )}
 
@@ -4000,8 +4145,8 @@ export default function App() {
         </main>
       )}
 
-      {/* RODAPÉ SIMPLES */}
-      <footer className="bg-slate-900 text-slate-400 border-t border-slate-800 py-3 px-4 sm:px-8 text-xs no-print">
+      {/* RODAPÉ COMPACTO */}
+      <footer className="bg-slate-900 text-slate-400 border-t border-slate-800 py-2.5 px-4 sm:px-6 text-xs no-print">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
           <span>Projeto Educacional · O Dinheiro Desaparece? Para onde vai o salário?</span>
           <span className="font-mono text-[11px]">Atalhos: teclas 1, 2, 3 e Enter</span>

@@ -66,7 +66,7 @@ function PersonagemSoloHomemSVG({ humor }: { humor: EstadoHumorFamilia }) {
   return (
     <svg
       viewBox="0 0 130 175"
-      className={`w-28 sm:w-32 h-36 sm:h-40 overflow-visible ${
+      className={`w-22 sm:w-26 h-28 sm:h-32 overflow-visible ${
         humor === 'feliz'
           ? 'animate-char-bounce'
           : humor === 'panico'
@@ -151,7 +151,7 @@ function PersonagemSoloMulherSVG({ humor }: { humor: EstadoHumorFamilia }) {
   return (
     <svg
       viewBox="0 0 130 175"
-      className={`w-28 sm:w-32 h-36 sm:h-40 overflow-visible ${
+      className={`w-22 sm:w-26 h-28 sm:h-32 overflow-visible ${
         humor === 'feliz'
           ? 'animate-char-bounce'
           : humor === 'panico'
@@ -242,7 +242,7 @@ function PersonagemVovoSVG({ humor }: { humor: EstadoHumorFamilia }) {
   return (
     <svg
       viewBox="0 0 105 145"
-      className={`w-16 sm:w-20 h-24 sm:h-30 overflow-visible ${
+      className={`w-14 sm:w-17 h-20 sm:h-25 overflow-visible ${
         humor === 'feliz'
           ? 'animate-char-bounce'
           : humor === 'panico'
@@ -298,7 +298,7 @@ function PersonagemFilhaSVG({ humor }: { humor: EstadoHumorFamilia }) {
   return (
     <svg
       viewBox="0 0 100 140"
-      className={`w-16 sm:w-20 h-24 sm:h-30 overflow-visible ${
+      className={`w-14 sm:w-17 h-20 sm:h-25 overflow-visible ${
         humor === 'feliz'
           ? 'animate-char-bounce'
           : humor === 'panico'
@@ -343,7 +343,7 @@ function PersonagemPaiSVG({ humor, compacto }: { humor: EstadoHumorFamilia; comp
     <svg
       viewBox="0 0 110 155"
       className={`${
-        compacto ? 'w-16 sm:w-20 h-24 sm:h-30' : 'w-20 sm:w-24 h-28 sm:h-34'
+        compacto ? 'w-14 sm:w-17 h-20 sm:h-25' : 'w-17 sm:w-20 h-24 sm:h-29'
       } overflow-visible ${
         humor === 'feliz'
           ? 'animate-char-bounce'
@@ -428,7 +428,7 @@ function PersonagemMaeSVG({ humor, compacto }: { humor: EstadoHumorFamilia; comp
     <svg
       viewBox="0 0 110 155"
       className={`${
-        compacto ? 'w-16 sm:w-20 h-24 sm:h-30' : 'w-20 sm:w-24 h-28 sm:h-34'
+        compacto ? 'w-14 sm:w-17 h-20 sm:h-25' : 'w-17 sm:w-20 h-24 sm:h-29'
       } overflow-visible ${
         humor === 'feliz'
           ? 'animate-char-bounce'
@@ -506,7 +506,7 @@ function PersonagemFilhoSVG({ humor, compacto }: { humor: EstadoHumorFamilia; co
     <svg
       viewBox="0 0 95 130"
       className={`${
-        compacto ? 'w-14 sm:w-16 h-20 sm:h-24' : 'w-16 sm:w-20 h-24 sm:h-28'
+        compacto ? 'w-12 sm:w-14 h-18 sm:h-21' : 'w-14 sm:w-17 h-20 sm:h-24'
       } overflow-visible ${
         humor === 'feliz'
           ? 'animate-char-bounce'
@@ -553,7 +553,7 @@ function CachorrinhoCarameloSVG({ humor, compacto }: { humor: EstadoHumorFamilia
     <svg
       viewBox="0 0 90 80"
       className={`${
-        compacto ? 'w-14 sm:w-16 h-12 sm:h-15' : 'w-16 sm:w-20 h-14 sm:h-18'
+        compacto ? 'w-12 sm:w-14 h-11 sm:h-13' : 'w-14 sm:w-17 h-12 sm:h-15'
       } overflow-visible ${
         humor === 'feliz' ? 'animate-char-bounce' : humor === 'panico' ? 'animate-char-shiver' : ''
       }`}
@@ -615,7 +615,7 @@ function AvatarNPCSVG({ tipo }: { tipo: TipoNPC }) {
 
   return (
     <div className="relative inline-block">
-      <svg viewBox="0 0 100 115" className="w-18 h-20 sm:w-22 sm:h-24 overflow-visible animate-char-bounce">
+      <svg viewBox="0 0 100 115" className="w-14 h-16 sm:w-16 sm:h-18 overflow-visible animate-char-bounce">
         <rect
           x="22"
           y="64"
@@ -649,7 +649,7 @@ function AvatarNPCSVG({ tipo }: { tipo: TipoNPC }) {
 }
 
 // ============================================================================
-// PALCO VISUAL 2D COMPLETO (FAMÍLIA SILVA, JOVEM SOLO H/M OU FAMÍLIA GRANDE)
+// PALCO VISUAL 2D COMPLETO (COMPACTO PARA CABER EM 1 TELA SEM SCROLL)
 // ============================================================================
 
 export const PalcoSalaFamilia: React.FC<PalcoSalaFamiliaProps> = ({
@@ -683,7 +683,7 @@ export const PalcoSalaFamilia: React.FC<PalcoSalaFamiliaProps> = ({
       } else {
         setTextoDigitado(textoCompleto.slice(0, indice));
       }
-    }, 16);
+    }, 15);
 
     return () => window.clearInterval(timer);
   }, [npcAtivo?.fala, npcAtivo?.tituloEvento]);
@@ -696,7 +696,7 @@ export const PalcoSalaFamilia: React.FC<PalcoSalaFamiliaProps> = ({
       : 'from-slate-900 via-rose-950/90 to-slate-900';
 
   const corChao =
-    humor === 'panico' ? 'bg-amber-950 border-t-3 border-slate-900' : 'bg-amber-700 border-t-3 border-slate-900';
+    humor === 'panico' ? 'bg-amber-950 border-t-2 border-slate-900' : 'bg-amber-700 border-t-2 border-slate-900';
 
   const rotuloModo =
     modoJogo === 'familia'
@@ -712,7 +712,7 @@ export const PalcoSalaFamilia: React.FC<PalcoSalaFamiliaProps> = ({
       {/* CENÁRIO DA SALA DE ESTAR 2D */}
       <div
         className={`relative w-full ${
-          modoCompacto ? 'min-h-[255px]' : 'min-h-[295px] sm:min-h-[330px]'
+          modoCompacto ? 'min-h-[210px]' : 'min-h-[230px] sm:min-h-[250px]'
         } bg-gradient-to-b ${corParede} flex flex-col justify-between transition-colors duration-500 overflow-hidden`}
       >
         {humor === 'panico' && (
@@ -720,9 +720,9 @@ export const PalcoSalaFamilia: React.FC<PalcoSalaFamiliaProps> = ({
         )}
 
         {/* ELEMENTOS DE PAREDE E TETO */}
-        <div className="relative z-10 flex items-start justify-between px-4 sm:px-7 pt-3">
+        <div className="relative z-10 flex items-start justify-between px-4 sm:px-6 pt-2.5">
           {/* Janela da Sala */}
-          <div className="w-22 sm:w-28 h-18 sm:h-22 rounded-xl border-3 border-slate-900 overflow-hidden shadow-[3px_3px_0px_0px_#0f172a] relative bg-sky-300 shrink-0">
+          <div className="w-18 sm:w-22 h-14 sm:h-16 rounded-lg border-2 border-slate-900 overflow-hidden shadow-[2px_2px_0px_0px_#0f172a] relative bg-sky-300 shrink-0">
             <div
               className={`w-full h-full transition-colors duration-500 ${
                 humor === 'feliz'
@@ -733,13 +733,13 @@ export const PalcoSalaFamilia: React.FC<PalcoSalaFamiliaProps> = ({
               }`}
             >
               {humor === 'feliz' && (
-                <div className="w-6 h-6 rounded-full bg-amber-300 border-2 border-slate-900 absolute top-2 right-3" />
+                <div className="w-5 h-5 rounded-full bg-amber-300 border-2 border-slate-900 absolute top-1.5 right-2" />
               )}
               {humor === 'preocupado' && (
-                <div className="w-6 h-6 rounded-full bg-orange-400 border-2 border-slate-900 absolute top-4 right-3" />
+                <div className="w-5 h-5 rounded-full bg-orange-400 border-2 border-slate-900 absolute top-3 right-2" />
               )}
               {humor === 'panico' && (
-                <div className="w-5 h-5 rounded-full bg-slate-400 border-2 border-slate-900 absolute top-2 right-3" />
+                <div className="w-4 h-4 rounded-full bg-slate-400 border-2 border-slate-900 absolute top-1.5 right-2" />
               )}
             </div>
             <div className="absolute inset-x-0 top-1/2 h-0.5 bg-slate-900" />
@@ -748,9 +748,9 @@ export const PalcoSalaFamilia: React.FC<PalcoSalaFamiliaProps> = ({
 
           {/* Luminária de Teto + Placa de Status */}
           <div className="flex flex-col items-center">
-            <div className="w-1 h-4 bg-slate-900" />
+            <div className="w-1 h-3 bg-slate-900" />
             <div
-              className={`px-3.5 py-1 rounded-b-xl border-2 border-slate-900 text-xs font-bold tracking-wide shadow-[2px_2px_0px_0px_#0f172a] text-center ${
+              className={`px-3 py-0.5 rounded-b-lg border-2 border-slate-900 text-[11px] font-bold tracking-wide shadow-[2px_2px_0px_0px_#0f172a] text-center ${
                 humor === 'feliz'
                   ? 'bg-amber-200 text-slate-900'
                   : humor === 'preocupado'
@@ -768,7 +768,7 @@ export const PalcoSalaFamilia: React.FC<PalcoSalaFamiliaProps> = ({
 
           {/* Quadro na Parede */}
           <div
-            className={`hidden sm:flex flex-col items-center justify-center w-28 h-16 bg-emerald-100 border-3 border-slate-900 rounded-lg shadow-[3px_3px_0px_0px_#0f172a] transition-transform duration-300 ${
+            className={`hidden sm:flex flex-col items-center justify-center w-24 h-14 bg-emerald-100 border-2 border-slate-900 rounded-lg shadow-[2px_2px_0px_0px_#0f172a] transition-transform duration-300 ${
               humor === 'panico' ? 'rotate-6 bg-rose-100' : humor === 'preocupado' ? '-rotate-2' : 'rotate-0'
             }`}
           >
@@ -776,7 +776,7 @@ export const PalcoSalaFamilia: React.FC<PalcoSalaFamiliaProps> = ({
               {mesNome || 'Sala de casa'}
             </span>
             <div className="flex items-center gap-1 mt-0.5 text-xs font-bold text-slate-900">
-              <Heart className="w-3.5 h-3.5 fill-rose-500 text-rose-600" />
+              <Heart className="w-3 h-3 fill-rose-500 text-rose-600" />
               <span>{felicidadeFamilia}%</span>
             </div>
           </div>
@@ -787,7 +787,7 @@ export const PalcoSalaFamilia: React.FC<PalcoSalaFamiliaProps> = ({
           <>
             <svg
               viewBox="0 0 80 80"
-              className="w-18 h-18 absolute top-0 right-0 text-slate-400/60 pointer-events-none z-10"
+              className="w-16 h-16 absolute top-0 right-0 text-slate-400/60 pointer-events-none z-10"
             >
               <line x1="80" y1="0" x2="0" y2="20" stroke="currentColor" strokeWidth="1.8" />
               <line x1="80" y1="0" x2="15" y2="55" stroke="currentColor" strokeWidth="1.8" />
@@ -796,28 +796,28 @@ export const PalcoSalaFamilia: React.FC<PalcoSalaFamiliaProps> = ({
               <path d="M 30 14 Q 28 40 58 65" fill="none" stroke="currentColor" strokeWidth="1.8" />
             </svg>
 
-            <div className="absolute top-6 left-1/3 z-20 pointer-events-none flex flex-col items-center">
-              <div className="w-2.5 h-3.5 rounded-full bg-sky-400 border-2 border-slate-900 animate-drip" />
+            <div className="absolute top-5 left-1/3 z-20 pointer-events-none flex flex-col items-center">
+              <div className="w-2 h-3 rounded-full bg-sky-400 border border-slate-900 animate-drip" />
             </div>
           </>
         )}
 
         {/* BALÃO DE FALA DO(S) PERSONAGEM(NS) NA SALA */}
         {falaFamilia && !npcAtivo && (
-          <div className="relative z-20 mx-auto my-1 max-w-md px-4 py-2 rounded-xl bg-white border-2 border-slate-900 shadow-[3px_3px_0px_0px_#0f172a] text-center">
-            <p className="text-xs sm:text-sm font-semibold text-slate-800">{falaFamilia}</p>
+          <div className="relative z-20 mx-3 sm:mx-auto my-1 max-w-md px-3.5 py-1.5 rounded-xl bg-white border-2 border-slate-900 shadow-[2px_2px_0px_0px_#0f172a] text-center">
+            <p className="text-xs font-semibold text-slate-800 leading-snug">{falaFamilia}</p>
           </div>
         )}
 
         {/* AVISO DE JUROS QUANDO COBRA CHEQUE ESPECIAL */}
         {(saldoAtual < 0 || jurosCobradosNoMes > 0) && (
-          <div className="absolute top-14 right-3 sm:right-6 z-20 bg-rose-600 text-white px-3 py-1.5 rounded-xl border-2 border-slate-900 shadow-[3px_3px_0px_0px_#0f172a] flex items-center gap-2 animate-monster">
-            <AlertCircle className="w-4 h-4 text-amber-200 shrink-0" />
-            <div className="text-[11px] leading-tight font-bold">
-              <div>Juros do cheque especial (8% a.m.)</div>
+          <div className="absolute top-12 right-3 z-20 bg-rose-600 text-white px-2.5 py-1 rounded-lg border-2 border-slate-900 shadow-[2px_2px_0px_0px_#0f172a] flex items-center gap-1.5 animate-monster">
+            <AlertCircle className="w-3.5 h-3.5 text-amber-200 shrink-0" />
+            <div className="text-[10px] leading-tight font-bold">
+              <div>Juros de 8% ao mês</div>
               {jurosCobradosNoMes > 0 && (
                 <div className="text-amber-200 font-mono">
-                  Descontou -R$ {jurosCobradosNoMes} neste mês
+                  -{jurosCobradosNoMes} neste mês
                 </div>
               )}
             </div>
@@ -842,7 +842,7 @@ export const PalcoSalaFamilia: React.FC<PalcoSalaFamiliaProps> = ({
               <div
                 key={p.id}
                 style={{ left: `${p.xPercent}%`, top: `${p.yPercent}%` }}
-                className={`absolute animate-float-up px-2.5 py-1 rounded-lg border-2 border-slate-900 font-mono font-bold text-xs sm:text-sm shadow-[2px_2px_0px_0px_#0f172a] whitespace-nowrap ${classesCor}`}
+                className={`absolute animate-float-up px-2.5 py-0.5 rounded-lg border-2 border-slate-900 font-mono font-bold text-xs shadow-[2px_2px_0px_0px_#0f172a] whitespace-nowrap ${classesCor}`}
               >
                 {p.texto}
               </div>
@@ -850,40 +850,40 @@ export const PalcoSalaFamilia: React.FC<PalcoSalaFamiliaProps> = ({
           })}
         </div>
 
-        {/* PALCO DOS PERSONAGENS: FAMÍLIA SILVA (4), FAMÍLIA GRANDE (6) OU JOVEM SOLO (1) */}
-        <div className="relative z-10 mt-auto pt-4 px-2 sm:px-8 flex flex-col items-center">
-          <div className="relative flex items-end justify-center gap-1.5 sm:gap-3 w-full max-w-2xl">
+        {/* PALCO DOS PERSONAGENS */}
+        <div className="relative z-10 mt-auto pt-2 px-2 sm:px-6 flex flex-col items-center">
+          <div className="relative flex items-end justify-center gap-1 sm:gap-2.5 w-full max-w-xl">
             {/* Sofá da Sala atrás */}
-            <div className="absolute bottom-2 inset-x-4 h-16 sm:h-20 bg-rose-500 border-3 border-slate-900 rounded-2xl shadow-[3px_3px_0px_0px_#0f172a] -z-10" />
-            <div className="absolute bottom-2 left-1 w-8 h-14 bg-rose-600 border-3 border-slate-900 rounded-xl -z-10" />
-            <div className="absolute bottom-2 right-1 w-8 h-14 bg-rose-600 border-3 border-slate-900 rounded-xl -z-10" />
+            <div className="absolute bottom-2 inset-x-4 h-13 sm:h-16 bg-rose-500 border-2 border-slate-900 rounded-xl shadow-[2px_2px_0px_0px_#0f172a] -z-10" />
+            <div className="absolute bottom-2 left-1 w-6 h-11 bg-rose-600 border-2 border-slate-900 rounded-lg -z-10" />
+            <div className="absolute bottom-2 right-1 w-6 h-11 bg-rose-600 border-2 border-slate-900 rounded-lg -z-10" />
 
             {modoJogo === 'familia' && (
               <>
                 <div className="flex flex-col items-center">
                   <PersonagemPaiSVG humor={humor} />
-                  <span className="-mt-2 px-2 py-0.5 rounded bg-slate-900 text-white font-mono text-[10px] font-semibold">
+                  <span className="-mt-1.5 px-1.5 py-0.5 rounded bg-slate-900 text-white font-mono text-[9px] font-semibold">
                     Pai
                   </span>
                 </div>
 
                 <div className="flex flex-col items-center">
                   <PersonagemMaeSVG humor={humor} />
-                  <span className="-mt-2 px-2 py-0.5 rounded bg-slate-900 text-white font-mono text-[10px] font-semibold">
+                  <span className="-mt-1.5 px-1.5 py-0.5 rounded bg-slate-900 text-white font-mono text-[9px] font-semibold">
                     Mãe
                   </span>
                 </div>
 
                 <div className="flex flex-col items-center">
                   <PersonagemFilhoSVG humor={humor} />
-                  <span className="-mt-2 px-2 py-0.5 rounded bg-slate-900 text-white font-mono text-[10px] font-semibold">
+                  <span className="-mt-1.5 px-1.5 py-0.5 rounded bg-slate-900 text-white font-mono text-[9px] font-semibold">
                     Filho
                   </span>
                 </div>
 
                 <div className="flex flex-col items-center">
                   <CachorrinhoCarameloSVG humor={humor} />
-                  <span className="-mt-1 px-2 py-0.5 rounded bg-amber-300 border border-slate-900 text-slate-950 font-mono text-[10px] font-bold">
+                  <span className="-mt-1 px-1.5 py-0.5 rounded bg-amber-300 border border-slate-900 text-slate-950 font-mono text-[9px] font-bold">
                     Caramelo
                   </span>
                 </div>
@@ -894,42 +894,42 @@ export const PalcoSalaFamilia: React.FC<PalcoSalaFamiliaProps> = ({
               <>
                 <div className="flex flex-col items-center">
                   <PersonagemVovoSVG humor={humor} />
-                  <span className="-mt-2 px-1.5 py-0.5 rounded bg-teal-900 text-amber-100 font-mono text-[9px] sm:text-[10px] font-semibold">
+                  <span className="-mt-1.5 px-1.5 py-0.5 rounded bg-teal-900 text-amber-100 font-mono text-[9px] font-semibold">
                     Vovó
                   </span>
                 </div>
 
                 <div className="flex flex-col items-center">
                   <PersonagemPaiSVG humor={humor} compacto />
-                  <span className="-mt-2 px-1.5 py-0.5 rounded bg-slate-900 text-white font-mono text-[9px] sm:text-[10px] font-semibold">
+                  <span className="-mt-1.5 px-1.5 py-0.5 rounded bg-slate-900 text-white font-mono text-[9px] font-semibold">
                     Pai
                   </span>
                 </div>
 
                 <div className="flex flex-col items-center">
                   <PersonagemMaeSVG humor={humor} compacto />
-                  <span className="-mt-2 px-1.5 py-0.5 rounded bg-slate-900 text-white font-mono text-[9px] sm:text-[10px] font-semibold">
+                  <span className="-mt-1.5 px-1.5 py-0.5 rounded bg-slate-900 text-white font-mono text-[9px] font-semibold">
                     Mãe
                   </span>
                 </div>
 
                 <div className="flex flex-col items-center">
                   <PersonagemFilhaSVG humor={humor} />
-                  <span className="-mt-2 px-1.5 py-0.5 rounded bg-pink-900 text-pink-100 font-mono text-[9px] sm:text-[10px] font-semibold">
+                  <span className="-mt-1.5 px-1.5 py-0.5 rounded bg-pink-900 text-pink-100 font-mono text-[9px] font-semibold">
                     Filha
                   </span>
                 </div>
 
                 <div className="flex flex-col items-center">
                   <PersonagemFilhoSVG humor={humor} compacto />
-                  <span className="-mt-2 px-1.5 py-0.5 rounded bg-slate-900 text-white font-mono text-[9px] sm:text-[10px] font-semibold">
+                  <span className="-mt-1.5 px-1.5 py-0.5 rounded bg-slate-900 text-white font-mono text-[9px] font-semibold">
                     Filho
                   </span>
                 </div>
 
                 <div className="flex flex-col items-center">
                   <CachorrinhoCarameloSVG humor={humor} compacto />
-                  <span className="-mt-1 px-1.5 py-0.5 rounded bg-amber-300 border border-slate-900 text-slate-950 font-mono text-[9px] sm:text-[10px] font-bold">
+                  <span className="-mt-1 px-1.5 py-0.5 rounded bg-amber-300 border border-slate-900 text-slate-950 font-mono text-[9px] font-bold">
                     Caramelo
                   </span>
                 </div>
@@ -937,18 +937,18 @@ export const PalcoSalaFamilia: React.FC<PalcoSalaFamiliaProps> = ({
             )}
 
             {modoJogo === 'individual' && (
-              <div className="flex flex-col items-center py-1">
+              <div className="flex flex-col items-center py-0.5">
                 {generoPersonagem === 'mulher' ? (
                   <>
                     <PersonagemSoloMulherSVG humor={humor} />
-                    <span className="-mt-2 px-3 py-0.5 rounded-md bg-pink-600 border-2 border-slate-900 text-white font-mono text-xs font-bold">
+                    <span className="-mt-1.5 px-2.5 py-0.5 rounded bg-pink-600 border border-slate-900 text-white font-mono text-[10px] font-bold">
                       Jovem (Mulher)
                     </span>
                   </>
                 ) : (
                   <>
                     <PersonagemSoloHomemSVG humor={humor} />
-                    <span className="-mt-2 px-3 py-0.5 rounded-md bg-sky-600 border-2 border-slate-900 text-white font-mono text-xs font-bold">
+                    <span className="-mt-1.5 px-2.5 py-0.5 rounded bg-sky-600 border border-slate-900 text-white font-mono text-[10px] font-bold">
                       Jovem (Homem)
                     </span>
                   </>
@@ -958,19 +958,19 @@ export const PalcoSalaFamilia: React.FC<PalcoSalaFamiliaProps> = ({
           </div>
 
           {/* Chão de Madeira e Tapete */}
-          <div className={`w-full h-6 -mx-10 mt-1 ${corChao} flex items-center justify-center`}>
-            <div className="w-3/5 h-2.5 rounded-full bg-teal-600 border border-slate-900" />
+          <div className={`w-full h-5 -mx-10 mt-1 ${corChao} flex items-center justify-center`}>
+            <div className="w-3/5 h-2 rounded-full bg-teal-600 border border-slate-900" />
           </div>
         </div>
       </div>
 
       {/* CAIXA DE DIÁLOGO DO VISITANTE */}
       {npcAtivo && (
-        <div className="bg-slate-900 border-t-3 border-slate-900 p-4 sm:p-5 text-white">
-          <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4">
-            <div className="shrink-0 flex flex-col items-center bg-amber-50 p-2 rounded-xl border-2 border-slate-950">
+        <div className="bg-slate-900 border-t-2 border-slate-900 p-3 sm:p-4 text-white">
+          <div className="flex items-start gap-3">
+            <div className="shrink-0 flex flex-col items-center bg-amber-50 p-1.5 rounded-xl border-2 border-slate-950">
               <AvatarNPCSVG tipo={npcAtivo.tipo} />
-              <span className="mt-1 px-2 py-0.5 rounded bg-slate-900 text-amber-300 font-mono text-[10px] font-bold">
+              <span className="mt-0.5 px-1.5 py-0.5 rounded bg-slate-900 text-amber-300 font-mono text-[9px] font-bold">
                 {npcAtivo.nome}
               </span>
             </div>
@@ -978,31 +978,26 @@ export const PalcoSalaFamilia: React.FC<PalcoSalaFamiliaProps> = ({
             <div
               onClick={() => setTextoDigitado(npcAtivo.fala)}
               title="Clique para mostrar todo o texto"
-              className="flex-1 w-full bg-white text-slate-900 rounded-xl border-2 border-slate-950 p-4 cursor-pointer space-y-2"
+              className="flex-1 w-full bg-white text-slate-900 rounded-xl border-2 border-slate-950 p-3 cursor-pointer space-y-1.5"
             >
-              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 pb-1.5">
-                <div className="flex items-center gap-2">
-                  <MessageSquare className="w-4 h-4 text-emerald-600 shrink-0" />
-                  <span className="font-display font-bold text-sm sm:text-base text-slate-900">
+              <div className="flex flex-wrap items-center justify-between gap-1 border-b border-slate-200 pb-1">
+                <div className="flex items-center gap-1.5">
+                  <MessageSquare className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                  <span className="font-display font-bold text-xs sm:text-sm text-slate-900">
                     {npcAtivo.tituloEvento}
                   </span>
                 </div>
-                <span className="text-xs font-medium text-slate-500">
+                <span className="text-[11px] font-medium text-slate-500">
                   {npcAtivo.cargo} · {npcAtivo.categoria}
                 </span>
               </div>
 
-              <p className="text-sm sm:text-base font-medium text-slate-800 leading-relaxed min-h-[2.75rem]">
+              <p className="text-xs sm:text-sm font-medium text-slate-800 leading-relaxed min-h-[2.4rem]">
                 “{textoDigitado}”
                 {textoDigitado.length < npcAtivo.fala.length && (
-                  <span className="inline-block w-1.5 h-4 bg-slate-900 ml-1 animate-pulse" />
+                  <span className="inline-block w-1.5 h-3.5 bg-slate-900 ml-1 animate-pulse" />
                 )}
               </p>
-
-              <div className="text-[11px] text-slate-500 flex items-center justify-between pt-1">
-                <span>Escolha uma das opções abaixo para decidir como lidar com isso:</span>
-                <span className="text-emerald-700 font-semibold">Sua vez</span>
-              </div>
             </div>
           </div>
         </div>
