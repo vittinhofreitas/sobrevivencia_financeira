@@ -13,13 +13,13 @@ import {
   Award,
   Volume2,
   VolumeX,
+  Music,
   Play,
   Plus,
   Minus,
   RotateCcw,
   Download,
   Printer,
-  Sparkles,
   AlertTriangle,
   ShieldCheck,
   Home,
@@ -62,15 +62,15 @@ import {
 } from './PalcoSalaFamilia';
 
 // ============================================================================
-// TIPOS E ESTRUTURAS DE DADOS DO JOGO ARCADE (100% EM PORTUGUÊS)
+// TIPOS E ESTRUTURAS DE DADOS DO JOGO
 // ============================================================================
 
 export type TelaJogo = 'selecao' | 'gameplay' | 'zeramento';
 
 export interface ReceitasMensais {
   salarioMensal: number;
-  bolsaFamilia: number; // Aplicado SOMENTE no Modo Família / Família Grande
-  peDeMeia: number; // Aplicado SOMENTE no Modo Individual (Jovem Solo)
+  bolsaFamilia: number; // Aplicado somente nos modos Família e Família Grande
+  peDeMeia: number; // Aplicado somente no modo Individual (Jovem)
 }
 
 export interface DespesasEssenciais {
@@ -169,1265 +169,1264 @@ export interface RegistroFaseMensal {
 }
 
 const NOMES_FASES_MESES = [
-  'FASE 1/6 (JANEIRO)',
-  'FASE 2/6 (FEVEREIRO)',
-  'FASE 3/6 (MARÇO)',
-  'FASE 4/6 (ABRIL)',
-  'FASE 5/6 (MAIO)',
-  'FASE 6/6 (JUNHO)',
+  'Mês 1 de 6 · Janeiro',
+  'Mês 2 de 6 · Fevereiro',
+  'Mês 3 de 6 · Março',
+  'Mês 4 de 6 · Abril',
+  'Mês 5 de 6 · Maio',
+  'Mês 6 de 6 · Junho',
 ];
 
 const NOMES_CURTOS_MESES = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho'];
 
 // ============================================================================
-// BANCO COMPLETO DE EVENTOS (COM EVENTOS DE GÊNERO, VIAGENS, ROUPAS,
-// BOLSA FAMÍLIA EXCLUSIVO PARA FAMÍLIA E PÉ-DE-MEIA EXCLUSIVO PARA JOVEM)
+// BANCO DE EVENTOS (TEXTOS NATURAIS E DIRETOS)
 // ============================================================================
 
 export const bancoDeEventosNPC: EventoNPC[] = [
-  // --- EVENTOS EXCLUSIVOS DO MODO INDIVIDUAL: MULHER (PINK TAX, SALÃO, SEGURANÇA) ---
+  // --- MODO INDIVIDUAL: MULHER ---
   {
     id: 101,
-    titulo: '"Pink Tax" na Farmácia e Autocuidado!',
-    categoria: 'Cuidados Pessoais (Mulher)',
+    titulo: 'Compras de farmácia e higiene pessoal',
+    categoria: 'Cuidados pessoais',
     grupoGrafico: 'cuidadosPessoais',
-    nomeNPC: 'Clara da Farmácia',
-    cargoNPC: 'Consultora de Cosméticos',
+    nomeNPC: 'Clara',
+    cargoNPC: 'Atendente da farmácia',
     tipoNPC: 'esteticista',
     exclusivoPara: 'individual_mulher',
     falaNPC:
-      'Acabaram seus itens básicos de higiene, absorventes, protetor solar e creme capilar! Reparou que os produtos femininos custam até 25% mais caro por causa da "Pink Tax"?',
+      'Acabaram seus itens básicos de higiene, absorventes, protetor solar e creme de cabelo. Reparou como as versões voltadas ao público feminino costumam custar bem mais caro na prateleira?',
     cartas: [
       {
         codigo: '1',
-        rotuloAcao: 'Ação 1 · Compra Consciente à Vista',
-        titulo: 'Comparar Princípio Ativo e Comprar Refil no PIX',
+        rotuloAcao: 'Opção 1',
+        titulo: 'Comparar rótulos e levar refil à vista',
         descricao:
-          'Foge das embalagens "cor-de-rosa" caras, leva versões neutras/refil no atacado por R$ 130.',
+          'Ignora as embalagens mais caras, escolhe versões neutras ou refil e paga R$ 130 no PIX.',
         impactoMoedas: -130,
         usaCofreReserva: false,
         parcelaCartaoFutura: 0,
         mesesParcela: 0,
         impactoCoracoes: 8,
         tipoEscolha: 'planejada',
-        falaReacaoFamilia: 'Driblamos a Pink Tax olhando os ingredientes e economizamos muito!',
+        falaReacaoFamilia: 'Olhar os ingredientes e pegar refil fez uma baita diferença no preço.',
         explicacaoMestre:
-          'A "Pink Tax" (Taxa Rosa) encarece itens femininos idênticos aos masculinos. Comparar rótulos e comprar refis protege seu salário!',
+          'Muitos produtos femininos sofrem a chamada "taxa rosa", custando mais caro pela embalagem. Comparar a fórmula e usar refis protege seu bolso.',
       },
       {
         codigo: '2',
-        rotuloAcao: 'Ação 2 · Alternativa Econômica',
-        titulo: 'Levar Apenas o Básico Essencial da Lista',
-        descricao: 'Compra somente o indispensável de higiene em promoção por R$ 75.',
+        rotuloAcao: 'Opção 2',
+        titulo: 'Comprar só o indispensável da lista',
+        descricao: 'Leva apenas o básico de higiene em promoção por R$ 75.',
         impactoMoedas: -75,
         usaCofreReserva: false,
         parcelaCartaoFutura: 0,
         mesesParcela: 0,
         impactoCoracoes: 3,
         tipoEscolha: 'economica',
-        falaReacaoFamilia: 'Focamos apenas no essencial deste mês sem estourar o orçamento!',
+        falaReacaoFamilia: 'Levamos só o que precisava mesmo para este mês.',
         explicacaoMestre:
-          'Separar itens de saúde/higiene indispensáveis de dermocosméticos de impulso mantém as contas sob controle.',
+          'Ir à farmácia com uma lista fechada evita colocar itens extras na cestinha por impulso.',
       },
       {
         codigo: '3',
-        rotuloAcao: 'Ação 3 · Kit Skincare Viral Parcelado',
-        titulo: 'Levar Kit Completo de Blogueira em 3x no Cartão',
-        descricao: 'Gasta R$ 180 hoje + 2 parcelas de R$ 150 em cremes importados.',
+        rotuloAcao: 'Opção 3',
+        titulo: 'Parcelar kit completo de pele e cabelo em 3x',
+        descricao: 'Paga R$ 180 hoje e assume mais 2 parcelas de R$ 150 no cartão.',
         impactoMoedas: -180,
         usaCofreReserva: false,
         parcelaCartaoFutura: 150,
         mesesParcela: 2,
         impactoCoracoes: 2,
         tipoEscolha: 'armadilha',
-        falaReacaoFamilia: 'R$ 480 em potinhos na farmácia! O cartão ficou pesado!',
+        falaReacaoFamilia: 'Quase quinhentos reais em farmácia... a fatura do mês que vem já ficou pesada.',
         explicacaoMestre:
-          'O marketing de beleza nas redes sociais incentiva rotinas de 10 produtos caros que drenam a renda jovem.',
+          'Parcelar cosméticos de uso diário faz a parcela se juntar com a reposição dos próximos meses.',
       },
     ],
   },
   {
     id: 102,
-    titulo: 'Manutenção do Cabelo / Tranças / Salão!',
-    categoria: 'Estética e Apresentação (Mulher)',
+    titulo: 'Manutenção do cabelo e salão',
+    categoria: 'Cuidados pessoais',
     grupoGrafico: 'cuidadosPessoais',
-    nomeNPC: 'Bia Trancista & Hair',
-    cargoNPC: 'Salão Beleza Real',
+    nomeNPC: 'Bia',
+    cargoNPC: 'Cabeleireira e trancista',
     tipoNPC: 'esteticista',
     exclusivoPara: 'individual_mulher',
     falaNPC:
-      'Amiga, chegou a hora da manutenção do cabelo e sobrancelha para trabalhar e estudar com autoestima lá no alto! Qual pacote vamos fazer hoje?',
+      'Chegou a época de fazer a manutenção do cabelo e da sobrancelha para trabalhar e estudar se sentindo bem. Como você prefere fazer neste mês?',
     cartas: [
       {
         codigo: '1',
-        rotuloAcao: 'Ação 1 · Agendamento Planejado à Vista',
-        titulo: 'Manutenção Completa Agendada com Desconto no PIX',
-        descricao: 'Faz o procedimento planejado no salão de confiança por R$ 170 à vista.',
+        rotuloAcao: 'Opção 1',
+        titulo: 'Fazer a manutenção agendada à vista',
+        descricao: 'Paga R$ 170 no PIX com desconto no salão de confiança.',
         impactoMoedas: -170,
         usaCofreReserva: false,
         parcelaCartaoFutura: 0,
         mesesParcela: 0,
         impactoCoracoes: 11,
         tipoEscolha: 'planejada',
-        falaReacaoFamilia: 'Autoestima renovada e tudo pago à vista dentro do planejado!',
+        falaReacaoFamilia: 'Cabelo arrumado e tudo pago à vista como estava planejado.',
         explicacaoMestre:
-          'Quando o salão já está previsto na categoria de Cuidados Pessoais, você cuida de si sem culpa e sem dívida.',
+          'Quando o cuidado pessoal já está previsto no orçamento do mês, você se cuida sem gerar dívida.',
       },
       {
         codigo: '2',
-        rotuloAcao: 'Ação 2 · Faça em Casa / Parceria com Amiga',
-        titulo: 'Hidratação e Finalização Caseira com Amiga',
-        descricao: 'Compra os produtos profissionais por R$ 65 e faz o cuidado em casa.',
+        rotuloAcao: 'Opção 2',
+        titulo: 'Cuidar em casa com ajuda de uma amiga',
+        descricao: 'Compra os produtos por R$ 65 e faz a hidratação e finalização em casa.',
         impactoMoedas: -65,
         usaCofreReserva: false,
         parcelaCartaoFutura: 0,
         mesesParcela: 0,
         impactoCoracoes: 7,
         tipoEscolha: 'economica',
-        falaReacaoFamilia: 'Ficou lindo fazendo em casa e economizamos mais de R$ 100!',
+        falaReacaoFamilia: 'Deu super certo fazer em casa e sobrou mais de cem reais.',
         explicacaoMestre:
-          'Intercalar idas ao salão com cronograma capilar caseiro reduz o gasto anual pela metade.',
+          'Intercalar idas ao salão com cuidados feitos em casa reduz bastante a despesa ao longo do ano.',
       },
       {
         codigo: '3',
-        rotuloAcao: 'Ação 3 · Pacote VIP de Salão no Cartão',
-        titulo: 'Fazer Combo Química + Unhas de Gel + Cílios em 3x',
-        descricao: 'Paga R$ 210 hoje + 2x de R$ 175 no cartão de crédito.',
+        rotuloAcao: 'Opção 3',
+        titulo: 'Fazer pacote completo no cartão em 3x',
+        descricao: 'Gasta R$ 210 hoje mais 2 parcelas de R$ 175 no crédito.',
         impactoMoedas: -210,
         usaCofreReserva: false,
         parcelaCartaoFutura: 175,
         mesesParcela: 2,
         impactoCoracoes: 4,
         tipoEscolha: 'armadilha',
-        falaReacaoFamilia: 'Ainda nem cresceu o cabelo e já temos R$ 350 de parcelas para pagar!',
+        falaReacaoFamilia: 'Quando precisar retocar o cabelo de novo, ainda estaremos pagando essas parcelas.',
         explicacaoMestre:
-          'Parcelar serviços que exigem nova manutenção todo mês cria sobreposição de parcelas no cartão.',
+          'Parcelar serviços que precisam de manutenção todo mês acumula uma parcela em cima da outra.',
       },
     ],
   },
   {
     id: 103,
-    titulo: 'Volta Tarde da Aula/Trabalho: Uber ou Ônibus?',
-    categoria: 'Segurança e Transporte (Mulher)',
+    titulo: 'Volta tarde da aula ou trabalho',
+    categoria: 'Transporte e segurança',
     grupoGrafico: 'transporte',
-    nomeNPC: 'Motorista de App',
-    cargoNPC: 'Tarifa Dinâmica Noturna',
+    nomeNPC: 'Ronaldo',
+    cargoNPC: 'Motorista de aplicativo',
     tipoNPC: 'mecanico',
     exclusivoPara: 'individual_mulher',
     falaNPC:
-      'São 22h30 e o ponto de ônibus está deserto! Por segurança, muitas mulheres precisam usar carro de aplicativo à noite, mas a tarifa dinâmica subiu!',
+      'Já passa das 22h e o ponto de ônibus está vazio. Para voltar em segurança à noite, muita gente prefere pedir carro por aplicativo, mas o preço dinâmico subiu.',
     cartas: [
       {
         codigo: '1',
-        rotuloAcao: 'Ação 1 · Carona Solidária / Rachar Corrida',
-        titulo: 'Dividir Corrida de App com 2 Colegas da Mesma Rua',
-        descricao: 'Volta em segurança até a porta de casa dividindo o valor (R$ 110 no mês).',
+        rotuloAcao: 'Opção 1',
+        titulo: 'Dividir a corrida com colegas do mesmo bairro',
+        descricao: 'Volta em segurança até em casa rachando o valor com duas colegas (R$ 110 no mês).',
         impactoMoedas: -110,
         usaCofreReserva: false,
         parcelaCartaoFutura: 0,
         mesesParcela: 0,
         impactoCoracoes: 9,
         tipoEscolha: 'planejada',
-        falaReacaoFamilia: 'Voltamos seguras para casa e pagando 1/3 da corrida!',
+        falaReacaoFamilia: 'Combinar a volta com as meninas deixou a corrida muito mais em conta.',
         explicacaoMestre:
-          'O custo com segurança no deslocamento feminino é real; organizar grupos de rota compartilhada reduz o peso no bolso.',
+          'O gasto extra com segurança no transporte noturno pesa no orçamento feminino; dividir rota reduz o custo a um terço.',
       },
       {
         codigo: '2',
-        rotuloAcao: 'Ação 2 · Alternativa Combinada',
-        titulo: 'Ir até Estação Movimentada e Pegar App Só no Trecho Final',
-        descricao: 'Usa integração até a avenida principal e app curto de R$ 60 no mês.',
+        rotuloAcao: 'Opção 2',
+        titulo: 'Ir até a estação principal e pedir carro só no trecho final',
+        descricao: 'Faz a parte movimentada de transporte público e usa o app só perto de casa (R$ 60).',
         impactoMoedas: -60,
         usaCofreReserva: false,
         parcelaCartaoFutura: 0,
         mesesParcela: 0,
         impactoCoracoes: 5,
         tipoEscolha: 'economica',
-        falaReacaoFamilia: 'Combinar transporte público com corrida curta economizou bastante!',
+        falaReacaoFamilia: 'Usar o aplicativo só no trecho final funcionou bem e custou pouco.',
         explicacaoMestre:
-          'Usar o aplicativo apenas na "última milha" noturna equilibra segurança pessoal e orçamento.',
+          'Combinar transporte público até um ponto seguro com uma corrida curta equilibra proteção e economia.',
       },
       {
         codigo: '3',
-        rotuloAcao: 'Ação 3 · Pedir App Sozinha Todo Dia no Crédito',
-        titulo: 'Pegar Carro de App na Tarifa Dinâmica Ida e Volta',
-        descricao: 'Gasta R$ 280 agora + R$ 180 acumulados na fatura do cartão do próximo mês!',
+        rotuloAcao: 'Opção 3',
+        titulo: 'Pedir corrida individual todo dia no cartão',
+        descricao: 'Gasta R$ 280 neste mês e acumula mais R$ 180 na fatura do próximo.',
         impactoMoedas: -280,
         usaCofreReserva: false,
         parcelaCartaoFutura: 180,
         mesesParcela: 1,
         impactoCoracoes: -2,
         tipoEscolha: 'armadilha',
-        falaReacaoFamilia: 'R$ 460 só de corridas no aplicativo! Quase um aluguel!',
+        falaReacaoFamilia: 'Somando corrida por corrida, deu quase metade de um aluguel.',
         explicacaoMestre:
-          'Corridas individuais em horário de pico no cartão de crédito somam centenas de reais sem perceber.',
+          'Corridas diárias na tarifa dinâmica pagas no crédito viram uma bola de neve silenciosa no fim do mês.',
       },
     ],
   },
 
-  // --- EVENTOS EXCLUSIVOS DO MODO INDIVIDUAL: HOMEM (BARBEARIA, GAMES/FUTEBOL, SUPLEMENTOS) ---
+  // --- MODO INDIVIDUAL: HOMEM ---
   {
     id: 201,
-    titulo: 'Barbearia Toda Semana: Degradê na Régua!',
-    categoria: 'Cuidados Pessoais (Homem)',
+    titulo: 'Barbearia toda semana',
+    categoria: 'Cuidados pessoais',
     grupoGrafico: 'cuidadosPessoais',
-    nomeNPC: 'Barbeiro Du Corte',
-    cargoNPC: 'Barbearia Retrô VIP',
+    nomeNPC: 'Du Corte',
+    cargoNPC: 'Barbeiro',
     tipoNPC: 'barbeiro',
     exclusivoPara: 'individual_homem',
     falaNPC:
-      'E aí, parceiro! Vai mandar aquele degradê navalhado + barba + pigmentação toda sexta-feira e levar a pomada importada?',
+      'E aí, parceiro! Vai querer fechar o pacote pra cortar toda sexta-feira, alinhar a barba na navalha e levar a pomada modeladora?',
     cartas: [
       {
         codigo: '1',
-        rotuloAcao: 'Ação 1 · Frequência Equilibrada à Vista',
-        titulo: 'Cortar a Cada 20 Dias e Cuidar da Barba em Casa',
-        descricao: 'Mantém o visual alinhado gastando R$ 90 no mês à vista.',
+        rotuloAcao: 'Opção 1',
+        titulo: 'Cortar a cada três semanas e aparar a barba em casa',
+        descricao: 'Mantém o corte em dia gastando R$ 90 no mês à vista.',
         impactoMoedas: -90,
         usaCofreReserva: false,
         parcelaCartaoFutura: 0,
         mesesParcela: 0,
         impactoCoracoes: 8,
         tipoEscolha: 'planejada',
-        falaReacaoFamilia: 'Visual na régua e dinheiro sobrando na carteira!',
+        falaReacaoFamilia: 'Cabelo alinhado e uma boa grana economizada no mês.',
         explicacaoMestre:
-          'Espaçar o corte para cada 3 semanas e aparar a barba em casa economiza mais de R$ 1.200 por ano.',
+          'Espaçar o corte para cada 20 dias e cuidar da barba em casa economiza mais de R$ 1.200 por ano.',
       },
       {
         codigo: '2',
-        rotuloAcao: 'Ação 2 · Alternativa Econômica',
-        titulo: 'Comprar Maquininha Própria e Cortar Simples',
-        descricao: 'Investe R$ 55 para manter o corte básico sem depender de salão toda semana.',
+        rotuloAcao: 'Opção 2',
+        titulo: 'Comprar uma maquininha simples para manter em casa',
+        descricao: 'Gasta R$ 55 numa máquina básica para aparar nas semanas intermediárias.',
         impactoMoedas: -55,
         usaCofreReserva: false,
         parcelaCartaoFutura: 0,
         mesesParcela: 0,
         impactoCoracoes: 5,
         tipoEscolha: 'economica',
-        falaReacaoFamilia: 'Prático demais! A maquininha já se pagou no primeiro mês!',
+        falaReacaoFamilia: 'A maquininha já se pagou logo no primeiro mês.',
         explicacaoMestre:
-          'Pequenos equipamentos de cuidado pessoal doméstico têm retorno financeiro imediato.',
+          'Ter equipamento básico em casa reduz bastante a frequência de gastos no salão ou barbearia.',
       },
       {
         codigo: '3',
-        rotuloAcao: 'Ação 3 · Clube VIP + Produtos no Cartão',
-        titulo: 'Ir Toda Sexta + Combo Pomada/Óleo/Toalha Quente no Crédito',
-        descricao: 'Gasta R$ 220 neste mês + R$ 140 na fatura do mês seguinte.',
+        rotuloAcao: 'Opção 3',
+        titulo: 'Ir toda sexta e levar produtos no cartão',
+        descricao: 'Gasta R$ 220 neste mês e joga R$ 140 para a fatura seguinte.',
         impactoMoedas: -220,
         usaCofreReserva: false,
         parcelaCartaoFutura: 140,
         mesesParcela: 1,
         impactoCoracoes: 3,
         tipoEscolha: 'armadilha',
-        falaReacaoFamilia: 'R$ 360 de barbearia e produtos! Foi quase metade do Pé-de-Meia!',
+        falaReacaoFamilia: 'Trezentos e sessenta reais só de barbearia e pomada neste mês.',
         explicacaoMestre:
-          'Ir à barbearia toda semana somado a consumos extras no local transforma um cuidado simples em gasto pesado.',
+          'Ir toda semana e consumir extras no local transforma um cuidado simples num gasto alto.',
       },
     ],
   },
   {
     id: 202,
-    titulo: 'Lançamento de Game + Futebol Pay-Per-View!',
-    categoria: 'Entretenimento & Amigos (Homem)',
+    titulo: 'Jogo novo no lançamento e futebol com a turma',
+    categoria: 'Lazer e amigos',
     grupoGrafico: 'viagens',
-    nomeNPC: 'Juninho Gamer',
-    cargoNPC: 'Parceiro do Squad',
+    nomeNPC: 'Juninho',
+    cargoNPC: 'Amigo da turma',
     tipoNPC: 'streaming_bot',
     exclusivoPara: 'individual_homem',
     falaNPC:
-      'Mano! Saiu o jogo novo de R$ 350 na pré-venda, tem o Passe de Batalha e o pacote do Campeonato de Futebol pra assistir com a galera!',
+      'Cara, saiu aquele jogo novo na pré-venda por R$ 350! Também tem o pacote do campeonato de futebol pra gente assinar. Bora pegar tudo hoje?',
     cartas: [
       {
         codigo: '1',
-        rotuloAcao: 'Ação 1 · Lazer Consciente',
-        titulo: 'Jogar Títulos Gratuitos / Promoção Antiga e Ver Jogo na TV Aberta',
-        descricao: 'Diverte-se com os amigos gastando apenas R$ 65 com petiscos à vista.',
+        rotuloAcao: 'Opção 1',
+        titulo: 'Esperar promoção e reunir a galera em casa',
+        descricao: 'Joga o que já tem na biblioteca e divide os petiscos por R$ 65 à vista.',
         impactoMoedas: -65,
         usaCofreReserva: false,
         parcelaCartaoFutura: 0,
         mesesParcela: 0,
         impactoCoracoes: 9,
         tipoEscolha: 'planejada',
-        falaReacaoFamilia: 'Jogamos a noite toda e rimos demais sem gastar quase nada!',
+        falaReacaoFamilia: 'Nos divertimos a noite inteira gastando muito pouco.',
         explicacaoMestre:
-          'Esperar alguns meses após o lançamento faz o preço dos jogos cair até 60% nas promoções sazonais.',
+          'Esperar alguns meses após o lançamento costuma derrubar o preço dos jogos pela metade.',
       },
       {
         codigo: '2',
-        rotuloAcao: 'Ação 2 · Dividir Assinatura',
-        titulo: 'Rachar Assinatura Mensal com Amigo (R$ 35)',
-        descricao: 'Divide o catálogo de jogos com o melhor amigo sem comprar no impulso.',
+        rotuloAcao: 'Opção 2',
+        titulo: 'Dividir assinatura mensal com um amigo',
+        descricao: 'Racha o plano de catálogo de jogos por R$ 35 sem comprar lançamento.',
         impactoMoedas: -35,
         usaCofreReserva: false,
         parcelaCartaoFutura: 0,
         mesesParcela: 0,
         impactoCoracoes: 7,
         tipoEscolha: 'economica',
-        falaReacaoFamilia: 'Catálogo gigante de jogos por apenas R$ 35!',
+        falaReacaoFamilia: 'Vários jogos liberados por trinta e cinco reais.',
         explicacaoMestre:
-          'Compartilhar planos ou aguardar promoções evita que microtransações levem seu salário.',
+          'Dividir assinaturas ou usar catálogos mensais evita gastos pesados com compras por impulso.',
       },
       {
         codigo: '3',
-        rotuloAcao: 'Ação 3 · Comprar Edição Deluxe + Skins no Cartão',
-        titulo: 'Passar Jogo Deluxe + Moedas Virtuais + Pay-Per-View em 3x',
-        descricao: 'Gasta R$ 210 agora + 2 parcelas de R$ 160 no cartão!',
+        rotuloAcao: 'Opção 3',
+        titulo: 'Comprar versão especial e moedas virtuais em 3x',
+        descricao: 'Paga R$ 210 agora mais 2 parcelas de R$ 160 no cartão.',
         impactoMoedas: -210,
         usaCofreReserva: false,
         parcelaCartaoFutura: 160,
         mesesParcela: 2,
         impactoCoracoes: 3,
         tipoEscolha: 'armadilha',
-        falaReacaoFamilia: 'Gastamos R$ 530 em jogo e skins virtuais! Que rombo na conta!',
+        falaReacaoFamilia: 'Mais de quinhentos reais em jogo e itens virtuais...',
         explicacaoMestre:
-          'Microtransações, passes de batalha e compras no lançamento são desenhados para drenar o orçamento masculino jovem.',
+          'Compras no lançamento somadas a itens dentro do jogo drenam rapidamente a renda de quem está começando.',
       },
     ],
   },
   {
     id: 203,
-    titulo: 'Combo Suplementos, Academia e Resenha!',
-    categoria: 'Estilo de Vida (Homem)',
+    titulo: 'Combo de suplementos e academia',
+    categoria: 'Saúde e rotina',
     grupoGrafico: 'cuidadosPessoais',
-    nomeNPC: 'Coach Bombado',
-    cargoNPC: 'Loja de Suplementos',
+    nomeNPC: 'Rodrigo',
+    cargoNPC: 'Vendedor de suplementos',
     tipoNPC: 'vendedor_shopping',
     exclusivoPara: 'individual_homem',
     falaNPC:
-      'Bora ficar monstro! Tenho aqui o combo Whey Isolado Importado + Pré-Treino + Creatina + Camisa Dry-Fit em 3x no cartão!',
+      'Para acelerar o resultado no treino, montei um kit com whey importado, pré-treino, creatina e camiseta térmica. Faço tudo em 3x no cartão!',
     cartas: [
       {
         codigo: '1',
-        rotuloAcao: 'Ação 1 · Nutrição Inteligente à Vista',
-        titulo: 'Comprar Ovos, Frango, Banana e Creatina Básica no PIX',
-        descricao: 'Foca na alimentação natural eficiente gastando R$ 110 à vista.',
+        rotuloAcao: 'Opção 1',
+        titulo: 'Focar na alimentação do dia a dia e creatina básica',
+        descricao: 'Compra ovos, frango, frutas e o básico à vista por R$ 110.',
         impactoMoedas: -110,
         usaCofreReserva: false,
         parcelaCartaoFutura: 0,
         mesesParcela: 0,
         impactoCoracoes: 9,
         tipoEscolha: 'planejada',
-        falaReacaoFamilia: 'Saúde em dia com comida de verdade e sem cair em conversa de marketing!',
+        falaReacaoFamilia: 'Comida de verdade resolveu super bem sem estourar a conta.',
         explicacaoMestre:
-          'Comida de verdade (ovos, frango, arroz, frutas) entrega excelente resultado nutricional por uma fração do preço de suplementos importados.',
+          'Uma boa alimentação natural entrega ótimos resultados por uma fração do preço de suplementos importados.',
       },
       {
         codigo: '2',
-        rotuloAcao: 'Ação 2 · Treino ao Ar Livre / Calistenia',
-        titulo: 'Treinar no Parque Público e Manter Dieta Caseira (R$ 45)',
-        descricao: 'Usa as barras da praça pública com os amigos e economiza na mensalidade.',
+        rotuloAcao: 'Opção 2',
+        titulo: 'Treinar ao ar livre na praça e manter refeição caseira',
+        descricao: 'Usa os equipamentos públicos do parque e gasta R$ 45 reforçando a feira.',
         impactoMoedas: -45,
         usaCofreReserva: false,
         parcelaCartaoFutura: 0,
         mesesParcela: 0,
         impactoCoracoes: 7,
         tipoEscolha: 'economica',
-        falaReacaoFamilia: 'Treinão ao ar livre de graça e saúde nota 10!',
+        falaReacaoFamilia: 'Treino em dia e sem mensalidade pesando no bolso.',
         explicacaoMestre:
-          'Parques públicos e calistenia mantêm o condicionamento físico com custo zero de mensalidade.',
+          'Atividades ao ar livre mantêm a saúde em dia quando o orçamento está curto.',
       },
       {
         codigo: '3',
-        rotuloAcao: 'Ação 3 · Levar o Combo Importado no Cartão',
-        titulo: 'Comprar Kit Completo de Potes Caros em 3x',
-        descricao: 'Gasta R$ 190 hoje + 2 parcelas de R$ 165 no cartão!',
+        rotuloAcao: 'Opção 3',
+        titulo: 'Levar o kit importado completo em 3x no cartão',
+        descricao: 'Gasta R$ 190 hoje mais 2 parcelas de R$ 165.',
         impactoMoedas: -190,
         usaCofreReserva: false,
         parcelaCartaoFutura: 165,
         mesesParcela: 2,
         impactoCoracoes: 1,
         tipoEscolha: 'armadilha',
-        falaReacaoFamilia: 'R$ 520 em potes de suplemento! O salário derreteu!',
+        falaReacaoFamilia: 'Mais de quinhentos reais em potes que acabam em poucas semanas.',
         explicacaoMestre:
-          'Suplementos caros sem necessidade real são um dos maiores gastos por impulso entre jovens homens.',
+          'Comprar combos caros de suplementos por impulso compromete o salário por vários meses.',
       },
     ],
   },
 
-  // --- EVENTO EXCLUSIVO DO MODO INDIVIDUAL (JOVEM): INCENTIVO PÉ-DE-MEIA ESTUDANTIL ---
+  // --- MODO INDIVIDUAL (JOVEM): PÉ-DE-MEIA ---
   {
     id: 301,
-    titulo: 'Incentivo Pé-de-Meia: Frequência Escolar e Bônus!',
-    categoria: 'Educação e Renda Jovem',
+    titulo: 'Parcela e frequência do Pé-de-Meia',
+    categoria: 'Estudos e incentivo',
     grupoGrafico: 'rendaExtra',
-    nomeNPC: 'Orientadora Helena',
-    cargoNPC: 'Programa Pé-de-Meia MEC',
+    nomeNPC: 'Helena',
+    cargoNPC: 'Orientadora da escola',
     tipoNPC: 'diretora_escola',
     exclusivoPara: 'individual_qualquer',
     falaNPC:
-      'Atenção, estudante! Sua frequência escolar passou de 80% neste bimestre e saiu a parcela extra de incentivo do Pé-de-Meia! O que você vai fazer com esse recurso?',
+      'Sua presença nas aulas ficou acima de 80% neste bimestre e caiu um valor extra do incentivo estudantil. Como você pretende organizar os estudos e esse dinheiro neste mês?',
     cartas: [
       {
         codigo: '1',
-        rotuloAcao: 'Ação 1 · Multiplicar o Futuro',
-        titulo: 'Guardar Bônus (+R$ 250) e Fazer Curso Técnico Rápido',
-        descricao: 'Garante a frequência, recebe +R$ 250 extras líquidos e fortalece o currículo!',
+        rotuloAcao: 'Opção 1',
+        titulo: 'Manter a frequência firme e guardar o bônus (+R$ 250)',
+        descricao: 'Garante a presença nas aulas, recebe +R$ 250 extras e faz um curso livre gratuito.',
         impactoMoedas: 250,
         usaCofreReserva: false,
         parcelaCartaoFutura: 0,
         mesesParcela: 0,
         impactoCoracoes: 10,
         tipoEscolha: 'planejada',
-        falaReacaoFamilia: 'Frequência exemplar na escola e +R$ 250 do Pé-de-Meia somados na conta!',
+        falaReacaoFamilia: 'Presença garantida e duzentos e cinquenta reais a mais na conta.',
         explicacaoMestre:
-          'O Pé-de-Meia existe para garantir sua permanência nos estudos e construir sua primeira reserva financeira!',
+          'O Pé-de-Meia premia a frequência escolar e ajuda a formar sua primeira reserva financeira.',
       },
       {
         codigo: '2',
-        rotuloAcao: 'Ação 2 · Reforçar o Caixa do Mês',
-        titulo: 'Usar o Bônus (+R$ 200) para Quitar Contas à Vista',
-        descricao: 'Mantém a frequência em dia e soma +R$ 200 direto no saldo do mês.',
+        rotuloAcao: 'Opção 2',
+        titulo: 'Usar a parcela (+R$ 200) para aliviar as contas do mês',
+        descricao: 'Mantém a frequência em dia e soma +R$ 200 direto no caixa.',
         impactoMoedas: 200,
         usaCofreReserva: false,
         parcelaCartaoFutura: 0,
         mesesParcela: 0,
         impactoCoracoes: 6,
         tipoEscolha: 'economica',
-        falaReacaoFamilia: 'Esses R$ 200 a mais salvaram as contas desta semana!',
+        falaReacaoFamilia: 'Esse valor ajudou a fechar as contas da semana no azul.',
         explicacaoMestre:
-          'Manter a frequência escolar acima de 80% evita o bloqueio do benefício mensal de R$ 200.',
+          'Manter a presença acima de 80% garante o pagamento regular do incentivo todo mês.',
       },
       {
         codigo: '3',
-        rotuloAcao: 'Ação 3 · Faltar às Aulas / Bloqueio do Benefício',
-        titulo: 'Faltar na Semana de Provas e Ter a Parcela Bloqueada (-R$ 200)',
-        descricao: 'Perde o incentivo do mês por excesso de faltas (-R$ 200) e fica frustrado.',
+        rotuloAcao: 'Opção 3',
+        titulo: 'Faltar às aulas na semana de provas (-R$ 200)',
+        descricao: 'A frequência cai abaixo do mínimo e a parcela do mês é bloqueada.',
         impactoMoedas: -200,
         usaCofreReserva: false,
         parcelaCartaoFutura: 0,
         mesesParcela: 0,
         impactoCoracoes: -10,
         tipoEscolha: 'armadilha',
-        falaReacaoFamilia: 'Perdemos a parcela do Pé-de-Meia deste mês por faltar às aulas!',
+        falaReacaoFamilia: 'Por causa das faltas, o pagamento deste mês ficou retido.',
         explicacaoMestre:
-          'Se a frequência mensal cair abaixo de 80%, o pagamento do Pé-de-Meia é suspenso naquele mês!',
+          'Quando a frequência escolar fica abaixo de 80%, o incentivo do mês é suspenso.',
       },
     ],
   },
 
-  // --- EVENTO EXCLUSIVO DOS MODOS FAMÍLIA E FAMÍLIA GRANDE: BOLSA FAMÍLIA / CADÚNICO ---
+  // --- MODOS FAMÍLIA E FAMÍLIA GRANDE: BOLSA FAMÍLIA ---
   {
     id: 401,
-    titulo: 'Convocação do CadÚnico: Atualização do Bolsa Família!',
-    categoria: 'Benefício Social Familiar',
+    titulo: 'Atualização do CadÚnico e vacinação',
+    categoria: 'Benefício familiar',
     grupoGrafico: 'rendaExtra',
-    nomeNPC: 'Assistente Social Lúcia',
-    cargoNPC: 'CRAS / Cadastro Único',
+    nomeNPC: 'Lúcia',
+    cargoNPC: 'Assistente social do CRAS',
     tipoNPC: 'assistente_social',
     exclusivoPara: 'familia_qualquer',
     falaNPC:
-      'Olá, família! Chegou o aviso no aplicativo para atualizar o CadÚnico, o cartão de vacinação e a frequência escolar das crianças para manter o Bolsa Família e o Benefício Primeira Infância!',
+      'Chegou um aviso no aplicativo para atualizar o cadastro da família e apresentar a carteira de vacinação e a frequência escolar das crianças para manter o Bolsa Família.',
     cartas: [
       {
         codigo: '1',
-        rotuloAcao: 'Ação 1 · Cadastro e Vacinas 100% em Dia',
-        titulo: 'Comparecer ao CRAS no Prazo e Garantir Adicional (+R$ 150)',
+        rotuloAcao: 'Opção 1',
+        titulo: 'Levar os documentos no prazo e liberar adicional (+R$ 150)',
         descricao:
-          'Leva todos os documentos, comprova vacinação/escola e libera +R$ 150 de adicional familiar!',
+          'Atualiza os dados no CRAS com vacinas em dia e garante +R$ 150 de benefício complementar.',
         impactoMoedas: 150,
         usaCofreReserva: false,
         parcelaCartaoFutura: 0,
         mesesParcela: 0,
         impactoCoracoes: 9,
         tipoEscolha: 'planejada',
-        falaReacaoFamilia: 'Cadastro atualizado no CRAS e benefício garantido com adicional!',
+        falaReacaoFamilia: 'Cadastro atualizado a tempo e benefício garantido.',
         explicacaoMestre:
-          'Manter o CadÚnico atualizado, vacinas em dia e frequência escolar garante a proteção da renda familiar.',
+          'Manter o CadÚnico, a vacinação e a frequência escolar em dia protege essa fonte importante da renda familiar.',
       },
       {
         codigo: '2',
-        rotuloAcao: 'Ação 2 · Agendamento pelo Aplicativo',
-        titulo: 'Regularizar Documentos na Semana Seguinte (Custo Transporte R$ 20)',
-        descricao: 'Gasta apenas R$ 20 de passagem até o posto e mantém o benefício normal.',
+        rotuloAcao: 'Opção 2',
+        titulo: 'Agendar atendimento para a semana seguinte (R$ 20)',
+        descricao: 'Gasta apenas R$ 20 de passagem até o posto e mantém o benefício regularizado.',
         impactoMoedas: -20,
         usaCofreReserva: false,
         parcelaCartaoFutura: 0,
         mesesParcela: 0,
         impactoCoracoes: 4,
         tipoEscolha: 'economica',
-        falaReacaoFamilia: 'Tudo regularizado sem fila e sem risco de bloqueio!',
+        falaReacaoFamilia: 'Tudo resolvido com hora marcada e sem dor de cabeça.',
         explicacaoMestre:
-          'Acompanhar o aplicativo oficial evita cair em boatos ou perder prazos de recadastramento.',
+          'Acompanhar os avisos oficiais pelo aplicativo evita filas e bloqueios inesperados.',
       },
       {
         codigo: '3',
-        rotuloAcao: 'Ação 3 · Ignorar o Prazo de Atualização',
-        titulo: 'Esquecer de Ir ao CRAS e Ter o Benefício Bloqueado no Mês (-R$ 300)',
-        descricao: 'Perde R$ 300 de receita no mês até conseguir desbloquear o cadastro!',
+        rotuloAcao: 'Opção 3',
+        titulo: 'Deixar passar o prazo de recadastramento (-R$ 300)',
+        descricao: 'O benefício sofre bloqueio temporário no mês até regularizar a situação.',
         impactoMoedas: -300,
         usaCofreReserva: false,
         parcelaCartaoFutura: 0,
         mesesParcela: 0,
         impactoCoracoes: -12,
         tipoEscolha: 'armadilha',
-        falaReacaoFamilia: 'O benefício foi bloqueado porque esquecemos de atualizar o cadastro!',
+        falaReacaoFamilia: 'Perdemos o prazo e o pagamento ficou bloqueado justo neste mês.',
         explicacaoMestre:
-          'Deixar de atualizar o CadÚnico ou descumprir condicionalidades de saúde e educação bloqueia o Bolsa Família.',
+          'Ignorar a convocação do CadÚnico ou as exigências de saúde e escola suspende o recebimento do benefício.',
       },
     ],
   },
 
-  // --- NOVOS EVENTOS DIRETAMENTE LIGADOS AOS CAMPOS DE VIAGENS E ROUPAS ---
+  // --- EVENTOS DE VIAGENS E ROUPAS ---
   {
     id: 501,
-    titulo: 'Promoção de Pacote de Viagem para o Feriadão!',
-    categoria: 'Viagens e Lazer',
+    titulo: 'Convite para viajar no feriado prolongado',
+    categoria: 'Viagens e lazer',
     grupoGrafico: 'viagens',
-    nomeNPC: 'Beto Turismo',
-    cargoNPC: 'Agência Sol & Praia',
+    nomeNPC: 'Beto',
+    cargoNPC: 'Agente de turismo',
     tipoNPC: 'agente_viagem',
     falaNPC:
-      'Olha o feriadão chegando! Tenho pacote com pousada e passeio de barco em oferta relâmpago! Vamos viajar planejado ou parcelar tudo no impulso?',
+      'Vem aí um feriado prolongado! Tem pacote completo de hotel parcelado no cartão e também opções de bate-e-volta aqui perto. O que vamos fazer?',
     cartas: [
       {
         codigo: '1',
-        rotuloAcao: 'Ação 1 · Passeio Bate-e-Volta Planejado',
-        titulo: 'Fazer Passeio Regional à Vista Dentro da Meta (R$ 190)',
-        descricao: 'Aproveita a praia/parque próximo levando lanche de casa e pagando à vista.',
+        rotuloAcao: 'Opção 1',
+        titulo: 'Fazer passeio bate-e-volta pagando à vista (R$ 190)',
+        descricao: 'Passa o dia numa cidade próxima levando lanche de casa e sem fazer dívida.',
         impactoMoedas: -190,
         usaCofreReserva: false,
         parcelaCartaoFutura: 0,
         mesesParcela: 0,
         impactoCoracoes: 12,
         tipoEscolha: 'planejada',
-        falaReacaoFamilia: 'Que fim de semana maravilhoso! Descansamos sem trazer dívida na mala!',
+        falaReacaoFamilia: 'Descansamos bastante e voltamos pra casa sem boleto pendurado.',
         explicacaoMestre:
-          'Turismo regional planejado à vista renova as energias sem comprometer os meses seguintes.',
+          'Passeios planejados à vista renovam o ânimo sem comprometer os próximos meses.',
       },
       {
         codigo: '2',
-        rotuloAcao: 'Ação 2 · Lazer Econômico na Cidade',
-        titulo: 'Programação Cultural Gratuita + Piquenique (R$ 60)',
-        descricao: 'Aproveita shows gratuitos, museus e parques da própria cidade por R$ 60.',
+        rotuloAcao: 'Opção 2',
+        titulo: 'Aproveitar programação gratuita na cidade (R$ 60)',
+        descricao: 'Faz piquenique no parque e vai a eventos culturais abertos gastando R$ 60.',
         impactoMoedas: -60,
         usaCofreReserva: false,
         parcelaCartaoFutura: 0,
         mesesParcela: 0,
         impactoCoracoes: 8,
         tipoEscolha: 'economica',
-        falaReacaoFamilia: 'Descobrimos lugares incríveis na nossa própria cidade gastando R$ 60!',
+        falaReacaoFamilia: 'O feriado no parque rendeu boas risadas e quase não gastamos.',
         explicacaoMestre:
-          'Lazer de qualidade não exige viajar longe quando o orçamento do mês está apertado.',
+          'Quando o caixa está curto, opções gratuitas na própria cidade garantem lazer sem aperto.',
       },
       {
         codigo: '3',
-        rotuloAcao: 'Ação 3 · Pacote Completo no Cartão em 4x',
-        titulo: 'Fechar Hotel Caro + Passeios Extras no Cartão',
-        descricao: 'Gasta R$ 320 na viagem hoje + 3 parcelas de R$ 240 na volta!',
+        rotuloAcao: 'Opção 3',
+        titulo: 'Fechar hotel e passeios caros em 4x no cartão',
+        descricao: 'Gasta R$ 320 na viagem agora e volta com 3 parcelas de R$ 240.',
         impactoMoedas: -320,
         usaCofreReserva: false,
         parcelaCartaoFutura: 240,
         mesesParcela: 3,
         impactoCoracoes: 5,
         tipoEscolha: 'armadilha',
-        falaReacaoFamilia: 'O feriado durou 3 dias, mas vamos pagar R$ 1.040 até o fim do semestre!',
+        falaReacaoFamilia: 'O feriado durou três dias, mas a conta vai durar quatro meses.',
         explicacaoMestre:
-          'Viajar sem ter guardado o dinheiro antes transforma o descanso em meses de aperto financeiro.',
+          'Viajar no impulso usando o limite do cartão transforma alguns dias de folga em meses de aperto.',
       },
     ],
   },
   {
     id: 502,
-    titulo: 'Precisa de Roupa e Calçado Novo para Evento / Trabalho!',
-    categoria: 'Vestuário e Calçados',
+    titulo: 'Roupa e calçado para compromisso importante',
+    categoria: 'Roupas e calçados',
     grupoGrafico: 'roupas',
-    nomeNPC: 'Vendedora Bia',
-    cargoNPC: 'Shopping Moda Center',
+    nomeNPC: 'Camila',
+    cargoNPC: 'Vendedora de loja',
     tipoNPC: 'vendedor_shopping',
     falaNPC:
-      'Surgiu uma ocasião importante neste mês e o calçado antigo abriu o bico! Na vitrine tem desde o básico elegante até o look completo parcelado no cartão da loja!',
+      'Surgiu um compromisso importante neste mês e o sapato antigo descolou. Se quiser fazer o cartão da loja hoje, você leva quatro peças e começa a pagar depois!',
     cartas: [
       {
         codigo: '1',
-        rotuloAcao: 'Ação 1 · Compra Objetiva à Vista',
-        titulo: 'Levar Peça Versátil (Cor Neutra) com Desconto no PIX',
-        descricao: 'Compra apenas a peça necessária que combina com tudo por R$ 160 à vista.',
+        rotuloAcao: 'Opção 1',
+        titulo: 'Comprar só a peça necessária com desconto no PIX (R$ 160)',
+        descricao: 'Escolhe um modelo neutro que combina com tudo e paga à vista.',
         impactoMoedas: -160,
         usaCofreReserva: false,
         parcelaCartaoFutura: 0,
         mesesParcela: 0,
         impactoCoracoes: 7,
         tipoEscolha: 'planejada',
-        falaReacaoFamilia: 'Peça linda, durável e comprada com 15% de desconto à vista!',
+        falaReacaoFamilia: 'Levamos exatamente o que precisava e ainda conseguimos desconto.',
         explicacaoMestre:
-          'Roupas curingas de boa qualidade duram anos e evitam compras repetidas por impulso.',
+          'Comprar apenas o item necessário à vista evita cair nas taxas embutidas dos cartões de loja.',
       },
       {
         codigo: '2',
-        rotuloAcao: 'Ação 2 · Garimpo em Brechó / Outlet',
-        titulo: 'Garimpar Peça Seminova Impecável em Brechó (R$ 75)',
-        descricao: 'Encontra roupa de marca praticamente nova em brechó curado por R$ 75.',
+        rotuloAcao: 'Opção 2',
+        titulo: 'Garimpar peça seminova em brechó (R$ 75)',
+        descricao: 'Encontra roupa e calçado em ótimo estado pagando menos da metade.',
         impactoMoedas: -75,
         usaCofreReserva: false,
         parcelaCartaoFutura: 0,
         mesesParcela: 0,
         impactoCoracoes: 8,
         tipoEscolha: 'economica',
-        falaReacaoFamilia: 'Achado incrível no brechó! Estilo nota 10 gastando menos da metade!',
+        falaReacaoFamilia: 'Achamos uma peça impecável no brechó por setenta e cinco reais.',
         explicacaoMestre:
-          'A moda circular e os brechós permitem vestir-se muito bem economizando até 70%.',
+          'Brechós e bazares organizados são ótimas alternativas para economizar até 70% em vestuário.',
       },
       {
         codigo: '3',
-        rotuloAcao: 'Ação 3 · Cartão da Loja em "8x"',
-        titulo: 'Levar 4 Sacolas Cheias + Calçado Caro no Cartão da Loja',
-        descricao: 'Paga R$ 240 hoje + 3 parcelas de R$ 190 com anuidade do cartão!',
+        rotuloAcao: 'Opção 3',
+        titulo: 'Fazer o cartão da loja e parcelar sacolas cheias',
+        descricao: 'Paga R$ 240 hoje e assume 3 parcelas de R$ 190 com taxas do cartão.',
         impactoMoedas: -240,
         usaCofreReserva: false,
         parcelaCartaoFutura: 190,
         mesesParcela: 3,
         impactoCoracoes: 1,
         tipoEscolha: 'armadilha',
-        falaReacaoFamilia: 'Saímos cheios de sacolas e com R$ 810 de dívida no cartão da loja!',
+        falaReacaoFamilia: 'Entramos para comprar um calçado e saímos com oitocentos reais de dívida.',
         explicacaoMestre:
-          'O cartão próprio de loja de departamentos é uma das maiores fontes de endividamento no Brasil.',
+          'Cartões de loja costumam cobrar anuidades e seguros que encarecem muito a compra final.',
       },
     ],
   },
 
-  // --- EVENTOS CLÁSSICOS DA VIDA REAL (UNIVERSAIS PARA TODOS OS PERFIS) ---
+  // --- EVENTOS GERAIS DA VIDA REAL ---
   {
     id: 1,
-    titulo: 'Geladeira Queimou de Madrugada!',
-    categoria: 'Emergência Doméstica',
+    titulo: 'A geladeira parou de gelar de madrugada',
+    categoria: 'Imprevisto em casa',
     grupoGrafico: 'imprevistos',
-    nomeNPC: 'Zé do Gelo',
-    cargoNPC: 'Técnico de Refrigeração',
+    nomeNPC: 'Seu Zé',
+    cargoNPC: 'Técnico de refrigeração',
     tipoNPC: 'tecnico',
     falaNPC:
-      'Eita! O motor da geladeira pifou de madrugada! Se não trocar a peça hoje, os alimentos da semana vão estragar todinhos!',
+      'O motor da geladeira queimou. Se não trocar a peça logo, as coisas que estão no congelador vão estragar.',
     cartas: [
       {
         codigo: '1',
-        rotuloAcao: 'Ação 1 · Pagar à Vista / Usar Reserva',
-        titulo: 'Consertar na Hora no PIX',
-        descricao: 'Paga R$ 450 à vista (usa o Cofre de Reserva se tiver) com garantia total.',
+        rotuloAcao: 'Opção 1',
+        titulo: 'Consertar hoje à vista ou usando a reserva (R$ 450)',
+        descricao: 'Troca a peça original com garantia (usa a reserva se tiver saldo guardado).',
         impactoMoedas: -450,
         usaCofreReserva: true,
         parcelaCartaoFutura: 0,
         mesesParcela: 0,
         impactoCoracoes: 6,
         tipoEscolha: 'planejada',
-        falaReacaoFamilia: 'Ufa! A geladeira voltou a gelar e salvamos toda a comida do mês!',
+        falaReacaoFamilia: 'Ainda bem que consertamos na hora e não perdemos a compra do mês.',
         explicacaoMestre:
-          'Pagar imprevistos à vista usando a Reserva de Emergência evita juros e impede perdas em cascata.',
+          'É exatamente para situações assim que serve a reserva de emergência: resolver o problema à vista e sem juros.',
       },
       {
         codigo: '2',
-        rotuloAcao: 'Ação 2 · Gambiarra / Alternativa Econômica',
-        titulo: 'Peça Recondicionada + Isopor no Vizinho',
-        descricao: 'Negocia peça usada por R$ 260 e guarda os perecíveis no vizinho por 2 dias.',
+        rotuloAcao: 'Opção 2',
+        titulo: 'Colocar peça recondicionada e guardar comida no vizinho (R$ 260)',
+        descricao: 'Negocia uma peça usada com garantia menor para gastar menos.',
         impactoMoedas: -260,
         usaCofreReserva: false,
         parcelaCartaoFutura: 0,
         mesesParcela: 0,
         impactoCoracoes: -3,
         tipoEscolha: 'economica',
-        falaReacaoFamilia: 'Deu trabalho carregar o isopor, mas economizamos R$ 190!',
+        falaReacaoFamilia: 'Deu um pouco de trabalho, mas a geladeira voltou a funcionar.',
         explicacaoMestre:
-          'Alternativas econômicas e negociação reduzem o impacto no caixa sem criar dívidas futuras.',
+          'Quando não há reserva suficiente, negociar alternativas mais baratas evita entrar no rotativo do cartão.',
       },
       {
         codigo: '3',
-        rotuloAcao: 'Ação 3 · Passar no Cartão / Cheque Especial',
-        titulo: 'Comprar Geladeira Nova Cara Parcelada',
-        descricao: 'Perde comida estragada + R$ 340 agora e assume 4x de R$ 250 no cartão!',
+        rotuloAcao: 'Opção 3',
+        titulo: 'Comprar uma geladeira nova parcelada no cartão',
+        descricao: 'Perde alimentos + R$ 340 hoje e assume 4 parcelas de R$ 250.',
         impactoMoedas: -340,
         usaCofreReserva: false,
         parcelaCartaoFutura: 250,
         mesesParcela: 4,
         impactoCoracoes: -8,
         tipoEscolha: 'armadilha',
-        falaReacaoFamilia: 'Essa parcela de R$ 250 vai perseguir nosso orçamento por 4 meses!',
+        falaReacaoFamilia: 'Em vez de apenas consertar, arrumamos uma prestação pesada por quatro meses.',
         explicacaoMestre:
-          'Usar uma urgência como desculpa para fazer dívida longa no cartão compromete os salários futuros.',
+          'Trocar um conserto simples por uma compra cara parcelada compromete a renda dos meses seguintes.',
       },
     ],
   },
   {
     id: 3,
-    titulo: 'Conta de Luz Bandeira Vermelha!',
-    categoria: 'Moradia e Contas',
+    titulo: 'Conta de luz veio mais alta neste mês',
+    categoria: 'Contas da casa',
     grupoGrafico: 'moradia',
-    nomeNPC: 'Seu Barriga da Luz',
-    cargoNPC: 'Leiturista de Energia',
+    nomeNPC: 'Marcos',
+    cargoNPC: 'Leiturista',
     tipoNPC: 'cobrador_luz',
     falaNPC:
-      'Onda de calor e bandeira vermelha patamar 2! O ventilador e o chuveiro fizeram a fatura de energia subir R$ 195 acima do esperado!',
+      'Com o calor forte e a tarifa em bandeira vermelha, a conta de energia veio R$ 210 acima do normal.',
     cartas: [
       {
         codigo: '1',
-        rotuloAcao: 'Ação 1 · Pagar à Vista / Usar Reserva',
-        titulo: 'Quitar em Dia e Trocar Lâmpadas por LED',
-        descricao: 'Paga os R$ 210 à vista e instala LED para economizar nos próximos meses.',
+        rotuloAcao: 'Opção 1',
+        titulo: 'Pagar em dia e trocar lâmpadas antigas por LED (R$ 210)',
+        descricao: 'Quita a fatura sem multa (usa a reserva se tiver) e reduz o gasto futuro.',
         impactoMoedas: -210,
         usaCofreReserva: true,
         parcelaCartaoFutura: 0,
         mesesParcela: 0,
         impactoCoracoes: 4,
         tipoEscolha: 'planejada',
-        falaReacaoFamilia: 'Conta paga sem multa e casa iluminada gastando menos energia!',
+        falaReacaoFamilia: 'Conta paga em dia e lâmpadas trocadas para o próximo mês vir menor.',
         explicacaoMestre:
-          'Quitar contas essenciais em dia evita juros e multas pesadas das concessionárias.',
+          'Pagar contas essenciais dentro do vencimento evita multas e juros na fatura seguinte.',
       },
       {
         codigo: '2',
-        rotuloAcao: 'Ação 2 · Corte de Gastos / Mutirão',
-        titulo: 'Banho Rápido e Tirar Aparelhos do Stand-by',
-        descricao: 'Reduz o consumo na semana para absorver a alta (custo líquido R$ 120).',
+        rotuloAcao: 'Opção 2',
+        titulo: 'Reduzir tempo de banho e tirar aparelhos da tomada (R$ 120)',
+        descricao: 'Faz economia de consumo em casa para compensar parte do aumento.',
         impactoMoedas: -120,
         usaCofreReserva: false,
         parcelaCartaoFutura: 0,
         mesesParcela: 0,
         impactoCoracoes: -2,
         tipoEscolha: 'economica',
-        falaReacaoFamilia: 'Apagar luzes e desligar aparelhos da tomada salvou nosso mês!',
+        falaReacaoFamilia: 'Todo mundo colaborou nos banhos e desligando aparelhos em espera.',
         explicacaoMestre:
-          'O consumo fantasma (aparelhos em stand-by) pode representar até 12% da conta de luz.',
+          'Chuveiro elétrico e aparelhos ligados sem uso respondem por boa parte da conta de luz.',
       },
       {
         codigo: '3',
-        rotuloAcao: 'Ação 3 · Ignorar / Atrasar Fatura',
-        titulo: 'Atrasar a Conta e Parcelar com Multa no Cartão',
-        descricao: 'Paga R$ 110 agora + 2 parcelas de R$ 100 com multa e juros de atraso.',
+        rotuloAcao: 'Opção 3',
+        titulo: 'Atrasar o pagamento e parcelar com multa no cartão',
+        descricao: 'Paga R$ 110 agora e joga 2 parcelas de R$ 100 para frente.',
         impactoMoedas: -110,
         usaCofreReserva: false,
         parcelaCartaoFutura: 100,
         mesesParcela: 2,
         impactoCoracoes: -9,
         tipoEscolha: 'armadilha',
-        falaReacaoFamilia: 'Quase cortaram nossa luz e ainda pagamos multa cara!',
+        falaReacaoFamilia: 'A conta atrasada ganhou multa e se juntou com a luz do mês que vem.',
         explicacaoMestre:
-          'Empurrar contas de água e luz com a barriga gera multa imediata e bola de neve.',
+          'Parcelar contas mensais como água e luz faz você pagar duas contas ao mesmo tempo no mês seguinte.',
       },
     ],
   },
   {
     id: 4,
-    titulo: 'Promoção Relâmpago: Smartphone em 12x!',
-    categoria: 'Tentação / Impulso',
+    titulo: 'Oferta de celular novo no shopping',
+    categoria: 'Consumo por impulso',
     grupoGrafico: 'outros',
-    nomeNPC: 'Léo Vendedor VIP',
-    cargoNPC: 'Mestre da Lábia',
+    nomeNPC: 'Léo',
+    cargoNPC: 'Vendedor de eletrônicos',
     tipoNPC: 'vendedor_shopping',
     falaNPC:
-      'Olha esse celular lançamento brilhando! O seu atual funciona bem, mas hoje você leva esse topo de linha "sem entrada pesada"!',
+      'Seu celular atual ainda funciona direitinho, mas acabou de chegar esse modelo novo com câmera tripla. Quer levar parcelado hoje?',
     cartas: [
       {
         codigo: '1',
-        rotuloAcao: 'Ação 1 · Consciência Financeira',
-        titulo: 'Aplicar Regra das 48h e Seguir com o Atual',
-        descricao: 'Recusa a tentação porque o celular atual está ótimo! Gasto: R$ 0.',
+        rotuloAcao: 'Opção 1',
+        titulo: 'Continuar com o celular atual (R$ 0)',
+        descricao: 'Espera passar a empolgação do momento e mantém o dinheiro na conta.',
         impactoMoedas: 0,
         usaCofreReserva: false,
         parcelaCartaoFutura: 0,
         mesesParcela: 0,
         impactoCoracoes: 5,
         tipoEscolha: 'planejada',
-        falaReacaoFamilia: 'Orgulho! Não caímos no papo do vendedor e o saldo segue intacto!',
+        falaReacaoFamilia: 'O aparelho atual atende super bem, não tinha por que entrar em dívida.',
         explicacaoMestre:
-          'Resistir à troca de aparelhos que ainda funcionam perfeitamente é o segredo para acumular reserva.',
+          'Esperar dois dias antes de comprar algo caro ajuda a perceber se é necessidade real ou só impulso.',
       },
       {
         codigo: '2',
-        rotuloAcao: 'Ação 2 · Alternativa Econômica',
-        titulo: 'Trocar Só a Capinha e Película por R$ 40',
-        descricao: 'Deixa o celular atual com cara de novo gastando apenas R$ 40.',
+        rotuloAcao: 'Opção 2',
+        titulo: 'Trocar apenas a película e a capinha (R$ 40)',
+        descricao: 'Renova a proteção do aparelho atual gastando bem pouco.',
         impactoMoedas: -40,
         usaCofreReserva: false,
         parcelaCartaoFutura: 0,
         mesesParcela: 0,
         impactoCoracoes: 6,
         tipoEscolha: 'economica',
-        falaReacaoFamilia: 'Capinha nova colocada! Parece celular novo por apenas R$ 40!',
+        falaReacaoFamilia: 'Com capinha e película novas, o celular ficou ótimo por quarenta reais.',
         explicacaoMestre:
-          'Pequenas manutenções matam o desejo de novidade por menos de 3% do preço de um aparelho novo.',
+          'Cuidar bem do que já temos prolonga a vida útil e poupa milhares de reais.',
       },
       {
         codigo: '3',
-        rotuloAcao: 'Ação 3 · Passar no Cartão Parcelado',
-        titulo: 'Levar o Celular Novo + Seguro no Cartão',
-        descricao: 'Paga R$ 280 hoje + 4 parcelas pesadas de R$ 240!',
+        rotuloAcao: 'Opção 3',
+        titulo: 'Levar o celular novo com seguro no cartão',
+        descricao: 'Paga R$ 280 hoje e assume 4 parcelas de R$ 240.',
         impactoMoedas: -280,
         usaCofreReserva: false,
         parcelaCartaoFutura: 240,
         mesesParcela: 4,
         impactoCoracoes: 2,
         tipoEscolha: 'armadilha',
-        falaReacaoFamilia: 'A euforia durou 2 dias, mas a fatura de R$ 240/mês ficou!',
+        falaReacaoFamilia: 'A novidade passou rápido, mas a parcela de R$ 240 ficou todo mês.',
         explicacaoMestre:
-          'O famoso "cabe na parcela" é a armadilha número 1 que faz o salário sumir todo início de mês.',
+          'Trocar aparelhos que ainda funcionam bem por meio de parcelamentos longos trava o orçamento.',
       },
     ],
   },
   {
     id: 5,
-    titulo: 'Imprevisto no Transporte / Pneu e Freio!',
-    categoria: 'Transporte Diário',
+    titulo: 'Manutenção urgente no transporte',
+    categoria: 'Transporte',
     grupoGrafico: 'transporte',
-    nomeNPC: 'Mecânico Tião',
-    cargoNPC: 'Oficina Auto & Moto',
+    nomeNPC: 'Tião',
+    cargoNPC: 'Mecânico da oficina',
     tipoNPC: 'mecanico',
     falaNPC:
-      'Problema no transporte da semana! Precisamos fazer o reparo urgente ou gastar o dobro com deslocamento de última hora.',
+      'O freio e o pneu chegaram no limite. Dá para resolver tudo hoje ou ir rodando assim mais um tempo, mas pode ficar mais caro depois.',
     cartas: [
       {
         codigo: '1',
-        rotuloAcao: 'Ação 1 · Pagar à Vista / Usar Reserva',
-        titulo: 'Manutenção Completa à Vista com Desconto',
-        descricao: 'Paga R$ 360 à vista (usa Reserva se tiver) e resolve com segurança.',
+        rotuloAcao: 'Opção 1',
+        titulo: 'Fazer o conserto completo à vista (R$ 360)',
+        descricao: 'Usa a reserva ou o saldo para resolver com segurança e desconto.',
         impactoMoedas: -360,
         usaCofreReserva: true,
         parcelaCartaoFutura: 0,
         mesesParcela: 0,
         impactoCoracoes: 6,
         tipoEscolha: 'planejada',
-        falaReacaoFamilia: 'Transporte seguro e resolvido à vista sem juros!',
+        falaReacaoFamilia: 'Resolvido na hora, com segurança e sem prestação.',
         explicacaoMestre:
-          'Manutenção preventiva e corretiva à vista evita acidentes e gastos maiores depois.',
+          'Resolver manutenções necessárias à vista evita que um defeito pequeno vire um prejuízo maior.',
       },
       {
         codigo: '2',
-        rotuloAcao: 'Ação 2 · Pesquisar Preço / Alternativa',
-        titulo: 'Cotar 3 Oficinas e Comprar Peça no Distribuidor (R$ 210)',
-        descricao: 'Pesquisa preço antes de fechar e economiza R$ 150.',
+        rotuloAcao: 'Opção 2',
+        titulo: 'Pesquisar preço em três oficinas antes (R$ 210)',
+        descricao: 'Compara orçamentos e compra a peça direto no distribuidor.',
         impactoMoedas: -210,
         usaCofreReserva: false,
         parcelaCartaoFutura: 0,
         mesesParcela: 0,
         impactoCoracoes: 3,
         tipoEscolha: 'economica',
-        falaReacaoFamilia: 'Pesquisar 3 orçamentos salvou R$ 150 do nosso bolso!',
+        falaReacaoFamilia: 'Só de pesquisar em outras oficinas, economizamos R$ 150.',
         explicacaoMestre:
-          'Nunca aprove o primeiro orçamento sem pesquisar: comparar 3 lugares economiza até 40%.',
+          'Comparar pelo menos três orçamentos antes de autorizar um serviço costuma gerar boa economia.',
       },
       {
         codigo: '3',
-        rotuloAcao: 'Ação 3 · Adiar Conserto / Usar Cartão',
-        titulo: 'Deixar Quebrar Mais e Parcelar no Cartão',
-        descricao: 'Gasta R$ 260 agora + 3x de R$ 180 quando o problema agrava.',
+        rotuloAcao: 'Opção 3',
+        titulo: 'Adiar o conserto e parcelar quando quebrar de vez',
+        descricao: 'Gasta R$ 260 agora mais 3 parcelas de R$ 180 com o dano maior.',
         impactoMoedas: -260,
         usaCofreReserva: false,
         parcelaCartaoFutura: 180,
         mesesParcela: 3,
         impactoCoracoes: -9,
         tipoEscolha: 'armadilha',
-        falaReacaoFamilia: 'Gastamos R$ 800 no total só porque adiamos a manutenção!',
+        falaReacaoFamilia: 'Deixamos para depois e o conserto acabou saindo mais que o dobro.',
         explicacaoMestre:
-          'Adiar manutenção necessária sempre multiplica o prejuízo mecânico e financeiro.',
+          'Adiar manutenção preventiva quase sempre multiplica o valor final da oficina.',
       },
     ],
   },
   {
     id: 6,
-    titulo: 'Oportunidade de Trabalho Extra no Fim de Semana',
-    categoria: 'Renda Extra vs. Descanso',
+    titulo: 'Chamado para trabalho extra no fim de semana',
+    categoria: 'Renda extra',
     grupoGrafico: 'rendaExtra',
-    nomeNPC: 'Chefe Pacheco',
-    cargoNPC: 'Coordenador de Eventos',
+    nomeNPC: 'Pacheco',
+    cargoNPC: 'Coordenador de eventos',
     tipoNPC: 'chefe',
     falaNPC:
-      'Surgiu um trabalho extra neste fim de semana! Paga em dinheiro vivo no domingo, mas exige abrir mão de parte do descanso.',
+      'Apareceu uma vaga para trabalhar num evento neste fim de semana. O pagamento sai na hora no domingo, mas exige abrir mão do descanso.',
     cartas: [
       {
         codigo: '1',
-        rotuloAcao: 'Ação 1 · Equilíbrio Planejado',
-        titulo: 'Pegar 1 Turno Extra (+R$ 300) e Descansar no Domingo',
-        descricao: 'Ganha +R$ 300 extras e preserva o descanso.',
+        rotuloAcao: 'Opção 1',
+        titulo: 'Trabalhar no sábado (+R$ 300) e descansar no domingo',
+        descricao: 'Garante um bom reforço no caixa sem abrir mão de todo o descanso.',
         impactoMoedas: 300,
         usaCofreReserva: false,
         parcelaCartaoFutura: 0,
         mesesParcela: 0,
         impactoCoracoes: 3,
         tipoEscolha: 'planejada',
-        falaReacaoFamilia: 'Entrou +R$ 300 na conta e ainda descansamos no domingo!',
+        falaReacaoFamilia: 'Entraram trezentos reais extras e ainda deu para descansar no domingo.',
         explicacaoMestre:
-          'Renda extra com equilíbrio aumenta o poder de poupança sem esgotar a saúde.',
+          'Conciliar trabalhos extras pontuais com descanso ajuda a reforçar a reserva sem esgotar a saúde.',
       },
       {
         codigo: '2',
-        rotuloAcao: 'Ação 2 · Foco Total no Caixa',
-        titulo: 'Trabalhar os 2 Fins de Semana Inteiros (+R$ 520)',
-        descricao: 'Recebe +R$ 520 na hora, mas o cansaço tira 8 Corações.',
+        rotuloAcao: 'Opção 2',
+        titulo: 'Pegar todos os turnos do fim de semana (+R$ 520)',
+        descricao: 'Aumenta bastante o saldo do mês, mas gera cansaço (-8 de bem-estar).',
         impactoMoedas: 520,
         usaCofreReserva: false,
         parcelaCartaoFutura: 0,
         mesesParcela: 0,
         impactoCoracoes: -8,
         tipoEscolha: 'economica',
-        falaReacaoFamilia: 'Baita reforço de +R$ 520 no caixa, mas que cansaço!',
+        falaReacaoFamilia: 'O dinheiro ajudou muito nas contas, mas a semana começou no cansaço.',
         explicacaoMestre:
-          'Fazer caixa rápido ajuda em meses difíceis, mas fique atento à barra de Corações (HP).',
+          'Fazer mais horas ajuda a sair do aperto, mas é importante cuidar para não desgastar a saúde.',
       },
       {
         codigo: '3',
-        rotuloAcao: 'Ação 3 · Recusar e Gastar na Rua',
-        titulo: 'Recusar o Extra e Sair para Gastar (-R$ 150)',
-        descricao: 'Abre mão da renda extra e gasta R$ 150 no fim de semana.',
+        rotuloAcao: 'Opção 3',
+        titulo: 'Recusar o trabalho e sair para gastar (-R$ 150)',
+        descricao: 'Deixa de ganhar o extra e gasta R$ 150 no passeio.',
         impactoMoedas: -150,
         usaCofreReserva: false,
         parcelaCartaoFutura: 0,
         mesesParcela: 0,
         impactoCoracoes: 5,
         tipoEscolha: 'armadilha',
-        falaReacaoFamilia: 'O passeio foi bom, mas deixamos de ganhar até R$ 520!',
+        falaReacaoFamilia: 'O fim de semana foi ótimo, mas fez falta aquele dinheiro extra no caixa.',
         explicacaoMestre:
-          'Trocar uma receita extra por uma despesa gera um custo de oportunidade alto.',
+          'Quando o orçamento está apertado, trocar uma oportunidade de renda por um gasto extra pesa em dobro.',
       },
     ],
   },
   {
     id: 7,
-    titulo: 'Inflação de 15% nos Alimentos do Supermercado!',
+    titulo: 'Alta nos preços do supermercado',
     categoria: 'Alimentação',
     grupoGrafico: 'alimentacao',
     nomeNPC: 'Dona Cleide',
-    cargoNPC: 'Caixa do Supermercado',
+    cargoNPC: 'Caixa do mercado',
     tipoNPC: 'caixa_mercado',
     falaNPC:
-      'Bip! Bip! O arroz, o café, o leite e a carne subiram 15% neste mês! Como vamos passar a compra do mês sem estourar o orçamento?',
+      'O arroz, o café, o leite e a carne subiram neste mês. Como você vai organizar a compra para não estourar o orçamento?',
     cartas: [
       {
         codigo: '1',
-        rotuloAcao: 'Ação 1 · Compra Planejada com Lista',
-        titulo: 'Atacarejo com Cardápio Semanal Fechado (R$ 100)',
-        descricao: 'Compra com lista planejada e zero desperdício.',
+        rotuloAcao: 'Opção 1',
+        titulo: 'Ir ao atacarejo com lista fechada (R$ 100)',
+        descricao: 'Planeja o cardápio da semana antes de sair de casa para evitar desperdício.',
         impactoMoedas: -100,
         usaCofreReserva: false,
         parcelaCartaoFutura: 0,
         mesesParcela: 0,
         impactoCoracoes: 4,
         tipoEscolha: 'planejada',
-        falaReacaoFamilia: 'Ir ao atacarejo com lista pronta segurou a inflação!',
+        falaReacaoFamilia: 'Comprar no atacarejo seguindo a lista segurou bem a subida dos preços.',
         explicacaoMestre:
-          'Planejar o cardápio semanal e seguir uma lista fechada reduz a conta de alimentação em até 25%.',
+          'Ir ao mercado com lista pronta e sem fome evita compras por impulso nos corredores.',
       },
       {
         codigo: '2',
-        rotuloAcao: 'Ação 2 · Alternativa Econômica',
-        titulo: 'Substituir Marcas Caras e Comprar na Feira (R$ 35)',
-        descricao: 'Escolhe frutas/legumes da estação e marcas próprias de qualidade.',
+        rotuloAcao: 'Opção 2',
+        titulo: 'Trocar marcas caras e comprar legumes da época na feira (R$ 35)',
+        descricao: 'Substitui itens caros por produtos da estação e marcas mais em conta.',
         impactoMoedas: -35,
         usaCofreReserva: false,
         parcelaCartaoFutura: 0,
         mesesParcela: 0,
         impactoCoracoes: 5,
         tipoEscolha: 'economica',
-        falaReacaoFamilia: 'Mesa farta com produtos da estação gastando quase nada a mais!',
+        falaReacaoFamilia: 'A feira de fim de manhã rendeu muita coisa boa e barata.',
         explicacaoMestre:
-          'Alimentos da época são mais baratos e nutritivos do que industrializados de marca famosa.',
+          'Frutas, verduras e legumes da estação são mais baratos e nutritivos que produtos industrializados.',
       },
       {
         codigo: '3',
-        rotuloAcao: 'Ação 3 · Parcelar Mercado no Cartão',
-        titulo: 'Pegar Tudo Sem Olhar Preço e Parcelar em 2x',
-        descricao: 'Gasta R$ 180 agora + R$ 165 na fatura do mês que vem!',
+        rotuloAcao: 'Opção 3',
+        titulo: 'Colocar tudo no carrinho e parcelar em 2x no cartão',
+        descricao: 'Gasta R$ 180 agora e deixa R$ 165 para a fatura do mês que vem.',
         impactoMoedas: -180,
         usaCofreReserva: false,
         parcelaCartaoFutura: 165,
         mesesParcela: 1,
         impactoCoracoes: -4,
         tipoEscolha: 'armadilha',
-        falaReacaoFamilia: 'Parcelamos a comida deste mês! No mês que vem teremos duas compras juntas!',
+        falaReacaoFamilia: 'A comida acaba neste mês, mas metade da conta ficou para o próximo.',
         explicacaoMestre:
-          'Jamais parcele supermercado: a comida acaba em 30 dias, mas a dívida soma com a compra do mês seguinte.',
+          'Parcelar compras de mercado é perigoso porque no mês seguinte você terá que comprar comida de novo.',
       },
     ],
   },
   {
     id: 8,
-    titulo: 'Dor de Dente Forte Exigindo Dentista Urgente!',
-    categoria: 'Saúde e Bem-Estar',
+    titulo: 'Dor de dente precisando de atendimento',
+    categoria: 'Saúde',
     grupoGrafico: 'cuidadosPessoais',
     nomeNPC: 'Dra. Sofia',
-    cargoNPC: 'Cirurgiã-Dentista',
+    cargoNPC: 'Dentista',
     tipoNPC: 'dentista',
     falaNPC:
-      'Essa dor de dente precisa de tratamento imediato! Se cuidar hoje é simples; se adiar tomando só analgésico, vira canal caro!',
+      'Essa cárie está funda. Se tratar hoje, uma restauração resolve; se deixar passar mais tempo, pode virar tratamento de canal.',
     cartas: [
       {
         codigo: '1',
-        rotuloAcao: 'Ação 1 · Pagar à Vista / Usar Reserva',
-        titulo: 'Fazer o Tratamento Agora Usando Reserva/Saldo',
-        descricao: 'Paga R$ 390 à vista (usa o Cofre se tiver) e elimina a dor na hora.',
+        rotuloAcao: 'Opção 1',
+        titulo: 'Fazer o tratamento hoje à vista ou usando a reserva (R$ 390)',
+        descricao: 'Resolve o problema na hora sem deixar agravar.',
         impactoMoedas: -390,
         usaCofreReserva: true,
         parcelaCartaoFutura: 0,
         mesesParcela: 0,
         impactoCoracoes: 10,
         tipoEscolha: 'planejada',
-        falaReacaoFamilia: 'Que alívio! Saúde tratada na hora e com desconto à vista!',
+        falaReacaoFamilia: 'Que alívio resolver essa dor logo no começo.',
         explicacaoMestre:
-          'A Reserva de Emergência protege sua saúde sem precisar recorrer a empréstimos caros.',
+          'Cuidar da saúde assim que o problema surge sai muito mais barato do que tratar complicações.',
       },
       {
         codigo: '2',
-        rotuloAcao: 'Ação 2 · Alternativa Econômica',
-        titulo: 'Atendimento na Clínica Odontológica da Universidade (R$ 140)',
-        descricao: 'Realiza o procedimento supervisionado pagando apenas a taxa de material.',
+        rotuloAcao: 'Opção 2',
+        titulo: 'Buscar atendimento na clínica-escola da faculdade (R$ 140)',
+        descricao: 'Faz o procedimento supervisionado por professores pagando apenas o material.',
         impactoMoedas: -140,
         usaCofreReserva: false,
         parcelaCartaoFutura: 0,
         mesesParcela: 0,
         impactoCoracoes: 5,
         tipoEscolha: 'economica',
-        falaReacaoFamilia: 'Excelente atendimento universitário pagando super pouco!',
+        falaReacaoFamilia: 'O atendimento na faculdade foi muito bem feito e coube no bolso.',
         explicacaoMestre:
-          'Clínicas-escola de faculdades de odontologia oferecem ótimo tratamento por custo reduzido.',
+          'Unidades básicas de saúde e clínicas universitárias oferecem ótimas opções de tratamento acessível.',
       },
       {
         codigo: '3',
-        rotuloAcao: 'Ação 3 · Adiar Tratamento / Cartão',
-        titulo: 'Tomar Só Remédio Agora e Pagar Cirurgia Cara Depois',
-        descricao: 'Gasta R$ 85 agora + 3 parcelas de R$ 220 quando inflama mais!',
+        rotuloAcao: 'Opção 3',
+        titulo: 'Tomar só analgésico agora e tratar depois no cartão',
+        descricao: 'Gasta R$ 85 em remédios e depois assume 3x de R$ 220 pelo canal.',
         impactoMoedas: -85,
         usaCofreReserva: false,
         parcelaCartaoFutura: 220,
         mesesParcela: 3,
         impactoCoracoes: -15,
         tipoEscolha: 'armadilha',
-        falaReacaoFamilia: 'Ficamos com dor o mês inteiro e a conta subiu para R$ 745!',
+        falaReacaoFamilia: 'Além de sofrer com dor o mês todo, o tratamento ficou muito mais caro.',
         explicacaoMestre:
-          'Adiar cuidados de saúde derruba a qualidade de vida e multiplica o preço do tratamento.',
+          'Adiar cuidados de saúde prejudica o bem-estar e multiplica o custo do tratamento.',
       },
     ],
   },
   {
     id: 9,
-    titulo: 'Assinaturas Esquecidas Cobrando no Cartão!',
-    categoria: 'Desperdício Invisível',
+    titulo: 'Assinaturas cobrando no cartão sem uso',
+    categoria: 'Gastos invisíveis',
     grupoGrafico: 'outros',
-    nomeNPC: 'Robô da Fatura',
-    cargoNPC: 'Cobrança Recorrente',
+    nomeNPC: 'Aviso da Fatura',
+    cargoNPC: 'Cobrança automática',
     tipoNPC: 'streaming_bot',
     falaNPC:
-      'BEEP! Debitando 4 streamings, 1 app de música e 1 clube de descontos que você nem lembrava que tinha assinado: R$ 175!',
+      'Foram cobrados R$ 175 no cartão referentes a serviços de filmes, música e clubes de benefícios que quase ninguém usou no mês.',
     cartas: [
       {
         codigo: '1',
-        rotuloAcao: 'Ação 1 · Faxina Financeira',
-        titulo: 'Cancelar Assinaturas Inativas e Estornar Cobrança (+R$ 100)',
-        descricao: 'Cancela tudo o que não usa e recupera +R$ 100 de estorno no mês!',
+        rotuloAcao: 'Opção 1',
+        titulo: 'Cancelar o que não usa e pedir estorno no dia (+R$ 100)',
+        descricao: 'Faz uma limpa nas assinaturas paradas e recupera parte do valor.',
         impactoMoedas: 100,
         usaCofreReserva: false,
         parcelaCartaoFutura: 0,
         mesesParcela: 0,
         impactoCoracoes: 5,
         tipoEscolha: 'planejada',
-        falaReacaoFamilia: 'Eliminamos os gastos fantasmas e recuperamos R$ 100!',
+        falaReacaoFamilia: 'Cancelamos o que estava parado e recuperamos cem reais.',
         explicacaoMestre:
-          'Conferir o extrato mensalmente caça pequenos débitos automáticos que somam mais de R$ 1.800 no ano.',
+          'Revisar a fatura todo mês ajuda a cortar pequenos gastos automáticos que somam muito no ano.',
       },
       {
         codigo: '2',
-        rotuloAcao: 'Ação 2 · Alternativa Econômica',
-        titulo: 'Manter Apenas 1 Plano Compartilhado (R$ 30)',
-        descricao: 'Corta os repetidos e mantém 1 opção barata de entretenimento.',
+        rotuloAcao: 'Opção 2',
+        titulo: 'Manter apenas um serviço por vez (R$ 30)',
+        descricao: 'Cancela os repetidos e deixa só o que realmente assiste.',
         impactoMoedas: -30,
         usaCofreReserva: false,
         parcelaCartaoFutura: 0,
         mesesParcela: 0,
         impactoCoracoes: 4,
         tipoEscolha: 'economica',
-        falaReacaoFamilia: 'Cortamos 80% do gasto com assinaturas sem perder a diversão!',
+        falaReacaoFamilia: 'Ficamos só com um aplicativo e cortamos o desperdício.',
         explicacaoMestre:
-          'Assinar apenas 1 serviço por vez evita pagar por catálogos que ficam parados.',
+          'Assinar apenas um serviço por vez evita pagar mensalidades de plataformas que ficam sem uso.',
       },
       {
         codigo: '3',
-        rotuloAcao: 'Ação 3 · Deixar no Automático',
-        titulo: 'Pensar "Depois Eu Cancelo" e Continuar Pagando',
-        descricao: 'Perde R$ 175 agora + R$ 175 nos próximos 2 meses sem usar!',
+        rotuloAcao: 'Opção 3',
+        titulo: 'Deixar para cancelar depois e continuar pagando',
+        descricao: 'Desconta R$ 175 neste mês e continua cobrando nos próximos 2 meses.',
         impactoMoedas: -175,
         usaCofreReserva: false,
         parcelaCartaoFutura: 175,
         mesesParcela: 2,
         impactoCoracoes: -3,
         tipoEscolha: 'armadilha',
-        falaReacaoFamilia: 'R$ 525 desperdiçados em apps que ninguém abriu!',
+        falaReacaoFamilia: 'Mais de quinhentos reais indo embora em assinaturas esquecidas.',
         explicacaoMestre:
-          'A preguiça de cancelar serviços recorrentes é um dos maiores ralos do salário moderno.',
+          'Pequenas cobranças automáticas esquecidas no cartão são um dos maiores ralos do orçamento.',
       },
     ],
   },
   {
     id: 12,
-    titulo: 'Vazamento Oculto Aumentando a Conta de Água!',
-    categoria: 'Manutenção Doméstica',
+    titulo: 'Vazamento no cano da lavanderia',
+    categoria: 'Manutenção da casa',
     grupoGrafico: 'moradia',
-    nomeNPC: 'Mário Encanador',
-    cargoNPC: 'Caça-Vazamentos',
+    nomeNPC: 'Mário',
+    cargoNPC: 'Encanador',
     tipoNPC: 'encanador',
     falaNPC:
-      'O hidrômetro não para de girar! Tem um cano trincado na parede da lavanderia desperdiçando água 24 horas por dia!',
+      'O relógio de água não para de girar porque tem um cano trincado na parede da lavanderia.',
     cartas: [
       {
         codigo: '1',
-        rotuloAcao: 'Ação 1 · Consertar Hoje / Reserva',
-        titulo: 'Reparo Imediato à Vista + Revisão da Tarifa (R$ 250)',
-        descricao: 'Resolve o vazamento no ato e solicita revisão da fatura na companhia.',
+        rotuloAcao: 'Opção 1',
+        titulo: 'Chamar o encanador hoje e pedir revisão da conta (R$ 250)',
+        descricao: 'Conserta na hora (usa a reserva se tiver) e evita conta alta.',
         impactoMoedas: -250,
         usaCofreReserva: true,
         parcelaCartaoFutura: 0,
         mesesParcela: 0,
         impactoCoracoes: 5,
         tipoEscolha: 'planejada',
-        falaReacaoFamilia: 'Cano consertado e fatura de água revisada sem susto!',
+        falaReacaoFamilia: 'Vazamento resolvido no mesmo dia e conta revisada.',
         explicacaoMestre:
-          'Consertar vazamentos no primeiro dia protege a estrutura da casa e abate multas de consumo.',
+          'Consertar vazamentos rapidamente evita infiltração e permite pedir revisão da fatura de água.',
       },
       {
         codigo: '2',
-        rotuloAcao: 'Ação 2 · Faça Você Mesmo',
-        titulo: 'Comprar Conexão PVC e Veda-Rosca e Arrumar no Sábado (R$ 85)',
-        descricao: 'Fecha o registro, compra a peça no depósito e faz o reparo por R$ 85.',
+        rotuloAcao: 'Opção 2',
+        titulo: 'Comprar a conexão e o veda-rosca e arrumar no sábado (R$ 85)',
+        descricao: 'Fecha o registro e faz o reparo por conta própria gastando só o material.',
         impactoMoedas: -85,
         usaCofreReserva: false,
         parcelaCartaoFutura: 0,
         mesesParcela: 0,
         impactoCoracoes: 3,
         tipoEscolha: 'economica',
-        falaReacaoFamilia: 'Consertamos nós mesmos no sábado e economizamos R$ 165!',
+        falaReacaoFamilia: 'Arrumamos o cano no sábado e economizamos a mão de obra.',
         explicacaoMestre:
-          'Saber realizar reparos básicos de casa gera uma economia enorme ao longo do ano.',
+          'Aprender pequenos reparos domésticos gera uma ótima economia ao longo do ano.',
       },
       {
         codigo: '3',
-        rotuloAcao: 'Ação 3 · Ignorar a Umidade',
-        titulo: 'Deixar para o Mês que Vem',
-        descricao: 'O cano estoura: R$ 200 de conta de água agora + 2x de R$ 210 de reforma!',
+        rotuloAcao: 'Opção 3',
+        titulo: 'Deixar o conserto para o mês que vem',
+        descricao: 'Gasta R$ 200 de água extra agora mais 2x de R$ 210 com a infiltração.',
         impactoMoedas: -200,
         usaCofreReserva: false,
         parcelaCartaoFutura: 210,
         mesesParcela: 2,
         impactoCoracoes: -10,
         tipoEscolha: 'armadilha',
-        falaReacaoFamilia: 'A parede infiltrou toda e o conserto custou R$ 620!',
+        falaReacaoFamilia: 'A umidade estragou o reboco e o conserto triplicou de preço.',
         explicacaoMestre:
-          'Vazamento ignorado é dinheiro indo literalmente pelo ralo.',
+          'Ignorar vazamentos aumenta a conta de água e estraga a pintura e a alvenaria.',
       },
     ],
   },
   {
     id: 13,
-    titulo: 'Desapego Online: Objetos Parados em Casa!',
-    categoria: 'Estratégia de Economia',
+    titulo: 'Itens parados ocupando espaço em casa',
+    categoria: 'Renda extra',
     grupoGrafico: 'rendaExtra',
-    nomeNPC: 'Lucas do Desapego',
-    cargoNPC: 'Comprador Online',
+    nomeNPC: 'Lucas',
+    cargoNPC: 'Comprador da internet',
     tipoNPC: 'comprador_web',
     falaNPC:
-      'Vocês têm aparelhos sem uso, roupas ótimas e itens guardados pegando poeira! Vamos anunciar na internet e fazer dinheiro vivo?',
+      'Tem aparelhos, roupas em bom estado e objetos que ninguém usa mais guardados no armário. Que tal anunciar na internet?',
     cartas: [
       {
         codigo: '1',
-        rotuloAcao: 'Ação 1 · Venda Direta no PIX',
-        titulo: 'Fotografar e Vender Tudo Online (+R$ 360)',
-        descricao: 'Faz anúncios caprichados e recebe +R$ 360 direto na conta!',
+        rotuloAcao: 'Opção 1',
+        titulo: 'Tirar boas fotos e vender pela internet (+R$ 360)',
+        descricao: 'Vende os itens parados e recebe o pagamento no PIX.',
         impactoMoedas: 360,
         usaCofreReserva: false,
         parcelaCartaoFutura: 0,
         mesesParcela: 0,
         impactoCoracoes: 7,
         tipoEscolha: 'planejada',
-        falaReacaoFamilia: 'Liberamos espaço em casa e ganhamos +R$ 360 à vista!',
+        falaReacaoFamilia: 'Liberamos espaço no armário e ainda entraram R$ 360 na conta.',
         explicacaoMestre:
-          'Vender o que não usa mais transforma objetos parados em fôlego para a Reserva de Emergência.',
+          'Vender o que está sem uso transforma coisas paradas em dinheiro para reforçar sua reserva.',
       },
       {
         codigo: '2',
-        rotuloAcao: 'Ação 2 · Venda Rápida + Doação',
-        titulo: 'Vender Lote em Brechó/Usados (+R$ 190) e Doar o Resto',
-        descricao: 'Recebe +R$ 190 na hora e pratica solidariedade.',
+        rotuloAcao: 'Opção 2',
+        titulo: 'Vender um lote para loja de usados (+R$ 190) e doar o resto',
+        descricao: 'Recebe rápido na hora e ajuda quem precisa.',
         impactoMoedas: 190,
         usaCofreReserva: false,
         parcelaCartaoFutura: 0,
         mesesParcela: 0,
         impactoCoracoes: 9,
         tipoEscolha: 'economica',
-        falaReacaoFamilia: 'Entrou +R$ 190 rápido e ajudamos quem precisava!',
+        falaReacaoFamilia: 'A casa ficou organizada e ainda entrou um bom dinheiro.',
         explicacaoMestre:
-          'A economia circular gera renda rápida e evita o desperdício.',
+          'Desapegar do que não usa libera espaço e traz dinheiro rápido para o caixa.',
       },
       {
         codigo: '3',
-        rotuloAcao: 'Ação 3 · Comprar Organizadores Caros',
-        titulo: 'Desistir de Vender e Comprar Caixas Plásticas (-R$ 120)',
-        descricao: 'Gasta R$ 120 para continuar guardando o que não usa.',
+        rotuloAcao: 'Opção 3',
+        titulo: 'Desistir de vender e comprar caixas organizadoras (-R$ 120)',
+        descricao: 'Gasta R$ 120 para continuar guardando coisas sem uso.',
         impactoMoedas: -120,
         usaCofreReserva: false,
         parcelaCartaoFutura: 0,
         mesesParcela: 0,
         impactoCoracoes: -2,
         tipoEscolha: 'armadilha',
-        falaReacaoFamilia: 'Deixamos de ganhar R$ 360 e ainda gastamos R$ 120!',
+        falaReacaoFamilia: 'Além de não ganhar nada, gastamos comprando caixas.',
         explicacaoMestre:
-          'Guardar coisas sem utilidade ocupa espaço e impede você de gerar caixa extra.',
+          'Acumular objetos sem utilidade faz você perder a chance de recuperar parte do que gastou.',
       },
     ],
   },
   {
     id: 15,
-    titulo: 'Tentação de Pedir Delivery Várias Vezes na Semana!',
-    categoria: 'Hábito e Alimentação',
+    titulo: 'Vontade de pedir entrega várias vezes na semana',
+    categoria: 'Alimentação e rotina',
     grupoGrafico: 'alimentacao',
-    nomeNPC: 'Flash Motoboy',
-    cargoNPC: 'App de Entrega',
+    nomeNPC: 'Henrique',
+    cargoNPC: 'Entregador de aplicativo',
     tipoNPC: 'entregador',
     falaNPC:
-      'Cupom na tela na hora do cansaço! "Pede lanche, açaí e pizza aí! São só R$ 75 cada pedido, 4 vezes por semana!"',
+      'Bateu cansaço à noite e chegou cupom no celular. Mas pedir lanche três ou quatro vezes por semana pesa rápido na conta.',
     cartas: [
       {
         codigo: '1',
-        rotuloAcao: 'Ação 1 · Marmitas Planejadas',
-        titulo: 'Deixar Refeições Prontas no Freezer + 1 Lanche no Mês (R$ 80)',
-        descricao: 'Organiza a comida da semana no domingo e curte 1 delivery sem culpa.',
+        rotuloAcao: 'Opção 1',
+        titulo: 'Deixar refeições prontas no freezer e pedir só uma vez (R$ 80)',
+        descricao: 'Organiza marmitas caseiras no fim de semana e curte um lanche sem exagero.',
         impactoMoedas: -80,
         usaCofreReserva: false,
         parcelaCartaoFutura: 0,
         mesesParcela: 0,
         impactoCoracoes: 7,
         tipoEscolha: 'planejada',
-        falaReacaoFamilia: 'Comida caseira pronta em 5 minutos salvou nosso salário!',
+        falaReacaoFamilia: 'Ter comida pronta no congelador salvou a semana corrida.',
         explicacaoMestre:
-          'Ter marmitas saborosas prontas no congelador vence a preguiça dos dias corridos.',
+          'Deixar refeições congeladas evita pedir entrega cara só porque você chegou cansado em casa.',
       },
       {
         codigo: '2',
-        rotuloAcao: 'Ação 2 · Alternativa Rápida em Casa',
-        titulo: 'Desativar Notificações do App e Fazer Lanches Caseiros (R$ 30)',
-        descricao: 'Prepara omelete, tapioca e sanduíche natural rápido em casa.',
+        rotuloAcao: 'Opção 2',
+        titulo: 'Desativar notificações do app e fazer lanche em casa (R$ 30)',
+        descricao: 'Prepara sanduíche, tapioca ou omelete rápido gastando pouco.',
         impactoMoedas: -30,
         usaCofreReserva: false,
         parcelaCartaoFutura: 0,
         mesesParcela: 0,
         impactoCoracoes: 4,
         tipoEscolha: 'economica',
-        falaReacaoFamilia: 'Silenciar os cupons do celular economizou centenas de reais!',
+        falaReacaoFamilia: 'Silenciar os alertas do aplicativo evitou muita compra por impulso.',
         explicacaoMestre:
-          'Notificações no horário do jantar são gatilhos emocionais para gastos não planejados.',
+          'Notificações de cupons no fim da tarde funcionam como gatilho para gastos fora do planejado.',
       },
       {
         codigo: '3',
-        rotuloAcao: 'Ação 3 · Pedir Delivery Toda Semana no Cartão',
-        titulo: 'Pedir Entrega 4x por Semana no Crédito',
-        descricao: 'Gasta R$ 320 neste mês + R$ 160 acumulados para a próxima fatura!',
+        rotuloAcao: 'Opção 3',
+        titulo: 'Pedir entrega toda semana no cartão de crédito',
+        descricao: 'Gasta R$ 320 neste mês e acumula R$ 160 para a próxima fatura.',
         impactoMoedas: -320,
         usaCofreReserva: false,
         parcelaCartaoFutura: 160,
         mesesParcela: 1,
         impactoCoracoes: 1,
         tipoEscolha: 'armadilha',
-        falaReacaoFamilia: 'R$ 480 só em taxas e lanches de aplicativo! O salário sumiu aqui!',
+        falaReacaoFamilia: 'Quase quinhentos reais só em entregas e taxas neste mês.',
         explicacaoMestre:
-          'Pequenos pedidos frequentes no delivery costumam superar o valor de toda a feira do mês.',
+          'Vários pedidos pequenos ao longo do mês costumam custar mais caro que toda a feira da casa.',
       },
     ],
   },
 ];
 
 // ============================================================================
-// CONFIGURAÇÕES PADRÃO POR MODO E GÊNERO (DIVERGÊNCIA REALISTA DE GASTOS)
+// PERFIS PADRÃO POR MODO E GÊNERO
 // ============================================================================
 
 interface PresetPerfilOrcamento {
@@ -1442,13 +1441,13 @@ interface PresetPerfilOrcamento {
 
 const PRESETS_ORCAMENTO: Record<string, PresetPerfilOrcamento> = {
   familia: {
-    titulo: 'Modo Família (Casal + Filho + Pet)',
-    subtitulo: '3 Pessoas · Salário + Benefício Bolsa Família',
+    titulo: 'Família Silva (Casal, filho e pet)',
+    subtitulo: '3 pessoas · Salário + Bolsa Família',
     dicaEducativa:
-      'No Modo Família, a renda conta com o complemento do Bolsa Família, mas os gastos essenciais de supermercado, moradia e cuidados com a criança exigem forte planejamento coletivo.',
+      'Na família de três pessoas, o Bolsa Família complementa a renda, mas mercado, contas da casa e despesas da criança exigem atenção para sobrar uma reserva todo mês.',
     receitas: {
       salarioMensal: 2800,
-      bolsaFamilia: 600, // Exclusivo Modo Família
+      bolsaFamilia: 600,
       peDeMeia: 0,
     },
     essenciais: {
@@ -1461,18 +1460,18 @@ const PRESETS_ORCAMENTO: Record<string, PresetPerfilOrcamento> = {
       gastoViagens: 200,
       gastoCuidadosPessoais: 160,
       outrosGastos: 100,
-      nomeOutrosGastos: 'Ração do Pet Caramelo e Escola',
+      nomeOutrosGastos: 'Ração do Caramelo e material escolar',
     },
     metaReserva: 250,
   },
   familia_grande: {
-    titulo: 'Modo Família Grande (Casal + 2 Filhos + Vovó + Pet)',
-    subtitulo: '5 Pessoas · Renda Familiar + Bolsa Família',
+    titulo: 'Família Grande (Casal, 2 filhos, vovó e pet)',
+    subtitulo: '5 pessoas · Renda familiar + Bolsa Família',
     dicaEducativa:
-      'Na Família Grande (5 pessoas), as contas de alimentação, água/luz e farmácia da Vovó são mais elevadas. Qualquer desperdício multiplica por 5 no fim do mês!',
+      'Com cinco pessoas morando juntas, alimentação, luz, água e remédios da vovó pesam bastante. Qualquer gasto fora de hora se multiplica rápido.',
     receitas: {
       salarioMensal: 4200,
-      bolsaFamilia: 750, // Exclusivo Modo Família
+      bolsaFamilia: 750,
       peDeMeia: 0,
     },
     essenciais: {
@@ -1485,43 +1484,43 @@ const PRESETS_ORCAMENTO: Record<string, PresetPerfilOrcamento> = {
       gastoViagens: 260,
       gastoCuidadosPessoais: 260,
       outrosGastos: 160,
-      nomeOutrosGastos: 'Farmácia da Vovó e Pet',
+      nomeOutrosGastos: 'Farmácia da vovó e ração do pet',
     },
     metaReserva: 380,
   },
   individual_mulher: {
-    titulo: 'Modo Individual / Jovem Solo (Mulher)',
-    subtitulo: '1 Pessoa · Salário/Estágio + Incentivo Pé-de-Meia Estudantil',
+    titulo: 'Jovem Solo (Mulher)',
+    subtitulo: '1 pessoa · Salário/estágio + Pé-de-Meia',
     dicaEducativa:
-      'Divergência Realista (Mulher): Estudos econômicos mostram que mulheres enfrentam a "Pink Tax" (produtos de higiene e cuidado pessoal até 25% mais caros), manutenção capilar/salão e maior necessidade de transporte por aplicativo à noite por segurança.',
+      'No dia a dia das mulheres, itens de higiene e farmácia costumam ser mais caros (a chamada "taxa rosa"), além dos gastos com cabelo/salão e corridas de aplicativo à noite por segurança.',
     receitas: {
       salarioMensal: 2100,
       bolsaFamilia: 0,
-      peDeMeia: 200, // Exclusivo Modo Individual Jovem
+      peDeMeia: 200,
     },
     essenciais: {
       gastoMoradia: 780,
       gastoAlimentacao: 480,
-      gastoTransporte: 250, // Maior peso por segurança noturna (app vs ônibus)
+      gastoTransporte: 250,
     },
     estiloVida: {
       gastoRoupas: 150,
       gastoViagens: 140,
-      gastoCuidadosPessoais: 190, // Pink Tax, higiene feminina, cabelo/salão
+      gastoCuidadosPessoais: 190,
       outrosGastos: 70,
-      nomeOutrosGastos: 'Material de Estudo / Internet Móvel',
+      nomeOutrosGastos: 'Celular e material de estudo',
     },
     metaReserva: 180,
   },
   individual_homem: {
-    titulo: 'Modo Individual / Jovem Solo (Homem)',
-    subtitulo: '1 Pessoa · Salário/Estágio + Incentivo Pé-de-Meia Estudantil',
+    titulo: 'Jovem Solo (Homem)',
+    subtitulo: '1 pessoa · Salário/estágio + Pé-de-Meia',
     dicaEducativa:
-      'Divergência Realista (Homem): No perfil jovem masculino, os maiores ralos financeiros costumam vir do hábito de barbearia toda semana, gastos com jogos/assinaturas esportivas, suplementos/academia e lanches/saídas de fim de semana.',
+      'No perfil jovem masculino, os gastos que mais costumam fugir do controle são idas semanais à barbearia, jogos e assinaturas de esporte, suplementos e lanches com a turma.',
     receitas: {
       salarioMensal: 2100,
       bolsaFamilia: 0,
-      peDeMeia: 200, // Exclusivo Modo Individual Jovem
+      peDeMeia: 200,
     },
     essenciais: {
       gastoMoradia: 780,
@@ -1530,10 +1529,10 @@ const PRESETS_ORCAMENTO: Record<string, PresetPerfilOrcamento> = {
     },
     estiloVida: {
       gastoRoupas: 120,
-      gastoViagens: 180, // Jogos, futebol, resenhas e passeios
-      gastoCuidadosPessoais: 130, // Barbearia e academia/suplementos
+      gastoViagens: 180,
+      gastoCuidadosPessoais: 130,
       outrosGastos: 80,
-      nomeOutrosGastos: 'Assinaturas Gamer / Esportes',
+      nomeOutrosGastos: 'Jogos e internet do celular',
     },
     metaReserva: 180,
   },
@@ -1549,20 +1548,20 @@ function formatarMoeda(valor: number): string {
 }
 
 const CORES_GRAFICO_CATEGORIAS = [
-  '#0284c7', // Alimentação (Sky)
-  '#0d9488', // Moradia/Contas (Teal)
-  '#f59e0b', // Transporte (Amber)
-  '#ec4899', // Roupas (Pink)
-  '#8b5cf6', // Viagens/Lazer (Violet)
-  '#db2777', // Cuidados Pessoais (Rose/Fuchsia)
-  '#6366f1', // Outros (Indigo)
-  '#f97316', // Imprevistos (Orange)
-  '#ef4444', // Juros (Red)
-  '#10b981', // Cofre Reserva (Emerald)
+  '#0284c7', // Alimentação
+  '#0d9488', // Moradia
+  '#f59e0b', // Transporte
+  '#ec4899', // Roupas
+  '#8b5cf6', // Viagens/Lazer
+  '#db2777', // Cuidados Pessoais
+  '#6366f1', // Outros
+  '#f97316', // Imprevistos
+  '#ef4444', // Juros
+  '#10b981', // Reserva
 ];
 
 // ============================================================================
-// COMPONENTE PRINCIPAL DO JOGO ARCADE
+// COMPONENTE PRINCIPAL
 // ============================================================================
 
 export default function App() {
@@ -1571,7 +1570,7 @@ export default function App() {
   const [modoJogo, setModoJogo] = useState<ModoJogo>('familia');
   const [generoPersonagem, setGeneroPersonagem] = useState<GeneroPersonagem>('mulher');
 
-  // 2. Estados Exatos de Receitas e Despesas (em português)
+  // 2. Estados de Receitas e Despesas (em português)
   const [salarioMensal, setSalarioMensal] = useState<number>(2800);
   const [bolsaFamilia, setBolsaFamilia] = useState<number>(600);
   const [peDeMeia, setPeDeMeia] = useState<number>(0);
@@ -1585,12 +1584,12 @@ export default function App() {
   const [gastoCuidadosPessoais, setGastoCuidadosPessoais] = useState<number>(160);
   const [outrosGastos, setOutrosGastos] = useState<number>(100);
   const [nomeOutrosGastos, setNomeOutrosGastos] = useState<string>(
-    'Ração do Pet Caramelo e Escola'
+    'Ração do Caramelo e material escolar'
   );
 
   const [metaReserva, setMetaReserva] = useState<number>(250);
 
-  // 3. Estados da Simulação de 6 Meses (Fases 1 a 6)
+  // 3. Estados da Simulação de 6 Meses
   const [mesAtual, setMesAtual] = useState<number>(1);
   const [indiceTurnoNoMes, setIndiceTurnoNoMes] = useState<number>(0);
   const [eventosDaPartida, setEventosDaPartida] = useState<EventoNPC[]>([]);
@@ -1608,75 +1607,205 @@ export default function App() {
   const [falaFamiliaPalco, setFalaFamiliaPalco] = useState<string>('');
   const [particulasFlutuantes, setParticulasFlutuantes] = useState<ParticulaFlutuante[]>([]);
   const [tremeTela, setTremeTela] = useState<boolean>(false);
+
+  // 4. Estados de Áudio: Música de Fundo e Efeitos Sonoros
+  const [musicaAtiva, setMusicaAtiva] = useState<boolean>(true);
   const [somAtivo, setSomAtivo] = useState<boolean>(true);
 
   const audioCtxRef = useRef<AudioContext | null>(null);
+  const intervaloMusicaRef = useRef<number | null>(null);
+  const passoMusicaRef = useRef<number>(0);
   const contadorParticulaRef = useRef<number>(1);
 
+  const obterAudioContext = useCallback(() => {
+    if (!audioCtxRef.current) {
+      const AudioContextClass =
+        window.AudioContext ||
+        (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+      audioCtxRef.current = new AudioContextClass();
+    }
+    if (audioCtxRef.current.state === 'suspended') {
+      audioCtxRef.current.resume();
+    }
+    return audioCtxRef.current;
+  }, []);
+
   // ============================================================================
-  // SINTETIZADOR DE EFEITOS SONOROS ARCADE (WEB AUDIO API)
+  // TRILHA SONORA DE FUNDO SUAVE (WEB AUDIO API LO-FI / CHIPTUNE ACÚSTICO)
+  // ============================================================================
+
+  const tocarPassoMusica = useCallback(() => {
+    if (!musicaAtiva) return;
+    try {
+      const ctx = obterAudioContext();
+      const t = ctx.currentTime;
+
+      // Sequência melódica calma e agradável (Dó maior / Lá menor / Fá / Sol)
+      const sequenciaMelodia = [
+        523.25, // C5
+        659.25, // E5
+        783.99, // G5
+        659.25, // E5
+        440.0,  // A4
+        523.25, // C5
+        659.25, // E5
+        523.25, // C5
+        349.23, // F4
+        440.0,  // A4
+        523.25, // C5
+        440.0,  // A4
+        392.0,  // G4
+        493.88, // B4
+        587.33, // D5
+        493.88, // B4
+      ];
+
+      const sequenciaBaixo = [
+        130.81, 0, 196.0, 0,
+        110.0,  0, 164.81, 0,
+        174.61, 0, 130.81, 0,
+        196.0,  0, 146.83, 0,
+      ];
+
+      const idx = passoMusicaRef.current % sequenciaMelodia.length;
+      passoMusicaRef.current += 1;
+
+      const notaMelodia = sequenciaMelodia[idx];
+      const notaBaixo = sequenciaBaixo[idx];
+
+      // Melodia suave em onda triangle
+      if (notaMelodia > 0) {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(notaMelodia, t);
+        gain.gain.setValueAtTime(0.001, t);
+        gain.gain.linearRampToValueAtTime(0.028, t + 0.04);
+        gain.gain.exponentialRampToValueAtTime(0.0008, t + 0.36);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(t);
+        osc.stop(t + 0.38);
+      }
+
+      // Baixo macio em onda sine
+      if (notaBaixo > 0) {
+        const oscBaixo = ctx.createOscillator();
+        const gainBaixo = ctx.createGain();
+        oscBaixo.type = 'sine';
+        oscBaixo.frequency.setValueAtTime(notaBaixo, t);
+        gainBaixo.gain.setValueAtTime(0.001, t);
+        gainBaixo.gain.linearRampToValueAtTime(0.032, t + 0.05);
+        gainBaixo.gain.exponentialRampToValueAtTime(0.0008, t + 0.42);
+        oscBaixo.connect(gainBaixo);
+        gainBaixo.connect(ctx.destination);
+        oscBaixo.start(t);
+        oscBaixo.stop(t + 0.44);
+      }
+    } catch {
+      // Ignora caso o navegador ainda aguarde interação do usuário
+    }
+  }, [musicaAtiva, obterAudioContext]);
+
+  useEffect(() => {
+    if (!musicaAtiva) {
+      if (intervaloMusicaRef.current !== null) {
+        window.clearInterval(intervaloMusicaRef.current);
+        intervaloMusicaRef.current = null;
+      }
+      return;
+    }
+
+    const iniciarSeInteragir = () => {
+      if (intervaloMusicaRef.current === null && musicaAtiva) {
+        tocarPassoMusica();
+        intervaloMusicaRef.current = window.setInterval(tocarPassoMusica, 420);
+      }
+    };
+
+    // Se já houve interação e o contexto existe, inicia imediatamente
+    if (audioCtxRef.current && audioCtxRef.current.state === 'running') {
+      iniciarSeInteragir();
+    }
+
+    window.addEventListener('pointerdown', iniciarSeInteragir, { once: true });
+    window.addEventListener('keydown', iniciarSeInteragir, { once: true });
+
+    return () => {
+      window.removeEventListener('pointerdown', iniciarSeInteragir);
+      window.removeEventListener('keydown', iniciarSeInteragir);
+      if (intervaloMusicaRef.current !== null) {
+        window.clearInterval(intervaloMusicaRef.current);
+        intervaloMusicaRef.current = null;
+      }
+    };
+  }, [musicaAtiva, tocarPassoMusica]);
+
+  const alternarMusicaFundo = () => {
+    setMusicaAtiva((ativa) => {
+      const novoEstado = !ativa;
+      if (novoEstado) {
+        obterAudioContext();
+      }
+      return novoEstado;
+    });
+  };
+
+  // ============================================================================
+  // EFEITOS SONOROS DE INTERAÇÃO (WEB AUDIO API)
   // ============================================================================
 
   const tocarSomArcade = useCallback(
     (tipo: 'moeda' | 'dano' | 'clique' | 'vitoria' | 'gameover' | 'start') => {
       if (!somAtivo) return;
       try {
-        if (!audioCtxRef.current) {
-          const AudioContextClass =
-            window.AudioContext ||
-            (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
-          audioCtxRef.current = new AudioContextClass();
-        }
-        const ctx = audioCtxRef.current;
-        if (ctx.state === 'suspended') {
-          ctx.resume();
-        }
+        const ctx = obterAudioContext();
         const t = ctx.currentTime;
 
         if (tipo === 'moeda') {
           const osc = ctx.createOscillator();
           const gain = ctx.createGain();
-          osc.type = 'square';
+          osc.type = 'triangle';
           osc.frequency.setValueAtTime(987.77, t);
           osc.frequency.setValueAtTime(1318.51, t + 0.075);
-          gain.gain.setValueAtTime(0.11, t);
-          gain.gain.exponentialRampToValueAtTime(0.001, t + 0.32);
-          osc.connect(gain);
-          gain.connect(ctx.destination);
-          osc.start(t);
-          osc.stop(t + 0.32);
-        } else if (tipo === 'dano') {
-          const osc = ctx.createOscillator();
-          const gain = ctx.createGain();
-          osc.type = 'sawtooth';
-          osc.frequency.setValueAtTime(190, t);
-          osc.frequency.linearRampToValueAtTime(65, t + 0.28);
-          gain.gain.setValueAtTime(0.15, t);
+          gain.gain.setValueAtTime(0.09, t);
           gain.gain.exponentialRampToValueAtTime(0.001, t + 0.3);
           osc.connect(gain);
           gain.connect(ctx.destination);
           osc.start(t);
           osc.stop(t + 0.3);
+        } else if (tipo === 'dano') {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(180, t);
+          osc.frequency.linearRampToValueAtTime(65, t + 0.25);
+          gain.gain.setValueAtTime(0.11, t);
+          gain.gain.exponentialRampToValueAtTime(0.001, t + 0.28);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(t);
+          osc.stop(t + 0.28);
         } else if (tipo === 'clique') {
           const osc = ctx.createOscillator();
           const gain = ctx.createGain();
           osc.type = 'triangle';
           osc.frequency.setValueAtTime(520, t);
-          osc.frequency.setValueAtTime(680, t + 0.03);
-          gain.gain.setValueAtTime(0.08, t);
-          gain.gain.exponentialRampToValueAtTime(0.001, t + 0.07);
+          osc.frequency.setValueAtTime(660, t + 0.025);
+          gain.gain.setValueAtTime(0.06, t);
+          gain.gain.exponentialRampToValueAtTime(0.001, t + 0.06);
           osc.connect(gain);
           gain.connect(ctx.destination);
           osc.start(t);
-          osc.stop(t + 0.07);
+          osc.stop(t + 0.06);
         } else if (tipo === 'start') {
           const notas = [261.63, 329.63, 392.0, 523.25];
           notas.forEach((freq, i) => {
             const osc = ctx.createOscillator();
             const gain = ctx.createGain();
-            osc.type = 'square';
+            osc.type = 'triangle';
             osc.frequency.setValueAtTime(freq, t + i * 0.06);
-            gain.gain.setValueAtTime(0.09, t + i * 0.06);
+            gain.gain.setValueAtTime(0.08, t + i * 0.06);
             gain.gain.exponentialRampToValueAtTime(0.001, t + i * 0.06 + 0.12);
             osc.connect(gain);
             gain.connect(ctx.destination);
@@ -1688,9 +1817,9 @@ export default function App() {
           notas.forEach((freq, i) => {
             const osc = ctx.createOscillator();
             const gain = ctx.createGain();
-            osc.type = 'square';
+            osc.type = 'triangle';
             osc.frequency.setValueAtTime(freq, t + i * 0.09);
-            gain.gain.setValueAtTime(0.11, t + i * 0.09);
+            gain.gain.setValueAtTime(0.09, t + i * 0.09);
             gain.gain.exponentialRampToValueAtTime(0.001, t + i * 0.09 + 0.22);
             osc.connect(gain);
             gain.connect(ctx.destination);
@@ -1704,7 +1833,7 @@ export default function App() {
             const gain = ctx.createGain();
             osc.type = 'sawtooth';
             osc.frequency.setValueAtTime(freq, t + i * 0.14);
-            gain.gain.setValueAtTime(0.11, t + i * 0.14);
+            gain.gain.setValueAtTime(0.09, t + i * 0.14);
             gain.gain.exponentialRampToValueAtTime(0.001, t + i * 0.14 + 0.22);
             osc.connect(gain);
             gain.connect(ctx.destination);
@@ -1716,7 +1845,7 @@ export default function App() {
         // Ignora silenciosamente
       }
     },
-    [somAtivo]
+    [somAtivo, obterAudioContext]
   );
 
   const dispararParticulas = useCallback(
@@ -1744,11 +1873,11 @@ export default function App() {
 
   const acionarScreenShake = useCallback(() => {
     setTremeTela(true);
-    window.setTimeout(() => setTremeTela(false), 500);
+    window.setTimeout(() => setTremeTela(false), 450);
   }, []);
 
   // ============================================================================
-  // TROCA DE MODO (FAMÍLIA / INDIVIDUAL / FAMÍLIA GRANDE) E GÊNERO (HOMEM / MULHER)
+  // TROCA DE MODO E GÊNERO
   // ============================================================================
 
   const aplicarPresetPerfil = useCallback(
@@ -1768,7 +1897,6 @@ export default function App() {
       if (!preset) return;
 
       setSalarioMensal(preset.receitas.salarioMensal);
-      // Regra estrita: Bolsa Família somente no modo família; Pé-de-Meia somente no modo individual
       setBolsaFamilia(novoModo === 'individual' ? 0 : preset.receitas.bolsaFamilia);
       setPeDeMeia(novoModo === 'individual' ? preset.receitas.peDeMeia : 0);
 
@@ -1796,10 +1924,9 @@ export default function App() {
   const presetAtivo = PRESETS_ORCAMENTO[chavePresetAtivo];
 
   // ============================================================================
-  // CÁLCULOS DE RECEITAS E DESPESAS PLANEJADAS (TELA 1)
+  // CÁLCULOS DE RECEITAS E DESPESAS PLANEJADAS
   // ============================================================================
 
-  // Garante a regra: Bolsa Família só conta se for família; Pé-de-Meia só conta se for individual
   const bolsaFamiliaEfetivo = modoJogo === 'individual' ? 0 : bolsaFamilia;
   const peDeMeiaEfetivo = modoJogo === 'individual' ? peDeMeia : 0;
 
@@ -1828,7 +1955,6 @@ export default function App() {
     return receitasMensaisTotais - totalGastosMensaisPlanejados - metaReserva;
   }, [receitasMensaisTotais, totalGastosMensaisPlanejados, metaReserva]);
 
-  // Estado de Humor em tempo real dos personagens no palco
   const humorFamiliaAtual: EstadoHumorFamilia = useMemo(() => {
     if (telaJogo === 'selecao') {
       if (
@@ -1864,27 +1990,27 @@ export default function App() {
 
   const falaDinamicaSelecao = useMemo(() => {
     if (moedasLivresParaImprevistos < 0) {
-      return 'SOCORRO! Os gastos planejados já passam da nossa Renda Total! Vamos começar no Cheque Especial!';
+      return 'As despesas planejadas já passam da renda do mês. Assim vamos começar no vermelho.';
     }
     if (gastoAlimentacao < receitasMensaisTotais * 0.12) {
-      return 'Com tão pouco dinheiro para Alimentação, vamos passar fome antes do fim do mês!';
+      return 'Separamos muito pouco para alimentação. Vai faltar comida antes do fim do mês.';
     }
     if (percentualComprometidoFixosEVida > 78) {
-      return 'PERIGO DE DÍVIDA! Mais de 78% da renda está comprometida antes mesmo dos imprevistos!';
+      return 'Quase toda a renda já está comprometida. Qualquer imprevisto pode complicar.';
     }
     if (metaReserva === 0) {
-      return 'Sem nenhuma moeda na Meta de Reserva, qualquer emergência vai nos jogar nas dívidas!';
+      return 'Sem guardar nada na reserva, o primeiro conserto de urgência vai virar dívida.';
     }
     if (modoJogo === 'individual' && generoPersonagem === 'mulher') {
-      return 'Orçamento Solo Feminino pronto! Lembre-se da Pink Tax e do Pé-de-Meia estudantil!';
+      return 'Tudo pronto por aqui. Vamos encarar os próximos 6 meses com o orçamento organizado.';
     }
     if (modoJogo === 'individual' && generoPersonagem === 'homem') {
-      return 'Orçamento Solo Masculino pronto! Cuidado com impulsos em jogos, barbearia e lanches!';
+      return 'Orçamento ajustado. Agora é segurar os gastos por impulso durante os 6 meses.';
     }
     if (modoJogo === 'familia_grande') {
-      return 'Família Grande reunida na sala! Com 5 pessoas + Pet, cada moeda bem planejada vale ouro!';
+      return 'Casa cheia! Com cinco pessoas, cada escolha faz diferença no fim do mês.';
     }
-    return 'Família Silva pronta! Salário + Bolsa Família configurados para enfrentar os 6 meses!';
+    return 'Contas planejadas. Vamos ver como a família se sai ao longo dos 6 meses.';
   }, [
     moedasLivresParaImprevistos,
     gastoAlimentacao,
@@ -1896,7 +2022,7 @@ export default function App() {
   ]);
 
   // ============================================================================
-  // INÍCIO DO JOGO E VIRADA DE MÊS (FASE 1 A FASE 6)
+  // INÍCIO DO JOGO E VIRADA DE MÊS
   // ============================================================================
 
   const iniciarFaseMensal = useCallback(
@@ -1908,14 +2034,10 @@ export default function App() {
       parcelasAgendadas: number[],
       jurosAcumulados: number
     ) => {
-      // 1. Cobra 8% de juros se terminou o mês anterior no vermelho (Cheque Especial)
       const jurosDoMes =
         saldoVindoMesAnterior < 0 ? Math.round(Math.abs(saldoVindoMesAnterior) * 0.08) : 0;
 
-      // 2. Parcelas de cartão contratadas em meses anteriores
       const faturaCartaoMes = parcelasAgendadas[numeroMes - 1] || 0;
-
-      // 3. Soma das Fontes de Renda Mensal (salarioMensal + bolsaFamiliaEfetivo + peDeMeiaEfetivo)
       const rendaEntradaMes = salarioMensal + bolsaFamiliaEfetivo + peDeMeiaEfetivo;
 
       let novoSaldo =
@@ -1925,7 +2047,6 @@ export default function App() {
         totalGastosMensaisPlanejados -
         faturaCartaoMes;
 
-      // 4. Guarda no Cofre de Reserva se houver saldo positivo
       let guardadoNesteMes = 0;
       if (metaReserva > 0 && novoSaldo >= metaReserva) {
         novoSaldo -= metaReserva;
@@ -1937,7 +2058,6 @@ export default function App() {
 
       const novaReserva = reservaVindaMesAnterior + guardadoNesteMes;
 
-      // 5. Impacto na felicidade base do mês
       let variacaoCoracoes = 0;
       if (gastoViagens + gastoRoupas + gastoCuidadosPessoais < rendaEntradaMes * 0.06) {
         variacaoCoracoes -= 5;
@@ -1983,33 +2103,32 @@ export default function App() {
       setIndiceTurnoNoMes(0);
       setDecisaoDoTurno(null);
 
-      // Partículas de entrada de renda (mostrando Salário + Bolsa Família ou Pé-de-Meia!)
       const listaParticulas: Array<{ texto: string; cor: ParticulaFlutuante['cor'] }> = [
         {
-          texto: `+${formatarMoeda(rendaEntradaMes)} RENDA DO MÊS!`,
+          texto: `+${formatarMoeda(rendaEntradaMes)} renda do mês`,
           cor: 'verde',
         },
         {
-          texto: `-${formatarMoeda(totalGastosMensaisPlanejados)} DESPESAS DO MÊS`,
+          texto: `-${formatarMoeda(totalGastosMensaisPlanejados)} contas do mês`,
           cor: 'amarelo',
         },
       ];
 
       if (bolsaFamiliaEfetivo > 0) {
         listaParticulas.push({
-          texto: `BOLSA FAMÍLIA: +${formatarMoeda(bolsaFamiliaEfetivo)}`,
+          texto: `Bolsa Família: +${formatarMoeda(bolsaFamiliaEfetivo)}`,
           cor: 'azul',
         });
       }
       if (peDeMeiaEfetivo > 0) {
         listaParticulas.push({
-          texto: `PÉ-DE-MEIA: +${formatarMoeda(peDeMeiaEfetivo)}`,
+          texto: `Pé-de-Meia: +${formatarMoeda(peDeMeiaEfetivo)}`,
           cor: 'azul',
         });
       }
       if (jurosDoMes > 0) {
         listaParticulas.push({
-          texto: `-${formatarMoeda(jurosDoMes)} JUROS 8%!`,
+          texto: `-${formatarMoeda(jurosDoMes)} juros (8%)`,
           cor: 'vermelho',
         });
         acionarScreenShake();
@@ -2040,7 +2159,6 @@ export default function App() {
   );
 
   const apertarStartJogo = () => {
-    // Filtra os eventos elegíveis para o Modo e Gênero escolhidos!
     const elegiveis = bancoDeEventosNPC.filter((ev) => {
       if (!ev.exclusivoPara) return true;
       if (ev.exclusivoPara === 'familia_qualquer') {
@@ -2058,7 +2176,6 @@ export default function App() {
       return true;
     });
 
-    // Prioriza colocar os eventos exclusivos do perfil escolhido entre os 12 sorteados dos 6 meses!
     const exclusivosDoPerfil = elegiveis.filter((e) => Boolean(e.exclusivoPara));
     const universais = elegiveis.filter((e) => !e.exclusivoPara);
 
@@ -2099,7 +2216,7 @@ export default function App() {
   }, [eventosDaPartida, mesAtual, indiceTurnoNoMes]);
 
   // ============================================================================
-  // PROCESSAR DECISÃO NAS CARTAS DE AÇÃO ARCADE
+  // PROCESSAR DECISÃO NAS CARTAS DE AÇÃO
   // ============================================================================
 
   const processarDecisao = useCallback(
@@ -2185,7 +2302,7 @@ export default function App() {
       const popups: Array<{ texto: string; cor: ParticulaFlutuante['cor'] }> = [];
       if (valorTiradoDoCofre > 0) {
         popups.push({
-          texto: `COFRE PROTEGEU: ${formatarMoeda(valorTiradoDoCofre)}!`,
+          texto: `Reserva cobriu ${formatarMoeda(valorTiradoDoCofre)}`,
           cor: 'azul',
         });
       }
@@ -2196,13 +2313,13 @@ export default function App() {
       }
       if (dividaTotalCriada > 0) {
         popups.push({
-          texto: `CARTÃO: ${carta.mesesParcela}x R$ ${carta.parcelaCartaoFutura}`,
+          texto: `Cartão: ${carta.mesesParcela}x R$ ${carta.parcelaCartaoFutura}`,
           cor: 'amarelo',
         });
       }
       if (carta.impactoCoracoes !== 0) {
         popups.push({
-          texto: `${carta.impactoCoracoes > 0 ? '+' : ''}${carta.impactoCoracoes} Corações`,
+          texto: `${carta.impactoCoracoes > 0 ? '+' : ''}${carta.impactoCoracoes}% bem-estar`,
           cor: 'rosa',
         });
       }
@@ -2306,7 +2423,7 @@ export default function App() {
   }, [telaJogo, decisaoDoTurno, eventoAtualNPC, processarDecisao, avancarProximoTurno]);
 
   // ============================================================================
-  // CONSOLIDAÇÃO FINAL PARA A TELA 3 (GRÁFICO DETALHADO + PLANILHA + RANKING)
+  // CONSOLIDAÇÃO FINAL PARA A TELA 3
   // ============================================================================
 
   const relatorioFinal = useMemo(() => {
@@ -2345,19 +2462,19 @@ export default function App() {
 
     const rotuloOutros = nomeOutrosGastos.trim()
       ? `Outros (${nomeOutrosGastos.trim().slice(0, 18)})`
-      : 'Outros Gastos';
+      : 'Outros gastos';
 
     const dadosPizza = [
       { name: 'Alimentação', value: somaAlimentacao, cor: CORES_GRAFICO_CATEGORIAS[0] },
-      { name: 'Moradia/Contas', value: somaMoradia, cor: CORES_GRAFICO_CATEGORIAS[1] },
+      { name: 'Moradia e contas', value: somaMoradia, cor: CORES_GRAFICO_CATEGORIAS[1] },
       { name: 'Transporte', value: somaTransporte, cor: CORES_GRAFICO_CATEGORIAS[2] },
       { name: 'Roupas', value: somaRoupas, cor: CORES_GRAFICO_CATEGORIAS[3] },
-      { name: 'Viagens/Lazer', value: somaViagens, cor: CORES_GRAFICO_CATEGORIAS[4] },
-      { name: 'Cuidados Pessoais', value: somaCuidados, cor: CORES_GRAFICO_CATEGORIAS[5] },
+      { name: 'Passeios e lazer', value: somaViagens, cor: CORES_GRAFICO_CATEGORIAS[4] },
+      { name: 'Cuidados pessoais', value: somaCuidados, cor: CORES_GRAFICO_CATEGORIAS[5] },
       { name: rotuloOutros, value: somaOutros, cor: CORES_GRAFICO_CATEGORIAS[6] },
       { name: 'Imprevistos', value: somaImprevistos, cor: CORES_GRAFICO_CATEGORIAS[7] },
-      { name: 'Juros Pagos', value: totalJurosPagos, cor: CORES_GRAFICO_CATEGORIAS[8] },
-      { name: 'Cofre Reserva', value: Math.max(0, reservaEmergencia), cor: CORES_GRAFICO_CATEGORIAS[9] },
+      { name: 'Juros pagos', value: totalJurosPagos, cor: CORES_GRAFICO_CATEGORIAS[8] },
+      { name: 'Reserva guardada', value: Math.max(0, reservaEmergencia), cor: CORES_GRAFICO_CATEGORIAS[9] },
     ].filter((i) => i.value > 0);
 
     const dadosBarras = historicoMensal.map((m) => ({
@@ -2389,28 +2506,28 @@ export default function App() {
       felicidadeFamilia >= 60
     ) {
       ranking = {
-        rank: 'RANK S',
-        titulo: 'Mestre das Finanças - Rank S',
+        rank: 'Ótimo resultado',
+        titulo: 'Contas em dia e reserva formada',
         subtitulo:
-          'Pontuação Máxima! Vocês equilibraram todas as categorias de despesas, usaram o Cofre de Reserva e zeraram sem pagar juros!',
-        corBg: 'bg-emerald-400 text-slate-950',
+          'Você fechou os 6 meses no azul, não pagou juros ao banco e manteve a qualidade de vida.',
+        corBg: 'bg-emerald-300 text-slate-950',
         icone: 'trofeu',
       };
     } else if (saldoAtual < 0 || totalJurosPagos > receitasMensaisTotais * 0.15 || patrimonioFinal < 0) {
       ranking = {
-        rank: 'GAME OVER',
-        titulo: 'Engolido pelos Juros - Game Over',
+        rank: 'Orçamento no vermelho',
+        titulo: 'As parcelas e os juros tomaram conta',
         subtitulo:
-          'O Monstro do Cheque Especial (8% a.m.) e as parcelas acumuladas no cartão devoraram a renda mensal!',
+          'Os parcelamentos acumulados e os juros de 8% ao mês no cheque especial consumiram a renda.',
         corBg: 'bg-rose-500 text-white',
         icone: 'caveira',
       };
     } else {
       ranking = {
-        rank: 'RANK B',
-        titulo: 'Sobrevivente no Limite - Rank B',
+        rank: 'No limite',
+        titulo: 'Sobreviveu aos 6 meses, mas no aperto',
         subtitulo:
-          'Vocês chegaram ao fim de Junho, mas passaram aperto no orçamento ou sacrificaram corações de bem-estar!',
+          'As contas fecharam por pouco ou foi preciso abrir mão de bastante bem-estar para não se endividar.',
         corBg: 'bg-amber-300 text-slate-950',
         icone: 'medalha',
       };
@@ -2445,20 +2562,20 @@ export default function App() {
 
   const exportarPlanilhaCSV = () => {
     const cabecalho = [
-      'Fase/Mes',
+      'Mes',
       'Salario (R$)',
       'Bolsa Familia (R$)',
       'Pe-de-Meia (R$)',
-      'Renda Extra Eventos (R$)',
+      'Renda Extra (R$)',
       'Renda Total (R$)',
       'Alimentacao (R$)',
       'Moradia e Transporte (R$)',
       'Roupas (R$)',
-      'Viagens e Lazer (R$)',
+      'Passeios e Lazer (R$)',
       'Cuidados Pessoais e Outros (R$)',
-      'Eventos e Parcelas Cartao (R$)',
+      'Imprevistos e Cartao (R$)',
       'Juros Pagos (R$)',
-      'Cofre Reserva (R$)',
+      'Reserva Acumulada (R$)',
       'Saldo Final (R$)',
     ];
     const linhas = historicoMensal.map((m) => [
@@ -2483,7 +2600,7 @@ export default function App() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'planilha_orcamento_sobrevivencia_financeira.csv';
+    a.download = 'resumo_orcamento_6_meses.csv';
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -2503,78 +2620,103 @@ export default function App() {
   };
 
   // ============================================================================
-  // RENDERIZAÇÃO PRINCIPAL DO JOGO ARCADE
+  // RENDERIZAÇÃO PRINCIPAL
   // ============================================================================
 
   return (
     <div
-      className={`min-h-screen bg-amber-100 text-slate-900 flex flex-col justify-between ${
+      className={`min-h-screen bg-[#f6f3ec] text-slate-900 flex flex-col justify-between ${
         tremeTela ? 'animate-screen-shake' : ''
       }`}
     >
-      {/* CABEÇALHO DE FLIPERAMA / ARCADE TOP BAR (3 ZONAS) */}
-      <header className="sticky top-0 z-40 bg-slate-900 text-white border-b-4 border-slate-950 px-4 sm:px-8 py-3 no-print">
-        <div className="max-w-7xl mx-auto flex items-center justify-between gap-6">
+      {/* BARRA SUPERIOR COM CONTROLE DE MÚSICA E EFEITOS SONOROS */}
+      <header className="sticky top-0 z-40 bg-slate-900 text-white border-b-2 border-slate-950 px-4 sm:px-8 py-3 no-print">
+        <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
           <button
             type="button"
             onClick={reiniciarFliperama}
-            className="flex items-center gap-2.5 text-left cursor-pointer group whitespace-nowrap shrink-0"
+            className="flex items-center gap-2.5 text-left cursor-pointer group shrink-0"
           >
-            <span className="p-1.5 rounded-xl bg-amber-400 text-slate-950 border-2 border-white shadow-[2px_2px_0px_0px_#10b981]">
+            <span className="p-1.5 rounded-lg bg-amber-300 text-slate-950 border border-slate-950">
               <Gamepad2 className="w-5 h-5" />
             </span>
-            <span className="font-display font-black text-base sm:text-xl tracking-tight text-amber-300 group-hover:text-emerald-300 transition-colors">
-              SOBREVIVÊNCIA FINANCEIRA: O SALÁRIO SUMIU!
-            </span>
+            <div>
+              <span className="font-display font-bold text-base sm:text-lg tracking-tight text-white group-hover:text-amber-300 transition-colors block leading-tight">
+                Para Onde Vai o Salário?
+              </span>
+              <span className="text-[11px] text-slate-400 hidden sm:block">
+                Simulador de orçamento no dia a dia
+              </span>
+            </div>
           </button>
 
-          <nav className="hidden lg:flex items-center gap-5 text-xs font-mono font-bold">
+          <nav className="hidden lg:flex items-center gap-4 text-xs font-medium">
             <span
               className={
                 telaJogo === 'selecao'
-                  ? 'text-emerald-400 underline underline-offset-4 decoration-2'
+                  ? 'text-amber-300 font-bold underline underline-offset-4'
                   : 'text-slate-400'
               }
             >
-              1. PERFIL & ORÇAMENTO RPG
+              1. Montar orçamento
             </span>
-            <span className="text-slate-600">►</span>
+            <span className="text-slate-600">→</span>
             <span
               className={
                 telaJogo === 'gameplay'
-                  ? 'text-emerald-400 underline underline-offset-4 decoration-2'
+                  ? 'text-amber-300 font-bold underline underline-offset-4'
                   : 'text-slate-400'
               }
             >
-              2. SOBREVIVER 6 MESES
+              2. Viver 6 meses
             </span>
-            <span className="text-slate-600">►</span>
+            <span className="text-slate-600">→</span>
             <span
               className={
                 telaJogo === 'zeramento'
-                  ? 'text-emerald-400 underline underline-offset-4 decoration-2'
+                  ? 'text-amber-300 font-bold underline underline-offset-4'
                   : 'text-slate-400'
               }
             >
-              3. HIGH SCORE & PLANILHA
+              3. Resultado
             </span>
           </nav>
 
-          <div className="flex items-center gap-3 shrink-0">
+          {/* Controles de Música de Fundo e Efeitos Sonoros */}
+          <div className="flex items-center gap-2 shrink-0">
+            <button
+              type="button"
+              onClick={alternarMusicaFundo}
+              title={musicaAtiva ? 'Silenciar música de fundo' : 'Ativar música de fundo'}
+              className={`px-3 py-1.5 rounded-lg border text-xs font-medium flex items-center gap-1.5 cursor-pointer transition-colors ${
+                musicaAtiva
+                  ? 'bg-slate-800 hover:bg-slate-700 border-emerald-500/60 text-emerald-300'
+                  : 'bg-slate-800/70 hover:bg-slate-800 border-slate-700 text-slate-400'
+              }`}
+            >
+              <Music className="w-3.5 h-3.5" />
+              <span>{musicaAtiva ? 'Música: ON' : 'Música: Muda'}</span>
+            </button>
+
             <button
               type="button"
               onClick={() => setSomAtivo((s) => !s)}
-              className="px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 border-2 border-slate-600 text-xs font-mono font-bold flex items-center gap-2 cursor-pointer whitespace-nowrap shrink-0"
+              title={somAtivo ? 'Silenciar efeitos sonoros' : 'Ativar efeitos sonoros'}
+              className={`px-3 py-1.5 rounded-lg border text-xs font-medium flex items-center gap-1.5 cursor-pointer transition-colors ${
+                somAtivo
+                  ? 'bg-slate-800 hover:bg-slate-700 border-amber-400/60 text-amber-200'
+                  : 'bg-slate-800/70 hover:bg-slate-800 border-slate-700 text-slate-400'
+              }`}
             >
               {somAtivo ? (
                 <>
-                  <Volume2 className="w-4 h-4 text-emerald-400" />
-                  <span className="text-emerald-300">SOM 8-BIT ON</span>
+                  <Volume2 className="w-3.5 h-3.5" />
+                  <span className="hidden sm:inline">Efeitos: ON</span>
                 </>
               ) : (
                 <>
-                  <VolumeX className="w-4 h-4 text-rose-400" />
-                  <span className="text-slate-400">MUDO</span>
+                  <VolumeX className="w-3.5 h-3.5" />
+                  <span className="hidden sm:inline">Efeitos: OFF</span>
                 </>
               )}
             </button>
@@ -2583,173 +2725,165 @@ export default function App() {
       </header>
 
       {/* =====================================================================
-          TELA 1: SELEÇÃO DE MODO, GÊNERO E ORÇAMENTO COMPLETO (RPG)
+          TELA 1: SELEÇÃO DE MODO, GÊNERO E ORÇAMENTO
          ===================================================================== */}
       {telaJogo === 'selecao' && (
         <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-8 py-6 space-y-6">
-          {/* Banner Superior estilo Fliperama */}
-          <div className="arcade-card rounded-3xl bg-gradient-to-r from-indigo-900 via-purple-900 to-slate-900 text-white p-5 sm:p-6 flex flex-col lg:flex-row items-center justify-between gap-4">
+          {/* Topo de apresentação limpo */}
+          <div className="arcade-card rounded-2xl bg-slate-900 text-white p-5 sm:p-6 flex flex-col lg:flex-row items-center justify-between gap-4">
             <div className="space-y-1 text-center lg:text-left">
-              <div className="inline-flex items-center gap-2 text-xs font-mono font-extrabold text-amber-300 uppercase tracking-widest">
-                <Sparkles className="w-4 h-4" />
-                <span>ARCADE LIFE-SIM · EDUCAÇÃO FINANCEIRA</span>
-              </div>
-              <h1 className="text-2xl sm:text-4xl font-black font-display tracking-tight text-white">
-                ESCOLHA SEU MODO E MONTE O ORÇAMENTO!
+              <h1 className="text-xl sm:text-3xl font-bold font-display tracking-tight text-white">
+                Monte o orçamento antes do mês começar
               </h1>
-              <p className="text-xs sm:text-sm text-indigo-200 max-w-2xl">
-                Jogue com a Família Silva, com a Família Grande (com Bolsa Família) ou no Modo
-                Jovem Individual (Homem ou Mulher, com incentivo Pé-de-Meia)!
+              <p className="text-xs sm:text-sm text-slate-300 max-w-2xl">
+                Escolha com quem você quer jogar, ajuste a renda e distribua as contas. Depois,
+                enfrente os imprevistos de janeiro a junho sem deixar o saldo cair no cheque especial.
               </p>
             </div>
 
             <button
               type="button"
               onClick={apertarStartJogo}
-              className="arcade-btn px-7 py-4 rounded-2xl bg-emerald-400 hover:bg-emerald-300 text-slate-950 font-display font-black text-lg sm:text-xl tracking-wide flex items-center gap-3 cursor-pointer shrink-0 animate-bounce"
+              className="arcade-btn px-6 py-3.5 rounded-xl bg-emerald-400 hover:bg-emerald-300 text-slate-950 font-display font-bold text-base sm:text-lg flex items-center gap-2.5 cursor-pointer shrink-0"
             >
-              <Play className="w-6 h-6 fill-slate-950" />
-              <span>PRESS START (6 MESES)</span>
+              <Play className="w-5 h-5 fill-slate-950" />
+              <span>Começar os 6 meses</span>
             </button>
           </div>
 
-          {/* Grid Principal da Tela 1 */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-            {/* Coluna Esquerda (5 cols): Palco 2D Reativo + Seleção de Modo e Gênero */}
+            {/* Coluna Esquerda (5 cols): Seleção de Modo + Palco da Sala */}
             <div className="lg:col-span-5 space-y-5 lg:sticky lg:top-20">
-              {/* 1. Seletor de Modo de Jogo e Gênero */}
-              <div className="arcade-card rounded-3xl bg-white p-5 space-y-4">
-                <h2 className="font-display font-black text-base sm:text-lg text-slate-900 uppercase">
-                  1. Escolha quem vai morar na Sala (Modo de Jogo)
+              <div className="arcade-card rounded-2xl bg-white p-5 space-y-4">
+                <h2 className="font-display font-bold text-base sm:text-lg text-slate-900">
+                  Quem vai morar na casa?
                 </h2>
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
-                  {/* Botão Modo Família (3 pessoas + Pet) */}
+                  {/* Modo Família */}
                   <button
                     type="button"
                     onClick={() => aplicarPresetPerfil('familia', generoPersonagem)}
-                    className={`p-3 rounded-2xl border-3 border-slate-900 text-left transition-all cursor-pointer flex flex-col justify-between ${
+                    className={`p-3 rounded-xl border-2 border-slate-900 text-left transition-all cursor-pointer flex flex-col justify-between ${
                       modoJogo === 'familia'
-                        ? 'bg-amber-300 shadow-[4px_4px_0px_0px_#0f172a] -translate-y-0.5'
+                        ? 'bg-amber-200 shadow-[3px_3px_0px_0px_#0f172a]'
                         : 'bg-slate-50 hover:bg-amber-50'
                     }`}
                   >
                     <div className="flex items-center justify-between">
-                      <Users className="w-5 h-5 text-slate-900" />
-                      <span className="px-1.5 py-0.5 rounded bg-slate-900 text-amber-300 font-mono text-[9px] font-black">
-                        3 PESSOAS
+                      <Users className="w-4 h-4 text-slate-800" />
+                      <span className="px-1.5 py-0.5 rounded bg-slate-900 text-amber-200 font-mono text-[10px] font-semibold">
+                        3 pessoas
                       </span>
                     </div>
                     <div className="mt-2">
-                      <div className="font-display font-black text-sm text-slate-900 leading-tight">
-                        Modo Família
+                      <div className="font-display font-bold text-sm text-slate-900">
+                        Família
                       </div>
-                      <div className="text-[11px] font-semibold text-slate-700 mt-0.5">
-                        Pai, Mãe, Filho + Pet (Com Bolsa Família)
+                      <div className="text-[11px] text-slate-600 mt-0.5">
+                        Casal, filho e pet (com Bolsa Família)
                       </div>
                     </div>
                   </button>
 
-                  {/* Botão Modo Individual / Jovem Solo (1 pessoa: Homem ou Mulher) */}
+                  {/* Modo Jovem Solo */}
                   <button
                     type="button"
                     onClick={() => aplicarPresetPerfil('individual', generoPersonagem)}
-                    className={`p-3 rounded-2xl border-3 border-slate-900 text-left transition-all cursor-pointer flex flex-col justify-between ${
+                    className={`p-3 rounded-xl border-2 border-slate-900 text-left transition-all cursor-pointer flex flex-col justify-between ${
                       modoJogo === 'individual'
-                        ? 'bg-pink-300 shadow-[4px_4px_0px_0px_#0f172a] -translate-y-0.5'
+                        ? 'bg-pink-200 shadow-[3px_3px_0px_0px_#0f172a]'
                         : 'bg-slate-50 hover:bg-pink-50'
                     }`}
                   >
                     <div className="flex items-center justify-between">
-                      <User className="w-5 h-5 text-slate-900" />
-                      <span className="px-1.5 py-0.5 rounded bg-slate-900 text-pink-300 font-mono text-[9px] font-black">
-                        1 PESSOA
+                      <User className="w-4 h-4 text-slate-800" />
+                      <span className="px-1.5 py-0.5 rounded bg-slate-900 text-pink-200 font-mono text-[10px] font-semibold">
+                        1 pessoa
                       </span>
                     </div>
                     <div className="mt-2">
-                      <div className="font-display font-black text-sm text-slate-900 leading-tight">
+                      <div className="font-display font-bold text-sm text-slate-900">
                         Jovem Solo
                       </div>
-                      <div className="text-[11px] font-semibold text-slate-700 mt-0.5">
-                        Homem ou Mulher (Com Pé-de-Meia)
+                      <div className="text-[11px] text-slate-600 mt-0.5">
+                        Mulher ou Homem (com Pé-de-Meia)
                       </div>
                     </div>
                   </button>
 
-                  {/* Botão Modo Família Grande (5 pessoas + Pet) */}
+                  {/* Modo Família Grande */}
                   <button
                     type="button"
                     onClick={() => aplicarPresetPerfil('familia_grande', generoPersonagem)}
-                    className={`p-3 rounded-2xl border-3 border-slate-900 text-left transition-all cursor-pointer flex flex-col justify-between ${
+                    className={`p-3 rounded-xl border-2 border-slate-900 text-left transition-all cursor-pointer flex flex-col justify-between ${
                       modoJogo === 'familia_grande'
-                        ? 'bg-emerald-300 shadow-[4px_4px_0px_0px_#0f172a] -translate-y-0.5'
+                        ? 'bg-emerald-200 shadow-[3px_3px_0px_0px_#0f172a]'
                         : 'bg-slate-50 hover:bg-emerald-50'
                     }`}
                   >
                     <div className="flex items-center justify-between">
-                      <Users className="w-5 h-5 text-slate-900" />
-                      <span className="px-1.5 py-0.5 rounded bg-slate-900 text-emerald-300 font-mono text-[9px] font-black">
-                        5 PESSOAS
+                      <Users className="w-4 h-4 text-slate-800" />
+                      <span className="px-1.5 py-0.5 rounded bg-slate-900 text-emerald-200 font-mono text-[10px] font-semibold">
+                        5 pessoas
                       </span>
                     </div>
                     <div className="mt-2">
-                      <div className="font-display font-black text-sm text-slate-900 leading-tight">
+                      <div className="font-display font-bold text-sm text-slate-900">
                         Família Grande
                       </div>
-                      <div className="text-[11px] font-semibold text-slate-700 mt-0.5">
-                        Casal, 2 Filhos, Vovó + Pet (Bolsa Família)
+                      <div className="text-[11px] text-slate-600 mt-0.5">
+                        Casal, 2 filhos, vovó e pet (Bolsa Família)
                       </div>
                     </div>
                   </button>
                 </div>
 
-                {/* SELETOR OBRIGATÓRIO DE GÊNERO QUANDO ESTIVER NO MODO INDIVIDUAL */}
+                {/* Seletor de Gênero no Modo Jovem Solo */}
                 {modoJogo === 'individual' && (
-                  <div className="p-3.5 rounded-2xl bg-slate-900 text-white space-y-2.5 border-3 border-slate-950">
-                    <div className="text-xs font-mono font-extrabold text-amber-300 uppercase">
-                      ★ Escolha o Gênero do Personagem Solo (Altera Gastos e Eventos):
+                  <div className="p-3.5 rounded-xl bg-slate-100 border-2 border-slate-900 space-y-2">
+                    <div className="text-xs font-semibold text-slate-700">
+                      Escolha seu personagem (muda os custos sugeridos e os dilemas do jogo):
                     </div>
-                    <div className="grid grid-cols-2 gap-3">
+                    <div className="grid grid-cols-2 gap-2.5">
                       <button
                         type="button"
                         onClick={() => aplicarPresetPerfil('individual', 'mulher')}
-                        className={`py-2.5 px-3 rounded-xl border-2 font-display font-black text-sm flex items-center justify-center gap-2 cursor-pointer transition-all ${
+                        className={`py-2 px-3 rounded-lg border-2 font-display font-bold text-sm flex items-center justify-center gap-2 cursor-pointer transition-all ${
                           generoPersonagem === 'mulher'
-                            ? 'bg-pink-500 text-white border-white shadow-[3px_3px_0px_0px_#facc15]'
-                            : 'bg-slate-800 text-slate-300 border-slate-700 hover:bg-slate-700'
+                            ? 'bg-pink-600 text-white border-slate-900 shadow-[2px_2px_0px_0px_#0f172a]'
+                            : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-50'
                         }`}
                       >
-                        <span>👩 MULHER (SOLO)</span>
+                        <span>Mulher</span>
                       </button>
 
                       <button
                         type="button"
                         onClick={() => aplicarPresetPerfil('individual', 'homem')}
-                        className={`py-2.5 px-3 rounded-xl border-2 font-display font-black text-sm flex items-center justify-center gap-2 cursor-pointer transition-all ${
+                        className={`py-2 px-3 rounded-lg border-2 font-display font-bold text-sm flex items-center justify-center gap-2 cursor-pointer transition-all ${
                           generoPersonagem === 'homem'
-                            ? 'bg-sky-500 text-white border-white shadow-[3px_3px_0px_0px_#facc15]'
-                            : 'bg-slate-800 text-slate-300 border-slate-700 hover:bg-slate-700'
+                            ? 'bg-sky-600 text-white border-slate-900 shadow-[2px_2px_0px_0px_#0f172a]'
+                            : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-50'
                         }`}
                       >
-                        <span>👨 HOMEM (SOLO)</span>
+                        <span>Homem</span>
                       </button>
                     </div>
                   </div>
                 )}
 
-                {/* Dica Educativa sobre o Perfil / Divergência por Gênero */}
-                <div className="p-3.5 rounded-2xl bg-amber-50 border-2 border-slate-900 flex items-start gap-2.5">
-                  <Info className="w-5 h-5 text-amber-700 shrink-0 mt-0.5" />
-                  <div className="text-xs text-slate-800 space-y-0.5">
-                    <div className="font-display font-black text-slate-900">
-                      {presetAtivo.titulo}
-                    </div>
-                    <p className="leading-relaxed font-medium">{presetAtivo.dicaEducativa}</p>
+                {/* Nota contextual sobre o perfil */}
+                <div className="p-3 rounded-xl bg-amber-50/80 border border-amber-300 flex items-start gap-2.5">
+                  <Info className="w-4 h-4 text-amber-700 shrink-0 mt-0.5" />
+                  <div className="text-xs text-slate-700 space-y-0.5">
+                    <div className="font-bold text-slate-900">{presetAtivo.titulo}</div>
+                    <p className="leading-relaxed">{presetAtivo.dicaEducativa}</p>
                   </div>
                 </div>
               </div>
 
-              {/* Palco 2D Interativo ao Vivo na Tela Inicial */}
+              {/* Palco 2D Interativo */}
               <PalcoSalaFamilia
                 modoJogo={modoJogo}
                 generoPersonagem={generoPersonagem}
@@ -2758,41 +2892,41 @@ export default function App() {
                 felicidadeFamilia={
                   humorFamiliaAtual === 'feliz' ? 90 : humorFamiliaAtual === 'preocupado' ? 58 : 30
                 }
-                mesNome="FASE DE PREPARAÇÃO"
+                mesNome="Planejamento"
                 falaFamilia={falaDinamicaSelecao}
                 particulas={particulasFlutuantes}
                 modoCompacto={true}
               />
             </div>
 
-            {/* Coluna Direita (7 cols): Novos Campos Exatos de Renda, Despesas e Poupança */}
+            {/* Coluna Direita (7 cols): Renda, Contas Fixas, Estilo de Vida e Reserva */}
             <div className="lg:col-span-7 space-y-5">
-              {/* GRUPO A: FONTES DE RENDA MENSAL (receitasMensais) */}
-              <section className="arcade-card rounded-3xl bg-white p-5 space-y-4">
-                <div className="flex flex-wrap items-center justify-between gap-2 border-b-3 border-slate-900 pb-3">
+              {/* RENDA DO MÊS */}
+              <section className="arcade-card rounded-2xl bg-white p-5 space-y-4">
+                <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 pb-3">
                   <div>
-                    <h2 className="font-display font-black text-base sm:text-lg text-slate-900 uppercase">
-                      A) Fontes de Renda Mensal (Entradas)
+                    <h2 className="font-display font-bold text-base sm:text-lg text-slate-900">
+                      Renda mensal
                     </h2>
-                    <p className="text-xs text-slate-600 font-medium">
-                      Somam automaticamente no início de cada um dos 6 meses
+                    <p className="text-xs text-slate-500">
+                      Valor que entra na conta no início de cada mês
                     </p>
                   </div>
-                  <div className="px-3.5 py-1.5 rounded-xl bg-emerald-400 border-2 border-slate-900 text-slate-950 font-mono text-sm font-black tabular-nums">
-                    RENDA TOTAL: {formatarMoeda(receitasMensaisTotais)}/mês
+                  <div className="px-3 py-1 rounded-lg bg-emerald-100 border border-emerald-700 text-emerald-950 font-mono text-sm font-bold tabular-nums">
+                    Total: {formatarMoeda(receitasMensaisTotais)}/mês
                   </div>
                 </div>
 
-                <div className="space-y-3.5">
-                  {/* 1. salarioMensal */}
-                  <div className="p-3.5 rounded-2xl bg-emerald-50/70 border-2 border-slate-900 space-y-2">
+                <div className="space-y-3">
+                  {/* Salário */}
+                  <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-300 space-y-2">
                     <div className="flex items-center justify-between gap-2">
-                      <span className="flex items-center gap-2 font-display font-black text-xs sm:text-sm text-slate-900">
+                      <span className="flex items-center gap-2 font-display font-bold text-xs sm:text-sm text-slate-900">
                         <Coins className="w-4 h-4 text-emerald-700" />
-                        <span>Salário do Trabalho / Estágio (salarioMensal)</span>
+                        <span>Salário ou estágio</span>
                       </span>
                       <div className="flex items-center gap-1.5">
-                        <span className="text-xs font-mono font-bold text-slate-500">R$</span>
+                        <span className="text-xs font-mono font-semibold text-slate-500">R$</span>
                         <input
                           type="number"
                           min={0}
@@ -2803,7 +2937,7 @@ export default function App() {
                             setSalarioMensal(Math.max(0, Number(e.target.value) || 0))
                           }
                           aria-label="Salário Mensal"
-                          className="w-28 px-2.5 py-1 rounded-lg border-2 border-slate-900 bg-white font-mono font-black text-sm text-right tabular-nums"
+                          className="w-28 px-2.5 py-1 rounded-lg border border-slate-400 bg-white font-mono font-bold text-sm text-right tabular-nums"
                         />
                       </div>
                     </div>
@@ -2819,16 +2953,16 @@ export default function App() {
                     />
                   </div>
 
-                  {/* 2. bolsaFamilia (SOMENTE NO MODO FAMÍLIA OU FAMÍLIA GRANDE) */}
+                  {/* Bolsa Família — exclusivo nos modos Família e Família Grande */}
                   {(modoJogo === 'familia' || modoJogo === 'familia_grande') && (
-                    <div className="p-3.5 rounded-2xl bg-sky-50 border-2 border-slate-900 space-y-2">
+                    <div className="p-3.5 rounded-xl bg-sky-50/70 border border-sky-200 space-y-2">
                       <div className="flex items-center justify-between gap-2">
-                        <span className="flex items-center gap-2 font-display font-black text-xs sm:text-sm text-slate-900">
+                        <span className="flex items-center gap-2 font-display font-bold text-xs sm:text-sm text-slate-900">
                           <HandCoins className="w-4 h-4 text-sky-700" />
-                          <span>Benefício Bolsa Família (Exclusivo Modo Família)</span>
+                          <span>Bolsa Família</span>
                         </span>
                         <div className="flex items-center gap-1.5">
-                          <span className="text-xs font-mono font-bold text-slate-500">R$</span>
+                          <span className="text-xs font-mono font-semibold text-slate-500">R$</span>
                           <input
                             type="number"
                             min={0}
@@ -2838,8 +2972,8 @@ export default function App() {
                             onChange={(e) =>
                               setBolsaFamilia(Math.max(0, Number(e.target.value) || 0))
                             }
-                            aria-label="Benefício Bolsa Família"
-                            className="w-24 px-2.5 py-1 rounded-lg border-2 border-slate-900 bg-white font-mono font-black text-sm text-right tabular-nums"
+                            aria-label="Bolsa Família"
+                            className="w-24 px-2.5 py-1 rounded-lg border border-slate-400 bg-white font-mono font-bold text-sm text-right tabular-nums"
                           />
                         </div>
                       </div>
@@ -2853,22 +2987,22 @@ export default function App() {
                         aria-label="Controle Bolsa Família"
                         className="w-full accent-sky-600 cursor-pointer h-2 bg-slate-200 rounded-lg"
                       />
-                      <div className="text-[11px] text-slate-600 font-medium">
-                        Dica: Base de R$ 600 + R$ 150 por criança pequena / R$ 50 por estudante.
+                      <div className="text-[11px] text-slate-500">
+                        Complemento familiar somado à renda mensal da casa.
                       </div>
                     </div>
                   )}
 
-                  {/* 3. peDeMeia (SOMENTE NO MODO INDIVIDUAL / JOVEM SOLO) */}
+                  {/* Pé-de-Meia — exclusivo no modo Individual / Jovem Solo */}
                   {modoJogo === 'individual' && (
-                    <div className="p-3.5 rounded-2xl bg-purple-50 border-2 border-slate-900 space-y-2">
+                    <div className="p-3.5 rounded-xl bg-purple-50/70 border border-purple-200 space-y-2">
                       <div className="flex items-center justify-between gap-2">
-                        <span className="flex items-center gap-2 font-display font-black text-xs sm:text-sm text-slate-900">
+                        <span className="flex items-center gap-2 font-display font-bold text-xs sm:text-sm text-slate-900">
                           <GraduationCap className="w-4 h-4 text-purple-700" />
-                          <span>Incentivo Pé-de-Meia Estudantil (Exclusivo Jovem Solo)</span>
+                          <span>Incentivo Pé-de-Meia</span>
                         </span>
                         <div className="flex items-center gap-1.5">
-                          <span className="text-xs font-mono font-bold text-slate-500">R$</span>
+                          <span className="text-xs font-mono font-semibold text-slate-500">R$</span>
                           <input
                             type="number"
                             min={0}
@@ -2879,7 +3013,7 @@ export default function App() {
                               setPeDeMeia(Math.max(0, Number(e.target.value) || 0))
                             }
                             aria-label="Incentivo Pé-de-Meia"
-                            className="w-24 px-2.5 py-1 rounded-lg border-2 border-slate-900 bg-white font-mono font-black text-sm text-right tabular-nums"
+                            className="w-24 px-2.5 py-1 rounded-lg border border-slate-400 bg-white font-mono font-bold text-sm text-right tabular-nums"
                           />
                         </div>
                       </div>
@@ -2893,26 +3027,26 @@ export default function App() {
                         aria-label="Controle Pé-de-Meia"
                         className="w-full accent-purple-600 cursor-pointer h-2 bg-slate-200 rounded-lg"
                       />
-                      <div className="text-[11px] text-slate-600 font-medium">
-                        Dica: R$ 200 mensais por frequência escolar + bônus de aprovação/ENEM!
+                      <div className="text-[11px] text-slate-500">
+                        Incentivo estudantil mensal para quem mantém a frequência escolar em dia.
                       </div>
                     </div>
                   )}
                 </div>
               </section>
 
-              {/* GRUPO B: DESPESAS FIXAS E ESSENCIAIS (despesasEssenciais) */}
-              <section className="arcade-card rounded-3xl bg-white p-5 space-y-4">
-                <div className="flex items-center justify-between border-b-3 border-slate-900 pb-2.5">
+              {/* CONTAS ESSENCIAIS */}
+              <section className="arcade-card rounded-2xl bg-white p-5 space-y-4">
+                <div className="flex items-center justify-between border-b border-slate-200 pb-2.5">
                   <div>
-                    <h2 className="font-display font-black text-base sm:text-lg text-slate-900 uppercase">
-                      B) Despesas Fixas e Essenciais
+                    <h2 className="font-display font-bold text-base sm:text-lg text-slate-900">
+                      Contas fixas e essenciais
                     </h2>
-                    <p className="text-xs text-slate-600 font-medium">
-                      Moradia/Contas, Alimentação do Mês e Transporte Diário
+                    <p className="text-xs text-slate-500">
+                      Moradia, compras de mercado e deslocamento diário
                     </p>
                   </div>
-                  <span className="font-mono font-black text-sm text-slate-900">
+                  <span className="font-mono font-bold text-sm text-slate-800">
                     {formatarMoeda(totalDespesasEssenciais)}/mês
                   </span>
                 </div>
@@ -2920,7 +3054,7 @@ export default function App() {
                 <div className="space-y-3">
                   {[
                     {
-                      label: 'Moradia (Aluguel, Água, Luz, Internet)',
+                      label: 'Moradia (aluguel, luz, água e internet)',
                       variavel: 'gastoMoradia',
                       valor: gastoMoradia,
                       setter: setGastoMoradia,
@@ -2929,7 +3063,7 @@ export default function App() {
                       icone: <Home className="w-4 h-4 text-teal-700" />,
                     },
                     {
-                      label: 'Alimentação (Supermercado e Feira do Mês)',
+                      label: 'Alimentação (supermercado e feira)',
                       variavel: 'gastoAlimentacao',
                       valor: gastoAlimentacao,
                       setter: setGastoAlimentacao,
@@ -2938,7 +3072,7 @@ export default function App() {
                       icone: <ShoppingCart className="w-4 h-4 text-sky-700" />,
                     },
                     {
-                      label: 'Transporte (Ônibus, Combustível, App Noturno)',
+                      label: 'Transporte (ônibus, combustível ou aplicativo)',
                       variavel: 'gastoTransporte',
                       valor: gastoTransporte,
                       setter: setGastoTransporte,
@@ -2952,14 +3086,14 @@ export default function App() {
                     return (
                       <div
                         key={item.variavel}
-                        className="p-3 rounded-2xl bg-slate-50 border-2 border-slate-900 space-y-2"
+                        className="p-3 rounded-xl bg-slate-50 border border-slate-300 space-y-2"
                       >
                         <div className="flex items-center justify-between gap-2">
-                          <span className="flex items-center gap-2 font-display font-black text-xs sm:text-sm text-slate-900">
+                          <span className="flex items-center gap-2 font-display font-bold text-xs sm:text-sm text-slate-900">
                             {item.icone}
                             <span>{item.label}</span>
                           </span>
-                          <span className="font-mono font-black text-sm text-slate-900 tabular-nums">
+                          <span className="font-mono font-bold text-sm text-slate-900 tabular-nums">
                             {formatarMoeda(item.valor)}
                           </span>
                         </div>
@@ -2970,13 +3104,13 @@ export default function App() {
                               tocarSomArcade('clique');
                               item.setter(Math.max(0, item.valor - 30));
                             }}
-                            className="w-7 h-7 rounded-lg bg-rose-200 border-2 border-slate-900 flex items-center justify-center cursor-pointer shrink-0"
+                            className="w-7 h-7 rounded-lg bg-white hover:bg-slate-100 border border-slate-400 flex items-center justify-center cursor-pointer shrink-0"
                             aria-label={`Diminuir ${item.label}`}
                           >
                             <Minus className="w-3.5 h-3.5" />
                           </button>
 
-                          <div className="flex-1 h-4 bg-slate-200 rounded-lg border-2 border-slate-900 overflow-hidden relative">
+                          <div className="flex-1 h-3.5 bg-slate-200 rounded-full border border-slate-400 overflow-hidden relative">
                             <div
                               className={`h-full ${item.cor} transition-all duration-150`}
                               style={{ width: `${pct}%` }}
@@ -3002,7 +3136,7 @@ export default function App() {
                               tocarSomArcade('clique');
                               item.setter(item.valor + 30);
                             }}
-                            className="w-7 h-7 rounded-lg bg-emerald-200 border-2 border-slate-900 flex items-center justify-center cursor-pointer shrink-0"
+                            className="w-7 h-7 rounded-lg bg-white hover:bg-slate-100 border border-slate-400 flex items-center justify-center cursor-pointer shrink-0"
                             aria-label={`Aumentar ${item.label}`}
                           >
                             <Plus className="w-3.5 h-3.5" />
@@ -3014,18 +3148,18 @@ export default function App() {
                 </div>
               </section>
 
-              {/* GRUPO C: DESPESAS VARIÁVEIS PLANEJADAS E ESTILO DE VIDA (despesasEstiloVida) */}
-              <section className="arcade-card rounded-3xl bg-white p-5 space-y-4">
-                <div className="flex items-center justify-between border-b-3 border-slate-900 pb-2.5">
+              {/* DIA A DIA E ESTILO DE VIDA */}
+              <section className="arcade-card rounded-2xl bg-white p-5 space-y-4">
+                <div className="flex items-center justify-between border-b border-slate-200 pb-2.5">
                   <div>
-                    <h2 className="font-display font-black text-base sm:text-lg text-slate-900 uppercase">
-                      C) Despesas Variáveis e Estilo de Vida
+                    <h2 className="font-display font-bold text-base sm:text-lg text-slate-900">
+                      Dia a dia, cuidados e lazer
                     </h2>
-                    <p className="text-xs text-slate-600 font-medium">
-                      Roupas, Viagens/Passeios, Cuidados Pessoais (Pink Tax / Barbearia) e Outros
+                    <p className="text-xs text-slate-500">
+                      Vestuário, passeios, cuidados pessoais e outros gastos planejados
                     </p>
                   </div>
-                  <span className="font-mono font-black text-sm text-slate-900">
+                  <span className="font-mono font-bold text-sm text-slate-800">
                     {formatarMoeda(totalDespesasEstiloVida)}/mês
                   </span>
                 </div>
@@ -3033,7 +3167,7 @@ export default function App() {
                 <div className="space-y-3">
                   {[
                     {
-                      label: 'Roupas, Calçados e Acessórios (gastoRoupas)',
+                      label: 'Roupas e calçados',
                       variavel: 'gastoRoupas',
                       valor: gastoRoupas,
                       setter: setGastoRoupas,
@@ -3042,7 +3176,7 @@ export default function App() {
                       icone: <Shirt className="w-4 h-4 text-pink-600" />,
                     },
                     {
-                      label: 'Viagens, Passeios e Lazer de Fim de Semana (gastoViagens)',
+                      label: 'Passeios, viagens e lazer de fim de semana',
                       variavel: 'gastoViagens',
                       valor: gastoViagens,
                       setter: setGastoViagens,
@@ -3053,10 +3187,10 @@ export default function App() {
                     {
                       label:
                         modoJogo === 'individual' && generoPersonagem === 'mulher'
-                          ? 'Cuidados Pessoais: Higiene, Salão, Skincare / Pink Tax'
+                          ? 'Cuidados pessoais (higiene, farmácia e salão)'
                           : modoJogo === 'individual' && generoPersonagem === 'homem'
-                          ? 'Cuidados Pessoais: Barbearia, Higiene e Suplementos'
-                          : 'Cuidados Pessoais: Higiene, Farmácia e Salão/Barbearia',
+                          ? 'Cuidados pessoais (barbearia, higiene e treino)'
+                          : 'Cuidados pessoais (higiene, farmácia e corte de cabelo)',
                       variavel: 'gastoCuidadosPessoais',
                       valor: gastoCuidadosPessoais,
                       setter: setGastoCuidadosPessoais,
@@ -3070,14 +3204,14 @@ export default function App() {
                     return (
                       <div
                         key={item.variavel}
-                        className="p-3 rounded-2xl bg-slate-50 border-2 border-slate-900 space-y-2"
+                        className="p-3 rounded-xl bg-slate-50 border border-slate-300 space-y-2"
                       >
                         <div className="flex items-center justify-between gap-2">
-                          <span className="flex items-center gap-2 font-display font-black text-xs sm:text-sm text-slate-900">
+                          <span className="flex items-center gap-2 font-display font-bold text-xs sm:text-sm text-slate-900">
                             {item.icone}
                             <span>{item.label}</span>
                           </span>
-                          <span className="font-mono font-black text-sm text-slate-900 tabular-nums">
+                          <span className="font-mono font-bold text-sm text-slate-900 tabular-nums">
                             {formatarMoeda(item.valor)}
                           </span>
                         </div>
@@ -3088,13 +3222,13 @@ export default function App() {
                               tocarSomArcade('clique');
                               item.setter(Math.max(0, item.valor - 20));
                             }}
-                            className="w-7 h-7 rounded-lg bg-rose-200 border-2 border-slate-900 flex items-center justify-center cursor-pointer shrink-0"
+                            className="w-7 h-7 rounded-lg bg-white hover:bg-slate-100 border border-slate-400 flex items-center justify-center cursor-pointer shrink-0"
                             aria-label={`Diminuir ${item.label}`}
                           >
                             <Minus className="w-3.5 h-3.5" />
                           </button>
 
-                          <div className="flex-1 h-4 bg-slate-200 rounded-lg border-2 border-slate-900 overflow-hidden relative">
+                          <div className="flex-1 h-3.5 bg-slate-200 rounded-full border border-slate-400 overflow-hidden relative">
                             <div
                               className={`h-full ${item.cor} transition-all duration-150`}
                               style={{ width: `${pct}%` }}
@@ -3120,7 +3254,7 @@ export default function App() {
                               tocarSomArcade('clique');
                               item.setter(item.valor + 20);
                             }}
-                            className="w-7 h-7 rounded-lg bg-emerald-200 border-2 border-slate-900 flex items-center justify-center cursor-pointer shrink-0"
+                            className="w-7 h-7 rounded-lg bg-white hover:bg-slate-100 border border-slate-400 flex items-center justify-center cursor-pointer shrink-0"
                             aria-label={`Aumentar ${item.label}`}
                           >
                             <Plus className="w-3.5 h-3.5" />
@@ -3130,14 +3264,14 @@ export default function App() {
                     );
                   })}
 
-                  {/* Campo Outros / Etc com Nome Personalizado e Valor */}
-                  <div className="p-3.5 rounded-2xl bg-indigo-50/70 border-2 border-slate-900 space-y-2.5">
+                  {/* Campo Outros Gastos Personalizável */}
+                  <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-300 space-y-2.5">
                     <div className="flex items-center justify-between gap-2">
-                      <span className="flex items-center gap-2 font-display font-black text-xs sm:text-sm text-slate-900">
+                      <span className="flex items-center gap-2 font-display font-bold text-xs sm:text-sm text-slate-900">
                         <FilePlus2 className="w-4 h-4 text-indigo-700" />
-                        <span>Outros Gastos / Etc (Personalizável)</span>
+                        <span>Outro gasto mensal (personalizável)</span>
                       </span>
-                      <span className="font-mono font-black text-sm text-indigo-900 tabular-nums">
+                      <span className="font-mono font-bold text-sm text-slate-900 tabular-nums">
                         {formatarMoeda(outrosGastos)}
                       </span>
                     </div>
@@ -3146,15 +3280,15 @@ export default function App() {
                       <div className="sm:col-span-8">
                         <input
                           type="text"
-                          placeholder="Digite o nome do gasto extra (ex: Curso, Pet, Streaming)"
+                          placeholder="Ex: Ração do pet, curso, internet do celular..."
                           value={nomeOutrosGastos}
                           onChange={(e) => setNomeOutrosGastos(e.target.value)}
                           aria-label="Nome do gasto personalizado"
-                          className="w-full px-3 py-1.5 rounded-xl border-2 border-slate-900 bg-white text-xs sm:text-sm font-semibold"
+                          className="w-full px-3 py-1.5 rounded-lg border border-slate-400 bg-white text-xs sm:text-sm"
                         />
                       </div>
                       <div className="sm:col-span-4 flex items-center gap-1.5">
-                        <span className="text-xs font-mono font-bold text-slate-600">R$</span>
+                        <span className="text-xs font-mono font-semibold text-slate-500">R$</span>
                         <input
                           type="number"
                           min={0}
@@ -3165,7 +3299,7 @@ export default function App() {
                             setOutrosGastos(Math.max(0, Number(e.target.value) || 0))
                           }
                           aria-label="Valor de Outros Gastos"
-                          className="w-full px-2.5 py-1.5 rounded-xl border-2 border-slate-900 bg-white font-mono font-black text-sm text-right tabular-nums"
+                          className="w-full px-2.5 py-1.5 rounded-lg border border-slate-400 bg-white font-mono font-bold text-sm text-right tabular-nums"
                         />
                       </div>
                     </div>
@@ -3173,15 +3307,15 @@ export default function App() {
                 </div>
               </section>
 
-              {/* GRUPO D: POUPANÇA (metaReserva) + BOTÃO START */}
-              <section className="arcade-card rounded-3xl bg-white p-5 space-y-4">
-                <div className="p-3.5 rounded-2xl bg-emerald-50 border-3 border-slate-900 space-y-2">
+              {/* RESERVA E BOTÃO INICIAR */}
+              <section className="arcade-card rounded-2xl bg-white p-5 space-y-4">
+                <div className="p-3.5 rounded-xl bg-emerald-50/80 border border-emerald-300 space-y-2">
                   <div className="flex items-center justify-between gap-2">
-                    <span className="flex items-center gap-2 font-display font-black text-xs sm:text-sm text-emerald-950">
+                    <span className="flex items-center gap-2 font-display font-bold text-xs sm:text-sm text-emerald-950">
                       <PiggyBank className="w-4 h-4 text-emerald-700" />
-                      <span>D) Poupança: Meta de Reserva de Emergência Mensal (metaReserva)</span>
+                      <span>Quanto guardar por mês na reserva de emergência?</span>
                     </span>
-                    <span className="font-mono font-black text-sm sm:text-base text-emerald-800 tabular-nums">
+                    <span className="font-mono font-bold text-sm sm:text-base text-emerald-800 tabular-nums">
                       {formatarMoeda(metaReserva)}/mês
                     </span>
                   </div>
@@ -3196,36 +3330,36 @@ export default function App() {
                       tocarSomArcade('clique');
                       setMetaReserva(Number(e.target.value));
                     }}
-                    aria-label="Meta de Reserva de Emergência Mensal"
-                    className="w-full accent-emerald-600 cursor-pointer h-2.5 bg-white rounded-lg border border-slate-900"
+                    aria-label="Reserva de emergência mensal"
+                    className="w-full accent-emerald-600 cursor-pointer h-2 bg-white rounded-lg border border-emerald-400"
                   />
                 </div>
 
-                {/* Termômetro Final e Botão Iniciar */}
+                {/* Resumo de Comprometimento da Renda */}
                 <div
-                  className={`p-4 rounded-2xl border-3 border-slate-900 flex flex-col sm:flex-row items-center justify-between gap-4 ${
+                  className={`p-4 rounded-xl border-2 border-slate-900 flex flex-col sm:flex-row items-center justify-between gap-4 ${
                     percentualComprometidoFixosEVida > 80 || moedasLivresParaImprevistos < 0
                       ? 'bg-rose-500 text-white'
                       : percentualComprometidoFixosEVida > 68
-                      ? 'bg-amber-300 text-slate-950'
-                      : 'bg-emerald-300 text-slate-950'
+                      ? 'bg-amber-200 text-slate-950'
+                      : 'bg-emerald-200 text-slate-950'
                   }`}
                 >
                   <div className="flex items-center gap-3">
                     {percentualComprometidoFixosEVida > 80 || moedasLivresParaImprevistos < 0 ? (
-                      <AlertTriangle className="w-8 h-8 shrink-0 animate-bounce" />
+                      <AlertTriangle className="w-7 h-7 shrink-0" />
                     ) : (
-                      <ShieldCheck className="w-8 h-8 shrink-0" />
+                      <ShieldCheck className="w-7 h-7 shrink-0" />
                     )}
                     <div>
-                      <div className="font-display font-black text-sm sm:text-base uppercase">
+                      <div className="font-display font-bold text-sm sm:text-base">
                         {percentualComprometidoFixosEVida > 80 || moedasLivresParaImprevistos < 0
-                          ? '⚠ PERIGO DE DÍVIDA! ORÇAMENTO ACIMA DO LIMITE!'
-                          : `Gastos Planejados: ${percentualComprometidoFixosEVida}% da Renda Total`}
+                          ? 'Atenção: despesas acima do limite seguro'
+                          : `${percentualComprometidoFixosEVida}% da renda comprometida com gastos fixos`}
                       </div>
-                      <p className="text-xs font-semibold opacity-95">
-                        Moedas livres por mês para imprevistos:{' '}
-                        <span className="font-mono font-black underline">
+                      <p className="text-xs opacity-90">
+                        Sobra livre no mês para imprevistos:{' '}
+                        <span className="font-mono font-bold underline">
                           {formatarMoeda(moedasLivresParaImprevistos)}
                         </span>
                       </p>
@@ -3235,9 +3369,9 @@ export default function App() {
                   <button
                     type="button"
                     onClick={apertarStartJogo}
-                    className="arcade-btn px-6 py-3.5 rounded-xl bg-slate-900 text-amber-300 font-display font-black text-sm uppercase tracking-wider cursor-pointer whitespace-nowrap shrink-0"
+                    className="arcade-btn px-5 py-3 rounded-xl bg-slate-900 text-amber-300 font-display font-bold text-sm cursor-pointer whitespace-nowrap shrink-0"
                   >
-                    INICIAR JOGO ►
+                    Começar simulação →
                   </button>
                 </div>
               </section>
@@ -3247,30 +3381,30 @@ export default function App() {
       )}
 
       {/* =====================================================================
-          TELA 2: GAMEPLAY PRINCIPAL (6 MESES / 6 FASES NO PALCO 2D)
+          TELA 2: SIMULAÇÃO DOS 6 MESES NO PALCO 2D
          ===================================================================== */}
       {telaJogo === 'gameplay' && eventoAtualNPC && faseEmAndamento && (
         <main className="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-8 py-5 space-y-5">
-          {/* HUD SUPERIOR DE VIDEOGAME ARCADE */}
-          <section className="arcade-card rounded-3xl bg-slate-900 text-white p-4 sm:p-5">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 items-center">
-              {/* 1. Fase Atual */}
-              <div className="p-3 rounded-2xl bg-indigo-950 border-3 border-indigo-400">
-                <div className="text-[11px] font-mono font-bold text-indigo-300 uppercase">
-                  EVENTO {indiceTurnoNoMes + 1} DE 2 NO MÊS
+          {/* PAINEL SUPERIOR DE ACOMPANHAMENTO DO MÊS */}
+          <section className="arcade-card rounded-2xl bg-slate-900 text-white p-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 items-center">
+              {/* 1. Mês atual */}
+              <div className="p-3 rounded-xl bg-slate-800 border border-slate-700">
+                <div className="text-[11px] font-mono text-slate-300">
+                  Situação {indiceTurnoNoMes + 1} de 2 no mês
                 </div>
-                <div className="font-display font-black text-base sm:text-lg text-amber-300 tracking-wide">
+                <div className="font-display font-bold text-base text-amber-300">
                   {NOMES_FASES_MESES[mesAtual - 1]}
                 </div>
                 <div className="flex gap-1.5 mt-1.5">
                   {[1, 2, 3, 4, 5, 6].map((m) => (
                     <div
                       key={m}
-                      className={`h-2 flex-1 rounded-sm border border-slate-950 ${
+                      className={`h-1.5 flex-1 rounded-full ${
                         m < mesAtual
                           ? 'bg-emerald-400'
                           : m === mesAtual
-                          ? 'bg-amber-400 animate-pulse'
+                          ? 'bg-amber-400'
                           : 'bg-slate-700'
                       }`}
                     />
@@ -3278,71 +3412,69 @@ export default function App() {
                 </div>
               </div>
 
-              {/* 2. Contador Gigante de Moedas + Fontes de Renda */}
+              {/* 2. Saldo disponível */}
               <div
-                className={`p-3 rounded-2xl border-3 ${
+                className={`p-3 rounded-xl border ${
                   saldoAtual >= 0
-                    ? 'bg-emerald-950 border-emerald-400'
-                    : 'bg-rose-950 border-rose-500 animate-pulse'
+                    ? 'bg-slate-800 border-emerald-500/60'
+                    : 'bg-rose-950 border-rose-500'
                 }`}
               >
-                <div className="flex items-center justify-between text-[11px] font-mono font-bold">
-                  <span className={saldoAtual >= 0 ? 'text-emerald-300' : 'text-rose-300'}>
-                    MOEDAS NA CONTA
-                  </span>
+                <div className="flex items-center justify-between text-[11px] text-slate-300">
+                  <span>Saldo na conta</span>
                   <Coins className="w-4 h-4 text-amber-300" />
                 </div>
                 <div
-                  className={`font-mono font-black text-xl sm:text-2xl tabular-nums ${
+                  className={`font-mono font-bold text-xl sm:text-2xl tabular-nums ${
                     saldoAtual >= 0 ? 'text-emerald-300' : 'text-rose-400'
                   }`}
                 >
                   {formatarMoeda(saldoAtual)}
                 </div>
-                <div className="text-[10px] font-mono text-slate-300 truncate">
+                <div className="text-[10px] font-mono text-slate-400 truncate">
                   {saldoAtual < 0
-                    ? '🚨 CHEQUE ESPECIAL (8% JUROS/MÊS)'
+                    ? 'No cheque especial (8% de juros ao mês)'
                     : modoJogo === 'individual'
-                    ? `Salário R$${salarioMensal} + Pé-de-Meia R$${peDeMeiaEfetivo}`
-                    : `Salário R$${salarioMensal} + Bolsa Fam. R$${bolsaFamiliaEfetivo}`}
+                    ? `Salário R$ ${salarioMensal} + Pé-de-Meia R$ ${peDeMeiaEfetivo}`
+                    : `Salário R$ ${salarioMensal} + Bolsa Fam. R$ ${bolsaFamiliaEfetivo}`}
                 </div>
               </div>
 
-              {/* 3. Cofre de Reserva de Emergência */}
-              <div className="p-3 rounded-2xl bg-sky-950 border-3 border-sky-400">
-                <div className="flex items-center justify-between text-[11px] font-mono font-bold text-sky-300">
-                  <span>COFRE DE RESERVA</span>
+              {/* 3. Reserva guardada */}
+              <div className="p-3 rounded-xl bg-slate-800 border border-sky-500/50">
+                <div className="flex items-center justify-between text-[11px] text-sky-300">
+                  <span>Reserva guardada</span>
                   <PiggyBank className="w-4 h-4 text-sky-300" />
                 </div>
-                <div className="font-mono font-black text-xl sm:text-2xl text-white tabular-nums">
+                <div className="font-mono font-bold text-xl sm:text-2xl text-white tabular-nums">
                   {formatarMoeda(reservaEmergencia)}
                 </div>
-                <div className="text-[10px] font-mono text-sky-200">
-                  Fatura Cartão no Mês: -{formatarMoeda(faseEmAndamento.parcelasCartaoAnteriores)}
+                <div className="text-[10px] font-mono text-slate-400">
+                  Parcelas do cartão neste mês: -{formatarMoeda(faseEmAndamento.parcelasCartaoAnteriores)}
                 </div>
               </div>
 
-              {/* 4. Barra de Vida / HP */}
-              <div className="p-3 rounded-2xl bg-purple-950 border-3 border-rose-400">
-                <div className="flex items-center justify-between text-[11px] font-mono font-bold text-rose-300">
-                  <span>VIDA / BEM-ESTAR (HP)</span>
-                  <span className="font-mono font-black text-white">{felicidadeFamilia}/100</span>
+              {/* 4. Bem-estar */}
+              <div className="p-3 rounded-xl bg-slate-800 border border-rose-400/50">
+                <div className="flex items-center justify-between text-[11px] text-rose-300">
+                  <span>Bem-estar</span>
+                  <span className="font-mono font-bold text-white">{felicidadeFamilia}%</span>
                 </div>
                 <div className="flex items-center gap-1 my-1">
                   {[20, 40, 60, 80, 100].map((limite) => (
                     <Heart
                       key={limite}
-                      className={`w-5 h-5 transition-transform ${
+                      className={`w-4 h-4 ${
                         felicidadeFamilia >= limite
-                          ? 'fill-rose-500 text-rose-400 scale-105'
+                          ? 'fill-rose-500 text-rose-400'
                           : felicidadeFamilia >= limite - 10
-                          ? 'fill-rose-500/50 text-rose-400'
+                          ? 'fill-rose-500/40 text-rose-400'
                           : 'text-slate-600'
                       }`}
                     />
                   ))}
                 </div>
-                <div className="w-full h-2.5 bg-slate-800 rounded-full overflow-hidden border border-slate-950">
+                <div className="w-full h-2 bg-slate-950 rounded-full overflow-hidden">
                   <div
                     className={`h-full transition-all duration-300 ${
                       felicidadeFamilia >= 65
@@ -3358,14 +3490,14 @@ export default function App() {
             </div>
           </section>
 
-          {/* PALCO VISUAL 2D DA SALA DE ESTAR (RENDERIZA FAMÍLIA, FAMÍLIA GRANDE OU JOVEM SOLO H/M) */}
+          {/* PALCO 2D DA SALA DE ESTAR */}
           <PalcoSalaFamilia
             modoJogo={modoJogo}
             generoPersonagem={generoPersonagem}
             humor={humorFamiliaAtual}
             saldoAtual={saldoAtual}
             felicidadeFamilia={felicidadeFamilia}
-            mesNome={NOMES_FASES_MESES[mesAtual - 1]}
+            mesNome={NOMES_CURTOS_MESES[mesAtual - 1]}
             npcAtivo={
               decisaoDoTurno
                 ? null
@@ -3383,54 +3515,54 @@ export default function App() {
             particulas={particulasFlutuantes}
           />
 
-          {/* 3 CARTAS DE AÇÃO ARCADE */}
+          {/* 3 OPÇÕES DE DECISÃO */}
           {!decisaoDoTurno ? (
             <section className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {eventoAtualNPC.cartas.map((carta, index) => {
                 const coresTopo =
                   index === 0
-                    ? 'bg-emerald-400 text-slate-950'
+                    ? 'bg-emerald-200 text-slate-900'
                     : index === 1
-                    ? 'bg-amber-300 text-slate-950'
-                    : 'bg-rose-400 text-white';
+                    ? 'bg-amber-200 text-slate-900'
+                    : 'bg-rose-200 text-slate-900';
 
                 return (
                   <button
                     key={carta.codigo}
                     type="button"
                     onClick={() => processarDecisao(carta)}
-                    className="arcade-btn rounded-3xl bg-white overflow-hidden flex flex-col justify-between text-left cursor-pointer group"
+                    className="arcade-btn rounded-2xl bg-white overflow-hidden flex flex-col justify-between text-left cursor-pointer group"
                   >
                     <div>
                       <div
-                        className={`px-4 py-2 border-b-3 border-slate-900 font-mono text-xs font-black uppercase flex items-center justify-between ${coresTopo}`}
+                        className={`px-4 py-2 border-b-2 border-slate-900 font-mono text-xs font-bold flex items-center justify-between ${coresTopo}`}
                       >
                         <span>{carta.rotuloAcao}</span>
                         <span className="px-1.5 py-0.5 rounded bg-slate-900 text-white text-[10px]">
-                          [{carta.codigo}]
+                          Tecla {carta.codigo}
                         </span>
                       </div>
 
-                      <div className="p-4 space-y-2">
-                        <h3 className="font-display font-black text-base sm:text-lg text-slate-900 group-hover:text-indigo-700 transition-colors">
+                      <div className="p-4 space-y-1.5">
+                        <h3 className="font-display font-bold text-base text-slate-900 group-hover:text-indigo-700 transition-colors">
                           {carta.titulo}
                         </h3>
-                        <p className="text-xs sm:text-sm text-slate-700 font-medium leading-relaxed">
+                        <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
                           {carta.descricao}
                         </p>
                       </div>
                     </div>
 
-                    <div className="p-3.5 bg-slate-100 border-t-3 border-slate-900 space-y-1 font-mono text-xs font-bold">
+                    <div className="p-3.5 bg-slate-50 border-t-2 border-slate-900 space-y-1 font-mono text-xs">
                       <div className="flex items-center justify-between">
-                        <span className="text-slate-600">MOEDAS AGORA:</span>
+                        <span className="text-slate-500">No caixa agora:</span>
                         <span
                           className={
                             carta.impactoMoedas > 0
-                              ? 'text-emerald-700 font-black'
+                              ? 'text-emerald-700 font-bold'
                               : carta.impactoMoedas === 0
-                              ? 'text-slate-800'
-                              : 'text-rose-600 font-black'
+                              ? 'text-slate-800 font-semibold'
+                              : 'text-rose-600 font-bold'
                           }
                         >
                           {carta.impactoMoedas > 0
@@ -3438,29 +3570,31 @@ export default function App() {
                             : carta.impactoMoedas === 0
                             ? 'R$ 0'
                             : formatarMoeda(carta.impactoMoedas)}
-                          {carta.usaCofreReserva && reservaEmergencia > 0 ? ' (Usa Cofre!)' : ''}
+                          {carta.usaCofreReserva && reservaEmergencia > 0 ? ' (usa reserva)' : ''}
                         </span>
                       </div>
 
                       {carta.parcelaCartaoFutura > 0 && (
                         <div className="flex items-center justify-between text-amber-800">
-                          <span>CARTÃO FUTURO:</span>
-                          <span className="font-black">
+                          <span>Próximos meses:</span>
+                          <span className="font-bold">
                             {carta.mesesParcela}x de {formatarMoeda(carta.parcelaCartaoFutura)}
                           </span>
                         </div>
                       )}
 
                       <div className="flex items-center justify-between">
-                        <span className="text-slate-600">CORAÇÕES (HP):</span>
+                        <span className="text-slate-500">Bem-estar:</span>
                         <span
                           className={
-                            carta.impactoCoracoes >= 0 ? 'text-emerald-700' : 'text-rose-600'
+                            carta.impactoCoracoes >= 0
+                              ? 'text-emerald-700 font-semibold'
+                              : 'text-rose-600 font-semibold'
                           }
                         >
                           {carta.impactoCoracoes > 0
-                            ? `+${carta.impactoCoracoes} HP`
-                            : `${carta.impactoCoracoes} HP`}
+                            ? `+${carta.impactoCoracoes}%`
+                            : `${carta.impactoCoracoes}%`}
                         </span>
                       </div>
                     </div>
@@ -3469,22 +3603,20 @@ export default function App() {
               })}
             </section>
           ) : (
-            <section className="arcade-card rounded-3xl bg-amber-300 p-5 sm:p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-              <div className="space-y-1.5">
-                <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-lg bg-slate-900 text-amber-300 font-mono text-xs font-black uppercase">
-                  <Sparkles className="w-3.5 h-3.5" />
-                  <span>LIÇÃO DO TURNO · ESCOLHA [{decisaoDoTurno.acaoEscolhida}]</span>
+            <section className="arcade-card rounded-2xl bg-amber-100 p-5 flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div className="space-y-1">
+                <div className="inline-block px-2.5 py-0.5 rounded bg-slate-900 text-amber-200 font-mono text-xs font-semibold">
+                  Resultado da escolha
                 </div>
-                <h3 className="font-display font-black text-lg sm:text-xl text-slate-950">
+                <h3 className="font-display font-bold text-lg text-slate-950">
                   {decisaoDoTurno.tituloAcao}
                 </h3>
-                <p className="text-xs sm:text-sm font-bold text-slate-900 max-w-2xl">
+                <p className="text-xs sm:text-sm text-slate-800 max-w-2xl">
                   {decisaoDoTurno.explicacaoMestre}
                 </p>
                 {decisaoDoTurno.usouReserva > 0 && (
-                  <p className="text-xs font-mono font-black text-emerald-900">
-                    ★ SEU COFRE DE RESERVA COBRIU {formatarMoeda(decisaoDoTurno.usouReserva)} DESTE
-                    IMPREVISTO!
+                  <p className="text-xs font-mono font-bold text-emerald-800">
+                    Sua reserva de emergência cobriu {formatarMoeda(decisaoDoTurno.usouReserva)} deste gasto.
                   </p>
                 )}
               </div>
@@ -3492,14 +3624,14 @@ export default function App() {
               <button
                 type="button"
                 onClick={avancarProximoTurno}
-                className="arcade-btn px-7 py-4 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-display font-black text-base sm:text-lg uppercase flex items-center gap-2 cursor-pointer whitespace-nowrap shrink-0"
+                className="arcade-btn px-6 py-3.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-display font-bold text-sm sm:text-base flex items-center gap-2 cursor-pointer whitespace-nowrap shrink-0"
               >
                 <span>
                   {indiceTurnoNoMes === 0
-                    ? 'PRÓXIMO VISITANTE (2/2)'
+                    ? 'Próxima situação do mês'
                     : mesAtual < 6
-                    ? `IR PARA FASE ${mesAtual + 1}/6`
-                    : 'VER TELA DE ZERAMENTO!'}
+                    ? `Avançar para ${NOMES_CURTOS_MESES[mesAtual]}`
+                    : 'Ver balanço dos 6 meses'}
                 </span>
                 <ChevronRight className="w-5 h-5" />
               </button>
@@ -3509,141 +3641,140 @@ export default function App() {
       )}
 
       {/* =====================================================================
-          TELA 3: ZERAMENTO / HIGH SCORE + PAINEL PEDAGÓGICO E PLANILHA
+          TELA 3: BALANÇO FINAL DOS 6 MESES + GRÁFICOS E PLANILHA
          ===================================================================== */}
       {telaJogo === 'zeramento' && (
         <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-8 py-6 space-y-6">
-          {/* BANNER DE TROFÉU / RANK FINAL ARCADE */}
+          {/* RESUMO DO RESULTADO */}
           <section
-            className={`arcade-card rounded-3xl p-6 sm:p-8 flex flex-col lg:flex-row items-center justify-between gap-6 ${relatorioFinal.ranking.corBg}`}
+            className={`arcade-card rounded-2xl p-6 flex flex-col lg:flex-row items-center justify-between gap-6 ${relatorioFinal.ranking.corBg}`}
           >
             <div className="flex flex-col sm:flex-row items-center gap-5 text-center sm:text-left">
-              <div className="w-24 h-24 rounded-3xl bg-slate-900 text-amber-300 border-4 border-white flex items-center justify-center shrink-0 animate-bounce shadow-[4px_4px_0px_0px_#0f172a]">
+              <div className="w-20 h-20 rounded-2xl bg-slate-900 text-amber-300 border-2 border-white flex items-center justify-center shrink-0">
                 {relatorioFinal.ranking.icone === 'trofeu' ? (
-                  <Trophy className="w-12 h-12 text-yellow-300" />
+                  <Trophy className="w-10 h-10 text-amber-300" />
                 ) : relatorioFinal.ranking.icone === 'caveira' ? (
-                  <Skull className="w-12 h-12 text-rose-400" />
+                  <Skull className="w-10 h-10 text-rose-400" />
                 ) : (
-                  <Award className="w-12 h-12 text-amber-300" />
+                  <Award className="w-10 h-10 text-amber-300" />
                 )}
               </div>
 
-              <div className="space-y-1.5">
-                <div className="inline-block px-3 py-0.5 rounded-lg bg-slate-900 text-amber-300 font-mono text-xs font-black">
-                  FIM DAS 6 FASES · {relatorioFinal.ranking.rank} · {presetAtivo.titulo}
+              <div className="space-y-1">
+                <div className="inline-block px-2.5 py-0.5 rounded bg-slate-900 text-amber-200 font-mono text-xs font-semibold">
+                  Fim dos 6 meses · {relatorioFinal.ranking.rank} · {presetAtivo.titulo}
                 </div>
-                <h1 className="text-2xl sm:text-4xl font-display font-black tracking-tight">
+                <h1 className="text-2xl sm:text-3xl font-display font-bold tracking-tight">
                   {relatorioFinal.ranking.titulo}
                 </h1>
-                <p className="text-sm sm:text-base font-bold opacity-90 max-w-2xl">
+                <p className="text-sm sm:text-base opacity-90 max-w-2xl">
                   {relatorioFinal.ranking.subtitulo}
                 </p>
               </div>
             </div>
 
-            <div className="flex flex-wrap items-center justify-center gap-3 shrink-0 no-print">
+            <div className="flex flex-wrap items-center justify-center gap-2.5 shrink-0 no-print">
               <button
                 type="button"
                 onClick={exportarPlanilhaCSV}
-                className="arcade-btn px-4 py-3 rounded-2xl bg-white text-slate-900 font-display font-black text-xs sm:text-sm flex items-center gap-2 cursor-pointer"
+                className="arcade-btn px-4 py-2.5 rounded-xl bg-white text-slate-900 font-display font-bold text-xs sm:text-sm flex items-center gap-2 cursor-pointer"
               >
                 <Download className="w-4 h-4" />
-                <span>EXPORTAR CSV</span>
+                <span>Baixar planilha (CSV)</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => window.print()}
-                className="arcade-btn px-4 py-3 rounded-2xl bg-white text-slate-900 font-display font-black text-xs sm:text-sm flex items-center gap-2 cursor-pointer"
+                className="arcade-btn px-4 py-2.5 rounded-xl bg-white text-slate-900 font-display font-bold text-xs sm:text-sm flex items-center gap-2 cursor-pointer"
               >
                 <Printer className="w-4 h-4" />
-                <span>IMPRIMIR</span>
+                <span>Imprimir</span>
               </button>
 
               <button
                 type="button"
                 onClick={reiniciarFliperama}
-                className="arcade-btn px-6 py-3 rounded-2xl bg-slate-900 text-amber-300 font-display font-black text-sm sm:text-base flex items-center gap-2 cursor-pointer"
+                className="arcade-btn px-5 py-2.5 rounded-xl bg-slate-900 text-amber-300 font-display font-bold text-sm flex items-center gap-2 cursor-pointer"
               >
-                <RotateCcw className="w-5 h-5" />
-                <span>JOGAR NOVAMENTE (INSERT COIN)</span>
+                <RotateCcw className="w-4 h-4" />
+                <span>Jogar novamente</span>
               </button>
             </div>
           </section>
 
-          {/* 4 CARDS DE SCORE DA PARTIDA */}
+          {/* 4 INDICADORES PRINCIPAIS */}
           <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div className="arcade-card-sm rounded-2xl bg-white p-4">
-              <div className="text-xs font-mono font-bold text-slate-500">
-                PATRIMÔNIO LÍQUIDO FINAL
+            <div className="arcade-card-sm rounded-xl bg-white p-4">
+              <div className="text-xs font-medium text-slate-500">
+                Saldo total + reserva (líquido)
               </div>
               <div
-                className={`text-2xl font-mono font-black tabular-nums mt-1 ${
+                className={`text-2xl font-mono font-bold tabular-nums mt-1 ${
                   relatorioFinal.patrimonioFinal >= 0 ? 'text-emerald-700' : 'text-rose-600'
                 }`}
               >
                 {formatarMoeda(relatorioFinal.patrimonioFinal)}
               </div>
-              <div className="text-xs text-slate-600 font-semibold mt-1">
-                Conta: {formatarMoeda(saldoAtual)} · Cofre: {formatarMoeda(reservaEmergencia)}
+              <div className="text-xs text-slate-600 mt-1">
+                Conta: {formatarMoeda(saldoAtual)} · Reserva: {formatarMoeda(reservaEmergencia)}
               </div>
             </div>
 
-            <div className="arcade-card-sm rounded-2xl bg-white p-4">
-              <div className="text-xs font-mono font-bold text-slate-500">
-                RENDA TOTAL ACUMULADA (6 MESES)
+            <div className="arcade-card-sm rounded-xl bg-white p-4">
+              <div className="text-xs font-medium text-slate-500">
+                Renda acumulada nos 6 meses
               </div>
-              <div className="text-2xl font-mono font-black text-slate-900 tabular-nums mt-1">
+              <div className="text-2xl font-mono font-bold text-slate-900 tabular-nums mt-1">
                 {formatarMoeda(relatorioFinal.rendaTotal6Meses)}
               </div>
-              <div className="text-xs text-slate-600 font-semibold mt-1">
+              <div className="text-xs text-slate-600 mt-1">
                 {modoJogo === 'individual'
-                  ? 'Salário + Pé-de-Meia + Extras'
-                  : 'Salário + Bolsa Família + Extras'}
+                  ? 'Salário + Pé-de-Meia + rendas extras'
+                  : 'Salário + Bolsa Família + rendas extras'}
               </div>
             </div>
 
-            <div className="arcade-card-sm rounded-2xl bg-white p-4">
-              <div className="text-xs font-mono font-bold text-slate-500">
-                MOEDAS COMIDAS PELOS JUROS
+            <div className="arcade-card-sm rounded-xl bg-white p-4">
+              <div className="text-xs font-medium text-slate-500">
+                Dinheiro perdido com juros
               </div>
               <div
-                className={`text-2xl font-mono font-black tabular-nums mt-1 ${
+                className={`text-2xl font-mono font-bold tabular-nums mt-1 ${
                   totalJurosPagos > 0 ? 'text-rose-600' : 'text-emerald-700'
                 }`}
               >
                 {formatarMoeda(totalJurosPagos)}
               </div>
-              <div className="text-xs text-slate-600 font-semibold mt-1">
+              <div className="text-xs text-slate-600 mt-1">
                 {dividaCartaoResidual > 0
-                  ? `+ ${formatarMoeda(dividaCartaoResidual)} em parcelas futuras`
-                  : 'Zero dívidas pendentes!'}
+                  ? `+ ${formatarMoeda(dividaCartaoResidual)} em parcelas restantes`
+                  : 'Nenhuma parcela pendente'}
               </div>
             </div>
 
-            <div className="arcade-card-sm rounded-2xl bg-white p-4">
-              <div className="text-xs font-mono font-bold text-slate-500">
-                BEM-ESTAR / FELICIDADE FINAL
+            <div className="arcade-card-sm rounded-xl bg-white p-4">
+              <div className="text-xs font-medium text-slate-500">
+                Bem-estar ao final de junho
               </div>
-              <div className="text-2xl font-mono font-black text-rose-600 tabular-nums mt-1">
-                {felicidadeFamilia}% HP
+              <div className="text-2xl font-mono font-bold text-rose-600 tabular-nums mt-1">
+                {felicidadeFamilia}%
               </div>
-              <div className="text-xs text-slate-600 font-semibold mt-1">
-                {felicidadeFamilia >= 70 ? 'Bem-estar preservado!' : 'Atenção ao cansaço'}
+              <div className="text-xs text-slate-600 mt-1">
+                {felicidadeFamilia >= 70 ? 'Qualidade de vida equilibrada' : 'Rotina desgastante'}
               </div>
             </div>
           </section>
 
-          {/* GRÁFICOS VISUAIS RECHARTS ATUALIZADOS COM TODAS AS NOVAS CATEGORIAS */}
+          {/* GRÁFICOS */}
           <section className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-            <div className="lg:col-span-5 arcade-card rounded-3xl bg-white p-5 flex flex-col justify-between">
+            <div className="lg:col-span-5 arcade-card rounded-2xl bg-white p-5 flex flex-col justify-between">
               <div>
-                <h2 className="font-display font-black text-lg text-slate-900 uppercase">
-                  Para Onde Foi o Dinheiro? (6 Meses)
+                <h2 className="font-display font-bold text-lg text-slate-900">
+                  Para onde foi o dinheiro nos 6 meses?
                 </h2>
-                <p className="text-xs text-slate-600 font-medium">
-                  Alimentação, Moradia, Transporte, Roupas, Viagens, Cuidados Pessoais, Outros e
-                  Juros
+                <p className="text-xs text-slate-500">
+                  Divisão entre contas fixas, estilo de vida, imprevistos, juros e reserva
                 </p>
               </div>
 
@@ -3665,7 +3796,7 @@ export default function App() {
                           key={`cell-${index}`}
                           fill={entry.cor}
                           stroke="#0f172a"
-                          strokeWidth={2}
+                          strokeWidth={1.5}
                         />
                       ))}
                     </Pie>
@@ -3678,13 +3809,13 @@ export default function App() {
               </div>
             </div>
 
-            <div className="lg:col-span-7 arcade-card rounded-3xl bg-white p-5 flex flex-col justify-between">
+            <div className="lg:col-span-7 arcade-card rounded-2xl bg-white p-5 flex flex-col justify-between">
               <div>
-                <h2 className="font-display font-black text-lg text-slate-900 uppercase">
-                  Evolução do Saldo e Cofre Mês a Mês
+                <h2 className="font-display font-bold text-lg text-slate-900">
+                  Evolução mês a mês
                 </h2>
-                <p className="text-xs text-slate-600 font-medium">
-                  Acompanhe o desempenho da Fase 1 (Janeiro) até a Fase 6 (Junho)
+                <p className="text-xs text-slate-500">
+                  Comparativo entre saldo em conta, reserva acumulada e juros pagos de janeiro a junho
                 </p>
               </div>
 
@@ -3695,8 +3826,8 @@ export default function App() {
                     margin={{ top: 10, right: 15, left: 5, bottom: 5 }}
                   >
                     <CartesianGrid strokeDasharray="3 3" stroke="#cbd5e1" />
-                    <XAxis dataKey="mes" tick={{ fontSize: 12, fontWeight: 700 }} />
-                    <YAxis tick={{ fontSize: 12, fontWeight: 700 }} />
+                    <XAxis dataKey="mes" tick={{ fontSize: 12, fontWeight: 600 }} />
+                    <YAxis tick={{ fontSize: 12, fontWeight: 600 }} />
                     <RechartsTooltip
                       formatter={(valor, nome) => [
                         formatarMoeda(Number(valor ?? 0)),
@@ -3704,30 +3835,30 @@ export default function App() {
                       ]}
                     />
                     <Legend />
-                    <ReferenceLine y={0} stroke="#0f172a" strokeWidth={2} />
+                    <ReferenceLine y={0} stroke="#0f172a" strokeWidth={1.5} />
                     <Bar
                       dataKey="SaldoFinal"
-                      name="Saldo em Conta"
+                      name="Saldo em conta"
                       fill="#10b981"
                       stroke="#0f172a"
-                      strokeWidth={2}
-                      radius={[6, 6, 0, 0]}
+                      strokeWidth={1.5}
+                      radius={[5, 5, 0, 0]}
                     />
                     <Bar
                       dataKey="CofreReserva"
-                      name="Cofre de Reserva"
+                      name="Reserva guardada"
                       fill="#0284c7"
                       stroke="#0f172a"
-                      strokeWidth={2}
-                      radius={[6, 6, 0, 0]}
+                      strokeWidth={1.5}
+                      radius={[5, 5, 0, 0]}
                     />
                     <Bar
                       dataKey="JurosPagos"
-                      name="Juros Pagos"
+                      name="Juros pagos"
                       fill="#ef4444"
                       stroke="#0f172a"
-                      strokeWidth={2}
-                      radius={[6, 6, 0, 0]}
+                      strokeWidth={1.5}
+                      radius={[5, 5, 0, 0]}
                     />
                   </BarChart>
                 </ResponsiveContainer>
@@ -3735,48 +3866,42 @@ export default function App() {
             </div>
           </section>
 
-          {/* PLANILHA DOMÉSTICA CONSOLIDADA DETALHANDO RENDA E CATEGORIAS */}
-          <section className="arcade-card rounded-3xl bg-white p-5 sm:p-6 space-y-4 overflow-hidden">
-            <div className="flex flex-wrap items-center justify-between gap-2">
-              <div>
-                <h2 className="font-display font-black text-lg sm:text-xl text-slate-900 uppercase">
-                  Log da Partida (Planilha de Orçamento Doméstico Consolidada)
-                </h2>
-                <p className="text-xs text-slate-600 font-medium">
-                  Detalhando Renda Total (Salário +{' '}
-                  {modoJogo === 'individual' ? 'Pé-de-Meia' : 'Bolsa Família'} + Extras),
-                  Alimentação, Roupas, Viagens, Cuidados e Eventos
-                </p>
-              </div>
+          {/* TABELA MÊS A MÊS */}
+          <section className="arcade-card rounded-2xl bg-white p-5 sm:p-6 space-y-4 overflow-hidden">
+            <div>
+              <h2 className="font-display font-bold text-lg sm:text-xl text-slate-900">
+                Extrato mês a mês
+              </h2>
+              <p className="text-xs text-slate-500">
+                Resumo das entradas ({modoJogo === 'individual' ? 'Salário + Pé-de-Meia' : 'Salário + Bolsa Família'}) e saídas de cada mês
+              </p>
             </div>
 
             <div className="overflow-x-auto -mx-5 px-5">
               <table className="w-full text-left border-collapse text-xs sm:text-sm">
                 <thead>
-                  <tr className="bg-slate-900 text-amber-300 font-mono uppercase text-[11px]">
+                  <tr className="bg-slate-900 text-amber-200 font-mono text-[11px]">
                     <th className="py-3 px-2.5">Mês</th>
-                    <th className="py-3 px-2.5 text-right">
-                      Renda ({modoJogo === 'individual' ? 'Sal.+Pé-de-Meia' : 'Sal.+Bolsa Fam.'})
-                    </th>
+                    <th className="py-3 px-2.5 text-right">Renda total</th>
                     <th className="py-3 px-2.5 text-right">Alimentação</th>
-                    <th className="py-3 px-2.5 text-right">Moradia & Transp.</th>
-                    <th className="py-3 px-2.5 text-right">Roupas & Viagens</th>
-                    <th className="py-3 px-2.5 text-right">Cuidados & Outros</th>
-                    <th className="py-3 px-2.5 text-right">Eventos & Cartão</th>
+                    <th className="py-3 px-2.5 text-right">Moradia e transp.</th>
+                    <th className="py-3 px-2.5 text-right">Roupas e lazer</th>
+                    <th className="py-3 px-2.5 text-right">Cuidados e outros</th>
+                    <th className="py-3 px-2.5 text-right">Imprevistos e cartão</th>
                     <th className="py-3 px-2.5 text-right">Juros (8%)</th>
-                    <th className="py-3 px-2.5 text-right">Saldo Final</th>
+                    <th className="py-3 px-2.5 text-right">Saldo final</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y-2 divide-slate-200 font-mono font-bold tabular-nums text-xs">
+                <tbody className="divide-y divide-slate-200 font-mono tabular-nums text-xs">
                   {historicoMensal.map((m) => (
-                    <tr key={m.mes} className="hover:bg-amber-50/70">
-                      <td className="py-3 px-2.5 font-sans font-black text-slate-900">
+                    <tr key={m.mes} className="hover:bg-amber-50/50">
+                      <td className="py-3 px-2.5 font-sans font-bold text-slate-900">
                         <div>{m.nomeMes}</div>
                         <div className="text-[10px] font-normal text-slate-500">
-                          {m.decisoes.map((d) => `[${d.acaoEscolhida}] ${d.eventoTitulo}`).join(' · ')}
+                          {m.decisoes.map((d) => d.eventoTitulo).join(' · ')}
                         </div>
                       </td>
-                      <td className="py-3 px-2.5 text-right text-emerald-700">
+                      <td className="py-3 px-2.5 text-right text-emerald-700 font-semibold">
                         +{formatarMoeda(m.rendaTotalMes + m.rendaExtraEventos)}
                       </td>
                       <td className="py-3 px-2.5 text-right text-slate-700">
@@ -3791,12 +3916,12 @@ export default function App() {
                       <td className="py-3 px-2.5 text-right text-pink-700">
                         -{formatarMoeda(m.gastoCuidadosMes + m.gastoOutrosMes)}
                       </td>
-                      <td className="py-3 px-2.5 text-right text-amber-700">
+                      <td className="py-3 px-2.5 text-right text-amber-800">
                         -{formatarMoeda(m.gastosEventosDireto + m.parcelasCartaoAnteriores)}
                       </td>
                       <td
                         className={`py-3 px-2.5 text-right ${
-                          m.jurosChequeEspecial > 0 ? 'text-rose-600 font-black' : 'text-slate-400'
+                          m.jurosChequeEspecial > 0 ? 'text-rose-600 font-bold' : 'text-slate-400'
                         }`}
                       >
                         {m.jurosChequeEspecial > 0
@@ -3804,7 +3929,7 @@ export default function App() {
                           : 'R$ 0'}
                       </td>
                       <td
-                        className={`py-3 px-2.5 text-right font-black ${
+                        className={`py-3 px-2.5 text-right font-bold ${
                           m.saldoFinal >= 0 ? 'text-emerald-700' : 'text-rose-600'
                         }`}
                       >
@@ -3817,133 +3942,69 @@ export default function App() {
             </div>
           </section>
 
-          {/* CONSELHOS DO MESTRE FINANCEIRO + 6 CARDS ILUSTRADOS */}
-          <section className="arcade-card rounded-3xl bg-indigo-950 text-white p-6 space-y-6">
-            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-b-2 border-indigo-800 pb-4">
+          {/* ANÁLISE DA PARTIDA */}
+          <section className="arcade-card rounded-2xl bg-slate-900 text-white p-6 space-y-5">
+            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-b border-slate-800 pb-4">
               <div className="space-y-1">
-                <div className="inline-flex items-center gap-2 text-xs font-mono font-extrabold text-amber-300 uppercase">
+                <div className="inline-flex items-center gap-2 text-xs font-mono text-amber-300">
                   <BookOpen className="w-4 h-4" />
-                  <span>DIAGNÓSTICO PERSONALIZADO DA SUA PARTIDA</span>
+                  <span>Análise das suas escolhas</span>
                 </div>
-                <h2 className="text-xl sm:text-2xl font-display font-black text-white">
-                  CONSELHOS DO MESTRE FINANCEIRO
+                <h2 className="text-xl font-display font-bold text-white">
+                  O que mais pesou no seu orçamento?
                 </h2>
               </div>
 
-              <div className="px-4 py-2 rounded-2xl bg-indigo-900 border-2 border-indigo-400 text-xs font-mono">
-                Armadilhas escolhidas na partida:{' '}
+              <div className="px-3.5 py-1.5 rounded-xl bg-slate-800 border border-slate-700 text-xs font-mono">
+                Compras parceladas ou por impulso:{' '}
                 <strong className="text-amber-300">
-                  {relatorioFinal.armadilhasEscolhidas.length} de 12 decisões
+                  {relatorioFinal.armadilhasEscolhidas.length} de 12 situações
                 </strong>
               </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="p-4 rounded-2xl bg-indigo-900/90 border-2 border-indigo-400 space-y-1.5">
-                <h3 className="font-display font-black text-amber-300 text-base">
-                  1. Análise de Juros, Cartão e Estilo de Vida
+              <div className="p-4 rounded-xl bg-slate-800/90 border border-slate-700 space-y-1.5">
+                <h3 className="font-display font-bold text-amber-300 text-base">
+                  Impacto do cartão e dos juros
                 </h3>
                 {totalJurosPagos > 0 || dividaCartaoResidual > 0 ? (
-                  <p className="text-xs sm:text-sm text-indigo-100 leading-relaxed">
-                    Cuidado! Vocês perderam{' '}
-                    <strong className="text-rose-300">{formatarMoeda(totalJurosPagos)}</strong> para
-                    o Monstro dos Juros (8% a.m.) e acumularam{' '}
+                  <p className="text-xs sm:text-sm text-slate-200 leading-relaxed">
+                    Ao longo do semestre, foram pagos{' '}
+                    <strong className="text-rose-300">{formatarMoeda(totalJurosPagos)}</strong> só
+                    em juros de cheque especial, além de{' '}
                     <strong className="text-amber-300">
                       {formatarMoeda(relatorioFinal.totalDesperdicadoArmadilhas)}
                     </strong>{' '}
-                    em escolhas de impulso em roupas, viagens ou parcelamentos. Quando parcelamos
-                    várias compras ao mesmo tempo, o salário do mês seguinte desaparece!
+                    em parcelamentos e gastos por impulso. Quando várias parcelas se somam, o salário
+                    do mês seguinte já entra comprometido.
                   </p>
                 ) : (
-                  <p className="text-xs sm:text-sm text-indigo-100 leading-relaxed">
-                    Jogada de Mestre! Vocês passaram os 6 meses com{' '}
-                    <strong className="text-emerald-300">R$ 0 de juros pagos</strong> ao banco e sem
-                    estourar o cartão!
+                  <p className="text-xs sm:text-sm text-slate-200 leading-relaxed">
+                    Você passou os 6 meses sem pagar juros ao banco e evitou acumular prestações no
+                    cartão. Isso permitiu preservar a renda para o que realmente importava.
                   </p>
                 )}
               </div>
 
-              <div className="p-4 rounded-2xl bg-indigo-900/90 border-2 border-indigo-400 space-y-1.5">
-                <h3 className="font-display font-black text-emerald-300 text-base">
-                  2. Lição do Perfil Jogado ({presetAtivo.titulo})
+              <div className="p-4 rounded-xl bg-slate-800/90 border border-slate-700 space-y-1.5">
+                <h3 className="font-display font-bold text-emerald-300 text-base">
+                  Particularidades do perfil ({presetAtivo.titulo})
                 </h3>
-                <p className="text-xs sm:text-sm text-indigo-100 leading-relaxed">
+                <p className="text-xs sm:text-sm text-slate-200 leading-relaxed">
                   {presetAtivo.dicaEducativa}
                 </p>
               </div>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 pt-2">
-              {[
-                {
-                  num: '01',
-                  icone: '🛡️',
-                  titulo: 'Pague-se Primeiro (Cofre)',
-                  texto:
-                    'Guarde a Reserva de Emergência no dia em que a renda cai. Nunca espere "sobrar" no fim do mês.',
-                },
-                {
-                  num: '02',
-                  icone: '🔍',
-                  titulo: 'Atenção à Pink Tax e Rótulos',
-                  texto:
-                    'Compare o preço por volume e o princípio ativo em itens de higiene e farmácia para não pagar mais caro só pela embalagem.',
-                },
-                {
-                  num: '03',
-                  icone: '🎓',
-                  titulo: 'Proteja Benefícios e Incentivos',
-                  texto:
-                    'No Jovem Solo, mantenha mais de 80% de presença para receber o Pé-de-Meia; na Família, mantenha o CadÚnico em dia para o Bolsa Família.',
-                },
-                {
-                  num: '04',
-                  icone: '✈️',
-                  titulo: 'Viagens e Roupas à Vista',
-                  texto:
-                    'Planeje passeios e compras de vestuário com antecedência para negociar descontos no PIX sem criar parcelas longas.',
-                },
-                {
-                  num: '05',
-                  icone: '🥦',
-                  titulo: 'Feira da Estação e Marmitas',
-                  texto:
-                    'Vá ao mercado com lista fechada e deixe refeições prontas no freezer para vencer a tentação do delivery.',
-                },
-                {
-                  num: '06',
-                  icone: '🔧',
-                  titulo: 'Manutenção Não Se Adia',
-                  texto:
-                    'Consertar um vazamento, freio ou dor de dente no início custa 3x menos do que esperar agravar.',
-                },
-              ].map((card) => (
-                <div
-                  key={card.num}
-                  className="p-4 rounded-2xl bg-white text-slate-900 border-3 border-slate-950 shadow-[4px_4px_0px_0px_#0f172a] space-y-1.5"
-                >
-                  <div className="flex items-center justify-between">
-                    <span className="text-2xl">{card.icone}</span>
-                    <span className="px-2 py-0.5 rounded bg-amber-300 border border-slate-900 font-mono text-xs font-black">
-                      PODER #{card.num}
-                    </span>
-                  </div>
-                  <h3 className="font-display font-black text-base text-slate-900">
-                    {card.titulo}
-                  </h3>
-                  <p className="text-xs text-slate-700 font-medium leading-relaxed">{card.texto}</p>
-                </div>
-              ))}
             </div>
           </section>
         </main>
       )}
 
-      {/* RODAPÉ ARCADE */}
-      <footer className="bg-slate-900 text-slate-400 border-t-4 border-slate-950 py-3 px-4 sm:px-8 text-xs font-mono no-print">
+      {/* RODAPÉ SIMPLES */}
+      <footer className="bg-slate-900 text-slate-400 border-t border-slate-800 py-3 px-4 sm:px-8 text-xs no-print">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
-          <span>SOBREVIVÊNCIA FINANCEIRA: O SALÁRIO SUMIU! · ARCADE LIFE-SIM 2D</span>
-          <span>USE O MOUSE OU AS TECLAS [1] [2] [3] E [ENTER] PARA JOGAR</span>
+          <span>Projeto Educacional · O Dinheiro Desaparece? Para onde vai o salário?</span>
+          <span className="font-mono text-[11px]">Atalhos: teclas 1, 2, 3 e Enter</span>
         </div>
       </footer>
     </div>
